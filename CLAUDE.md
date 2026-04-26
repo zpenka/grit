@@ -81,12 +81,14 @@ go vet ./...             # Run Go linter
 ### Package Structure
 ```
 grit/
-├── grit.go              # Main entry, Bubble Tea integration, CLI handling
-├── engine.go            # Core features, parsing, navigation (~3500 lines)
-├── engine_render_consolidation.go  # Unified rendering patterns
-├── engine_optimization.go           # Caching & performance utilities
-├── engine_test_helpers.go           # Test utilities
-├── engine_test.go       # 300+ feature tests
+├── grit.go                           # Main entry, Bubble Tea integration
+├── engine.go                         # Keybinding handler, entry points
+├── engine_types.go                   # 100+ type definitions (all data structures)
+├── engine_render_consolidation.go    # Unified rendering patterns
+├── engine_optimization.go            # Caching & performance utilities
+├── engine_test_helpers.go            # Test utilities
+├── engine_test.go                    # Core test helpers
+├── *_test.go                         # 350+ feature tests (organized by topic)
 ├── core/
 │   ├── types.go         # Core data structures
 │   ├── parser.go        # Commit/diff parsing

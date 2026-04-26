@@ -366,11 +366,10 @@ test/
 
 ## Implementation Priority
 
-### Immediate (Week 1)
-- [ ] Phase 1: Code Organization
+### Immediate (In Progress)
+- [x] Phase 1: Code Organization — Step 1 (engine_types.go extracted)
+- [ ] Phase 1: Steps 2-10 (parsing, navigation, filtering, cache, rendering, analytics, git_ops, integration, stubs)
 - [ ] Phase 2: Documentation (Parallel)
-- [ ] Create module structure
-- [ ] Move files/functions
 
 ### Short-term (Week 2-3)
 - [ ] Phase 3: Consolidation

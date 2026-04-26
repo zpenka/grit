@@ -335,17 +335,31 @@ recache := &regexCache{maxSize: 50}
 ## File Structure
 
 ```
-gitlog/
-├── engine.go                          (Main: 3500+ lines)
-├── engine_render_consolidation.go     (UI: 200 lines)
-├── engine_optimization.go              (Performance: 250 lines)
-├── engine_test_helpers.go              (Tests: 150 lines)
-├── engine_test.go                      (Tests: 3970 lines)
-├── gitlog.go                           (Package main)
-├── ARCHITECTURE.md                     (This file)
-├── REFACTORING.md                      (Refactoring plan)
-└── README.md                           (User documentation)
+grit/
+├── grit.go                            (UI: 798 lines - Bubble Tea entry point)
+├── engine.go                          (Keybindings: ~300 lines - after Phase 1 extraction)
+├── engine_types.go                    (Types: 794 lines - ALL 100+ type definitions)
+├── engine_render_consolidation.go     (UI: 200 lines - Unified rendering patterns)
+├── engine_optimization.go             (Performance: 250 lines - Caching & lazy loading)
+├── engine_test_helpers.go             (Tests: ~150 lines - Test utilities)
+├── engine_test.go                     (Tests: ~45 lines - Test fixture helpers)
+├── *_test.go                          (Tests: 350+ tests - Organized by feature/topic)
+├── core/                              (Core package)
+│   ├── types.go                       (Core data structures)
+│   ├── parser.go                      (Commit/diff parsing)
+│   ├── filter.go                      (Filtering operations)
+│   └── utils.go                       (Helper utilities)
+├── cmd/grit/                          (CLI package)
+├── CLAUDE.md                          (Developer guidance)
+├── ARCHITECTURE.md                    (This file)
+├── REFACTORING_PLAN.md                (Phase 1-6 implementation roadmap)
+└── README.md                          (User documentation)
 ```
+
+**Note**: Phase 1 Code Organization in progress. Eventually will extract:
+- `engine_parsing.go`, `engine_navigation.go`, `engine_filtering.go`
+- `engine_cache.go`, `engine_rendering.go`, `engine_analytics.go`
+- `engine_git_ops.go`, `engine_integration.go`, `engine_stubs.go`
 
 ## Summary
 
