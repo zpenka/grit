@@ -14,7 +14,13 @@
 //
 // Git operations are interactive and preview-based, reducing the risk of
 // unintended changes. All operations can be reviewed before execution.
-//
+package grit
+
+import (
+	"fmt"
+	"strings"
+)
+
 // --- Interactive Rebase ---
 
 // parseRebaseSequence builds a rebase operation sequence from commits.

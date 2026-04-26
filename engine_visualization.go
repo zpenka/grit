@@ -13,7 +13,13 @@
 //
 // Visualizations use ANSI colors and Unicode box characters for terminal-friendly
 // output. They help identify patterns in large histories at a glance.
-//
+package grit
+
+import (
+	"fmt"
+	"strings"
+)
+
 // --- Visualization (5 features) ---
 
 // Feature 14: Contributor Flamegraph

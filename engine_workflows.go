@@ -13,7 +13,12 @@
 //
 // Workflows are often multi-step operations that require careful state tracking.
 // This module provides the building blocks for complex git tasks.
-//
+package grit
+
+import (
+	"strings"
+)
+
 // --- Advanced Workflows (5 features) ---
 
 // Feature 9: Worktree Support

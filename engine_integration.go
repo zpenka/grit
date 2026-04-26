@@ -13,7 +13,13 @@
 //
 // Integrations are read-only at present and support linking commits to external
 // tracking systems without modifying the repository.
-//
+package grit
+
+import (
+	"fmt"
+	"strings"
+)
+
 // --- Integration & Export (5 features) ---
 
 // Feature 19: GitHub PR Linking
