@@ -1,39 +1,30 @@
-# grit
+# grit - Terminal UI for Git History
 
-A terminal UI for exploring your git history. Browse commits, diffs, blame, analytics, and more—all in the terminal.
+A powerful, feature-rich terminal UI for exploring git repositories with 113+ integrated features. Built in Go with zero external dependencies (besides Bubble Tea for TUI).
 
-**312+ features** including:
-- Interactive commit browsing
-- Diff viewing with syntax highlighting
-- Author and time-based filtering
-- Git operations (rebase, cherry-pick, revert)
-- Blame view for code ownership
-- Analytics (hotspots, code ownership, complexity)
-- Team collaboration metrics
-- Export to markdown, patches, JIRA
+## Key Features
+
+- **Interactive Browsing** - Explore commits, diffs, blame information
+- **Analysis** - Code ownership, hotspots, team activity heatmaps
+- **Git Operations** - Rebase, cherry-pick, reset, amend workflows
+- **Export & Integration** - GitHub/Jira linking, CSV/JSON/XML export
+- **Team Metrics** - Velocity tracking, collaboration analytics
+- **Visualization** - Commit graphs, timelines, complexity analysis
+
+## Quick Start
+
+```bash
+go build -o grit .
+./grit
+```
+
+Run from any git repository. Requires Go 1.21+.
 
 ## Installation
 
 ```bash
 go install github.com/zpenka/grit@latest
 ```
-
-Or build from source:
-
-```bash
-git clone github.com/zpenka/grit
-cd grit
-go build -o grit .
-./grit
-```
-
-## Usage
-
-```bash
-grit
-```
-
-Run from within any git repository. Requires Go 1.21+.
 
 ## Requirements
 
