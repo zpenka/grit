@@ -337,8 +337,11 @@ recache := &regexCache{maxSize: 50}
 ```
 grit/
 ├── grit.go                            (UI: 798 lines - Bubble Tea entry point)
-├── engine.go                          (Keybindings: ~300 lines - after Phase 1 extraction)
+├── engine.go                          (Core: ~1200 lines - Utilities, features)
 ├── engine_types.go                    (Types: 794 lines - ALL 100+ type definitions)
+├── engine_parsing.go                  (Parsing: 135 lines - Commit/diff parsing)
+├── engine_navigation.go               (Navigation: 270 lines - Cursor, panel, bookmarks)
+├── engine_filtering.go                (Filtering: 149 lines - Search, query, filters)
 ├── engine_render_consolidation.go     (UI: 200 lines - Unified rendering patterns)
 ├── engine_optimization.go             (Performance: 250 lines - Caching & lazy loading)
 ├── engine_test_helpers.go             (Tests: ~150 lines - Test utilities)
@@ -356,8 +359,7 @@ grit/
 └── README.md                          (User documentation)
 ```
 
-**Note**: Phase 1 Code Organization in progress. Eventually will extract:
-- `engine_parsing.go`, `engine_navigation.go`, `engine_filtering.go`
+**Phase 1 Progress**: Steps 1-4 complete (types, parsing, navigation, filtering extracted). Eventually will extract:
 - `engine_cache.go`, `engine_rendering.go`, `engine_analytics.go`
 - `engine_git_ops.go`, `engine_integration.go`, `engine_stubs.go`
 

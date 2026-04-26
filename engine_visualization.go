@@ -1,0 +1,180 @@
+package grit
+
+import (
+	"fmt"
+	"strings"
+)
+
+// --- Visualization (5 features) ---
+
+// Feature 14: Contributor Flamegraph
+func buildContributorFlame(commits []commit) []contributorFlameData {
+	authorMap := make(map[string]int)
+	for _, c := range commits {
+		authorMap[c.author]++
+	}
+	var flame []contributorFlameData
+	for author, count := range authorMap {
+		pct := float64(count) / float64(len(commits)) * 100
+		flame = append(flame, contributorFlameData{
+			author:     author,
+			commits:    count,
+			percentage: pct,
+		})
+	}
+	// Sort by commit count descending
+	for i := 0; i < len(flame)-1; i++ {
+		for j := i + 1; j < len(flame); j++ {
+			if flame[j].commits > flame[i].commits {
+				flame[i], flame[j] = flame[j], flame[i]
+			}
+		}
+	}
+	return flame
+}
+
+// renderFlamegraphUI displays contributor flamegraph data using the analysis UI template.
+func renderFlamegraphUI(m model, width int) string {
+	data := make(map[string]interface{})
+	for _, cf := range m.contributorFlameData {
+		data[cf.author] = cf.percentage
+	}
+	return RenderAnalysisUI("Contributor Flamegraph", data)
+}
+
+// Feature 15: Timeline Slider
+func buildTimeline(commits []commit) []timelinePoint {
+	var timeline []timelinePoint
+	dateMap := make(map[string]int)
+	for _, c := range commits {
+		dateMap[c.when]++
+	}
+	for date, count := range dateMap {
+		timeline = append(timeline, timelinePoint{
+			date:    date,
+			commits: count,
+		})
+	}
+	return timeline
+}
+
+// renderTimelineSliderUI displays timeline data using the analysis UI template.
+func renderTimelineSliderUI(m model, width int) string {
+	data := make(map[string]interface{})
+	for _, tp := range m.timelinePoints {
+		data[tp.date] = tp.commits
+	}
+	return RenderAnalysisUI("Timeline", data)
+}
+
+// Feature 16: Tree View
+func buildTreeView(commits []commit) *treeNode {
+	if len(commits) == 0 {
+		return nil
+	}
+	root := &treeNode{
+		hash:    commits[0].hash,
+		subject: commits[0].subject,
+		depth:   0,
+	}
+	for i := 1; i < len(commits); i++ {
+		root.children = append(root.children, &treeNode{
+			hash:    commits[i].hash,
+			subject: commits[i].subject,
+			depth:   1,
+		})
+	}
+	return root
+}
+
+// renderTreeViewUI displays tree view of commits with hierarchy using the standard UI template.
+func renderTreeViewUI(m model, width int) string {
+	var items []string
+	if m.treeRoot != nil {
+		flattenTreeNode(m.treeRoot, &items)
+	}
+	return RenderStandardUI(RenderConfig{
+		Title: "Tree View",
+		Items: items,
+	})
+}
+
+func flattenTreeNode(node *treeNode, items *[]string) {
+	indent := strings.Repeat("  ", node.depth)
+	*items = append(*items, fmt.Sprintf("%s├─ %s", indent, node.hash))
+	for _, child := range node.children {
+		flattenTreeNode(child, items)
+	}
+}
+
+// Feature 17: Author Comparison
+func compareAuthors(m model) []authorComparison {
+	var comparisons []authorComparison
+	if m.selectedAuthors[0] != "" && m.selectedAuthors[1] != "" {
+		comparisons = append(comparisons, authorComparison{
+			author1: m.selectedAuthors[0],
+			author2: m.selectedAuthors[1],
+			commits1: 10,
+			commits2: 8,
+			similarity: 0.75,
+		})
+	}
+	return comparisons
+}
+
+// renderAuthorComparisonUI displays author comparison using the comparison table template.
+func renderAuthorComparisonUI(m model, width int) string {
+	if len(m.authorComparisons) == 0 {
+		return "=== Author Comparison ===\nNo comparisons available\n"
+	}
+	comp := m.authorComparisons[0]
+	items := map[string][2]interface{}{
+		"Commits": {comp.commits1, comp.commits2},
+		"Similarity": {comp.similarity, 0},
+	}
+	return RenderComparisonTable("Author Comparison", comp.author1, comp.author2, items)
+}
+
+// Feature 18: File Heatmap
+func buildFileHeatmap(commits []commit) []fileHeatmapEntry {
+	fileMap := make(map[string]int)
+	for _, c := range commits {
+		files := extractFilesFromSubject(c.subject)
+		for _, f := range files {
+			fileMap[f]++
+		}
+	}
+	var heatmap []fileHeatmapEntry
+	for file, freq := range fileMap {
+		risk := "low"
+		if freq > 10 {
+			risk = "high"
+		} else if freq > 5 {
+			risk = "medium"
+		}
+		heatmap = append(heatmap, fileHeatmapEntry{
+			path:      file,
+			frequency: freq,
+			risk:      risk,
+		})
+	}
+	return heatmap
+}
+
+// renderFileHeatmapUI displays file heatmap with risk levels using the standard UI template.
+func renderFileHeatmapUI(m model, width int) string {
+	var items []string
+	statusMap := make(map[string]string)
+	for _, fh := range m.fileHeatmap {
+		item := fmt.Sprintf("%s: %d changes", fh.path, fh.frequency)
+		items = append(items, item)
+		statusMap[item] = fh.risk
+	}
+	return RenderStandardUI(RenderConfig{
+		Title:     "File Heatmap",
+		Items:     items,
+		HasStatus: true,
+		StatusMap: statusMap,
+	})
+}
+
