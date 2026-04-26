@@ -1,10 +1,32 @@
+// Package grit provides a terminal UI for exploring git history with 113+ integrated features.
+//
+// The package is organized into focused modules:
+//   - engine_types.go: Core type definitions (150+ types)
+//   - engine_parsing.go: Git data parsing functions
+//   - engine_navigation.go: UI cursor and panel navigation
+//   - engine_filtering.go: Commit filtering logic
+//   - engine_cache.go: Caching mechanisms (diff, stats, regex)
+//   - engine_optimization.go: Performance optimization utilities
+//   - engine_render_consolidation.go: Consolidated render templates
+//   - engine_rendering.go: Main UI rendering engine
+//   - engine_analytics.go: Analytics and analysis functions
+//   - engine_git_ops.go: Git operations (rebase, cherry-pick, etc.)
+//   - engine_workflows.go: Advanced workflows (worktrees, stash, tags)
+//   - engine_visualization.go: Visualization functions (graphs, timelines, heatmaps)
+//   - engine_integration.go: External integrations (GitHub, Jira, exports)
+//   - engine_team_ai.go: Team analytics, AI, and compliance features
+//
+// Core data flow:
+//   git log → parseCommits() → model.commits → features → render*UI() → Terminal
+//
+// See CLAUDE.md and DEVELOPER.md for detailed development guidance.
 package grit
 
 import (
 	"regexp"
 )
 
-// Core data types
+// Core data types for git history exploration
 
 type commit struct {
 	hash      string
