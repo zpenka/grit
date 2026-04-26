@@ -1,3 +1,16 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The cache module (engine_cache.go) implements caching strategies for expensive
+// operations. It provides LRU (Least Recently Used) caching for diffs, statistics
+// caching for commit analysis, and regex pattern compilation caching.
+//
+// Key types and functions:
+//   - diffCache: LRU cache for diff output (bounded memory usage)
+//   - statisticsCache: Memoization of commit statistics
+//   - regexCache: Compiled regex pattern cache for filtering
+//
+// Caching is critical for performance in large repositories. The LRU strategy
+// ensures bounded memory usage while keeping frequently accessed diffs hot.
 package grit
 
 import (

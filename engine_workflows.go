@@ -1,9 +1,19 @@
-package grit
-
-import (
-	"strings"
-)
-
+// Package grit provides a terminal UI for exploring git history.
+//
+// The workflows module (engine_workflows.go) provides advanced git workflows
+// beyond basic operations: worktree management, stash handling, tag operations,
+// and reflog browsing.
+//
+// Key functions:
+//   - loadWorktrees: Parse and manage multiple working trees
+//   - saveToStash: Stash changes with description
+//   - applyStash: Restore stashed changes
+//   - createTag: Create annotated or lightweight tags
+//   - browseReflog: Navigate git reflog history
+//
+// Workflows are often multi-step operations that require careful state tracking.
+// This module provides the building blocks for complex git tasks.
+//
 // --- Advanced Workflows (5 features) ---
 
 // Feature 9: Worktree Support

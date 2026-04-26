@@ -1,3 +1,18 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The main rendering module (engine_rendering.go) is the heart of the UI,
+// responsible for converting the model state into terminal output. It renders
+// the four-panel interface: commit list, diff view, file tree, and feature panels.
+//
+// Key rendering groups:
+//   - Commit list: Shows filtered commits with author, time, stats badges
+//   - Diff panel: Displays unified diff with syntax highlighting and line numbers
+//   - File panel: Shows files changed with hunks and change statistics
+//   - Feature panels: Results for analytics, bisect, team stats, visualizations
+//
+// The rendering engine is performance-critical. It leverages Lipgloss for
+// terminal styling and the consolidated templates from engine_render_consolidation.go.
+// Large diffs are cached to prevent re-rendering on each frame.
 package grit
 
 import (

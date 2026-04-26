@@ -1,10 +1,19 @@
-package grit
-
-import (
-	"fmt"
-	"strings"
-)
-
+// Package grit provides a terminal UI for exploring git history.
+//
+// The integration module (engine_integration.go) connects grit to external
+// systems: GitHub for PR linking, Jira for issue tracking, and various export
+// formats for data sharing.
+//
+// Key functions:
+//   - linkGitHubPR: Associate commits with GitHub pull requests
+//   - linkJiraIssue: Link commits to Jira tickets
+//   - exportToCSV: Generate CSV reports of commit data
+//   - exportToJSON: Export structured JSON format
+//   - exportToXML: Generate XML for system integration
+//
+// Integrations are read-only at present and support linking commits to external
+// tracking systems without modifying the repository.
+//
 // --- Integration & Export (5 features) ---
 
 // Feature 19: GitHub PR Linking

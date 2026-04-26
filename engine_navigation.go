@@ -1,3 +1,17 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The navigation module (engine_navigation.go) manages cursor position, panel
+// switching, and scrolling within the UI. It maintains and updates the model's
+// navigation state in response to user input.
+//
+// Key functions:
+//   - moveCursorUp/Down: Navigate through commits
+//   - switchPanel: Change active UI panel
+//   - ScrollPanelUp/Down: Scroll within panels
+//   - setBookmark/goToBookmark: Save and restore cursor positions
+//
+// Navigation is stateless—all functions take and return a model, making them
+// easily testable and composable with Bubble Tea's update cycle.
 package grit
 
 // moveCursorDown advances the commit cursor by one position and resets diff offset.

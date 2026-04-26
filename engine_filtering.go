@@ -1,3 +1,17 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The filtering module (engine_filtering.go) provides search and filtering
+// capabilities for commits. It supports text search, regex patterns, author
+// filtering, and date range filtering.
+//
+// Key functions:
+//   - filterCommits: Search by text across subject, author, hash
+//   - visibleCommits: Apply active filters to full commit list
+//   - filterByAuthor: Filter commits by author name
+//   - filterByDateRange: Filter commits by timestamp range
+//
+// Filtering is used to reduce large commit lists to a relevant subset, improving
+// navigation performance and focus for analysis tasks.
 package grit
 
 import (

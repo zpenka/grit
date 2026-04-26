@@ -1,12 +1,27 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The render consolidation module (engine_render_consolidation.go) provides
+// unified UI templates and rendering patterns shared across all features. It
+// eliminates duplication by centralizing layout logic while allowing features
+// to customize content and styling.
+//
+// Key functions:
+//   - RenderStandardUI: Generic two-column list with status display
+//   - RenderAnalysisUI: Data grid layout for analytics results
+//   - RenderDataGrid: Flexible tabular data presentation
+//   - RenderPanel: Individual panel rendering with borders and title
+//
+// All 30+ feature renderers use these templates, ensuring consistent styling
+// and making global UI changes easy to implement.
+//
+// Consolidated rendering functions to reduce duplication
+// All render*UI functions follow this pattern for consistency
 package grit
 
 import (
 	"fmt"
 	"strings"
 )
-
-// Consolidated rendering functions to reduce duplication
-// All render*UI functions follow this pattern for consistency
 
 // Helper functions for building render data
 
