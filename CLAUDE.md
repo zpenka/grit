@@ -82,8 +82,9 @@ go vet ./...             # Run Go linter
 ```
 grit/
 ├── grit.go                           # Main entry, Bubble Tea integration
-├── engine.go                         # Keybinding handler, entry points
+├── engine.go                         # Keybinding handler, entry points, utilities
 ├── engine_types.go                   # 100+ type definitions (all data structures)
+├── engine_parsing.go                 # Parsing functions (git log, diff, files)
 ├── engine_render_consolidation.go    # Unified rendering patterns
 ├── engine_optimization.go            # Caching & performance utilities
 ├── engine_test_helpers.go            # Test utilities
