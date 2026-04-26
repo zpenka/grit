@@ -197,7 +197,9 @@ Check cache metrics via model fields to identify optimization opportunities.
 
 ## References
 
-- **ARCHITECTURE.md**: Detailed layering, data flow, and extension guide
-- **ARCHITECTURE_COMPREHENSIVE.md**: Complete feature inventory
-- **README.md**: User-facing documentation
-- **engine.go**: Main implementation (~3500 lines)
+- **[ARCHITECTURE.md](ARCHITECTURE.md)**: Module structure, data flow, and design patterns
+- **[DEVELOPER.md](DEVELOPER.md)**: Complete developer guide and contribution workflow
+- **[PROGRESS.md](PROGRESS.md)**: Phase-by-phase progress tracking
+- **[CHANGELOG.md](CHANGELOG.md)**: Detailed changelog of features and changes
+- **[README.md](README.md)**: User-facing documentation and quick start
+- **[docs/modules/](docs/modules/)**: Detailed documentation for all 14 modules
