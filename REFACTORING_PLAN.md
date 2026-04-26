@@ -369,7 +369,9 @@ test/
 ### Immediate (In Progress)
 - [x] Phase 1: Code Organization — Step 1 (engine_types.go extracted)
 - [x] Phase 1: Code Organization — Step 2 (engine_parsing.go extracted)
-- [ ] Phase 1: Steps 3-10 (navigation, filtering, cache, rendering, analytics, git_ops, integration, stubs)
+- [x] Phase 1: Code Organization — Step 3 (engine_navigation.go extracted)
+- [x] Phase 1: Code Organization — Step 4 (engine_filtering.go extracted)
+- [ ] Phase 1: Steps 5-10 (cache, rendering, analytics, git_ops, integration, stubs)
 - [ ] Phase 2: Documentation (Parallel)
 
 ### Short-term (Week 2-3)

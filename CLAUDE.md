@@ -85,6 +85,8 @@ grit/
 ├── engine.go                         # Keybinding handler, entry points, utilities
 ├── engine_types.go                   # 100+ type definitions (all data structures)
 ├── engine_parsing.go                 # Parsing functions (git log, diff, files)
+├── engine_navigation.go              # Cursor & panel navigation, bookmarks
+├── engine_filtering.go               # Filtering and search functions
 ├── engine_render_consolidation.go    # Unified rendering patterns
 ├── engine_optimization.go            # Caching & performance utilities
 ├── engine_test_helpers.go            # Test utilities
