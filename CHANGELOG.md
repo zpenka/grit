@@ -2,6 +2,52 @@
 
 All notable changes to grit are documented here. This file follows the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [Phase 3] - 2026-04-26
+
+### Added - Feature Completeness & Release Readiness
+
+**CLI Flags (grit.go):**
+- `const Version = "0.1.0"` - Version constant
+- `-v, --version` flag - Print version and exit
+- `-h, --help` flag - Print usage/help message
+
+**Test Coverage:**
+- `engine_team_ai_test.go` - 11 tests for analytics/compliance features
+- `engine_visualization_test.go` - 14 tests for visualization functions
+- `engine_workflows_test.go` - 13 tests for workflow operations
+- Total: 38 new tests, all passing
+
+### Fixed - Hardcoded Stubs Replaced
+
+**engine_team_ai.go:**
+- `trackLicenseHeaders` - Removed hardcoded main.go/MIT; returns empty list
+- `scanForSecurityIssues` - Fixed hardcoded "line 5" → real line number tracking
+- `trackDataDeletion` - Removed hardcoded "GDPR request" reason
+- `detectSecrets` - Fixed hardcoded "line 1" → real line tracking with patterns
+- `detectAnomalies` - Enhanced to detect large commits (50000+ lines, "rewrite entire" patterns)
+
+**engine_visualization.go:**
+- `buildTreeView` - Fixed flat depth-1 structure → builds proper nested hierarchy
+- `buildTimeline` - Added missing hash field to timeline points
+- `compareAuthors` - Now works without pre-selected authors; auto-compares first two
+
+**scripts/build-release.sh:**
+- Fixed variable case bug: `${version}` → `${VERSION}` (was creating blank filenames)
+
+### Changed - Release Tooling
+
+- Release script now generates proper binary names: `grit-0.1.0-linux-amd64`, `grit-0.1.0-darwin-arm64`, etc.
+- All platform builds (linux, darwin, windows) with correct architectures
+
+### Stats
+
+- **Tests**: 371 → 409 (38 new tests, 100% pass rate)
+- **Files changed**: 7 (5 modified, 3 created)
+- **Lines added**: 737+
+- **Commits**: 1 (bundled PR #11)
+
+---
+
 ## [Phase 2] - 2026-04-26
 
 ### Added - Documentation & Godoc Comments
