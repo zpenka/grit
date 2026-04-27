@@ -719,6 +719,12 @@ func (m model) View() string {
 	if m.showComplexity {
 		return renderComplexityUI(m, m.width)
 	}
+	if m.showCoupling {
+		return renderCouplingAnalysisUI(m, m.width)
+	}
+	if m.showDependencies {
+		return renderDependenciesUI(m, m.width)
+	}
 
 	// Show visualization feature panels
 	if m.showFlamegraph {
@@ -766,6 +772,12 @@ func (m model) View() string {
 	}
 	if m.showIssueRefs {
 		return renderIssueRefsUI(m, m.width)
+	}
+	if m.showConflictUI {
+		return renderConflictUI(m, m.width)
+	}
+	if m.showExportUI {
+		return renderExportUI(m, m.width)
 	}
 
 	// Show git ops panels
