@@ -330,6 +330,8 @@ func findStashByIndex(stashes []stashEntry, idx int) *stashEntry {
 // ===== UI INTEGRATION: KEYBINDINGS =====
 
 // handleKeyBinding processes keyboard input and returns updated model.
+// DEPRECATED: This function is dead code. All keybinding dispatch happens in grit.go's Update() method.
+// Kept for reference only. Do not use.
 func handleKeyBinding(m model, key string) model {
 	switch key {
 	case "m":

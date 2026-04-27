@@ -177,6 +177,15 @@ type model struct {
 	width             int
 	height            int
 	loading           bool
+	// Help overlay
+	showHelp bool
+	// Feature menus
+	showAnalyticsMenu  bool
+	analyticsMenuIdx  int
+	showVisualizationMenu bool
+	vizMenuIdx        int
+	showTeamMenu      bool
+	teamMenuIdx       int
 	// Bisect & Recovery
 	bisectState         bisectState
 	showBisectUI        bool

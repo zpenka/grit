@@ -202,6 +202,33 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 	}
 
+	// Esc clears all feature panels (except structural ones)
+	if km.String() == "esc" && !m.showBlame && !m.showBranch && !m.showFiles && !m.searching && !m.showAnalyticsMenu && !m.showVisualizationMenu && !m.showTeamMenu {
+		m.showHelp = false
+		m.showCodeOwnership = false
+		m.showHotspots = false
+		m.showLinting = false
+		m.showComplexity = false
+		m.showActivityHeatmap = false
+		m.showAnalytics = false
+		m.showFlamegraph = false
+		m.showTimeline = false
+		m.showTreeView = false
+		m.showAuthorComparison = false
+		m.showFileHeatmap = false
+		m.showTeamStats = false
+		m.showReviewUI = false
+		m.showPairProgramming = false
+		m.showVelocity = false
+		m.showClassification = false
+		m.showSecrets = false
+		m.showChangelog = false
+		m.showPRLinks = false
+		m.showJiraLinks = false
+		m.showIssueRefs = false
+		return m, nil
+	}
+
 	// Blame view: all navigation goes to blame scrolling
 	if m.showBlame {
 		panelH := diffPanelHeight(m)
@@ -352,6 +379,113 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, openInEditor(m.repoPath, vc[m.cursor].hash)
 		}
 		return m, nil
+	case "?":
+		m.showHelp = !m.showHelp
+		m.countBuf = ""
+		return m, nil
+	case "a":
+		m.showAnalyticsMenu = !m.showAnalyticsMenu
+		m.analyticsMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
+	case "v":
+		m.showVisualizationMenu = !m.showVisualizationMenu
+		m.vizMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
+	case "t":
+		m.showTeamMenu = !m.showTeamMenu
+		m.teamMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
+	case "r":
+		m.showRebaseUI = !m.showRebaseUI
+		if m.showRebaseUI && len(m.rebaseSequence) == 0 {
+			m.rebaseSequence = parseRebaseSequence(m.commits)
+		}
+		m.countBuf = ""
+		return m, nil
+	case "c":
+		if m.cursor < len(vc) {
+			m = toggleCherryPick(m, vc[m.cursor].hash)
+			m.showCherryPickUI = len(m.cherryPickList) > 0
+		}
+		m.countBuf = ""
+		return m, nil
+	case "x":
+		// Reset mode cycles: "" → soft → mixed → hard → ""
+		switch m.resetMode {
+		case "":
+			m.resetMode = "soft"
+		case "soft":
+			m.resetMode = "mixed"
+		case "mixed":
+			m.resetMode = "hard"
+		default:
+			m.resetMode = ""
+		}
+		m.countBuf = ""
+		return m, nil
+	}
+
+	// Analytics menu navigation
+	if m.showAnalyticsMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.analyticsMenuIdx < analyticsMenuLen-1 {
+				m.analyticsMenuIdx++
+			}
+		case "k", "up":
+			if m.analyticsMenuIdx > 0 {
+				m.analyticsMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchAnalyticsFeature(m, m.analyticsMenuIdx)
+			m.showAnalyticsMenu = false
+		case "esc", "a":
+			m.showAnalyticsMenu = false
+		}
+		return m, nil
+	}
+
+	// Visualization menu navigation
+	if m.showVisualizationMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.vizMenuIdx < vizMenuLen-1 {
+				m.vizMenuIdx++
+			}
+		case "k", "up":
+			if m.vizMenuIdx > 0 {
+				m.vizMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchVizFeature(m, m.vizMenuIdx)
+			m.showVisualizationMenu = false
+		case "esc", "v":
+			m.showVisualizationMenu = false
+		}
+		return m, nil
+	}
+
+	// Team menu navigation
+	if m.showTeamMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.teamMenuIdx < teamMenuLen-1 {
+				m.teamMenuIdx++
+			}
+		case "k", "up":
+			if m.teamMenuIdx > 0 {
+				m.teamMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchTeamFeature(m, m.teamMenuIdx)
+			m.showTeamMenu = false
+		case "esc", "t":
+			m.showTeamMenu = false
+		}
+		return m, nil
 	}
 
 	panelH := diffPanelHeight(m)
@@ -481,6 +615,94 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	if m.width == 0 || m.height == 0 {
 		return "\n  loading…\n"
+	}
+
+	// Show help overlay if requested
+	if m.showHelp {
+		return renderHelpOverlay(m)
+	}
+
+	// Show analytics menu overlay if requested
+	if m.showAnalyticsMenu {
+		return renderAnalyticsMenuOverlay(m, m.width)
+	}
+
+	// Show visualization menu overlay if requested
+	if m.showVisualizationMenu {
+		return renderVisualizationMenuOverlay(m, m.width)
+	}
+
+	// Show team menu overlay if requested
+	if m.showTeamMenu {
+		return renderTeamMenuOverlay(m, m.width)
+	}
+
+	// Show analytics feature panels
+	if m.showCodeOwnership {
+		return renderCodeOwnershipUI(m, m.width)
+	}
+	if m.showHotspots {
+		return renderHotspotsUI(m, m.width)
+	}
+	if m.showLinting {
+		return renderLintingUI(m, m.width)
+	}
+	if m.showBisectUI {
+		return renderBisectUI(m, m.width)
+	}
+	if m.showActivityHeatmap {
+		return renderActivityHeatmapUI(m, m.width)
+	}
+	if m.showAnalytics {
+		return renderAnalyticsPanel(m, m.width)
+	}
+	if m.showComplexity {
+		return renderComplexityUI(m, m.width)
+	}
+
+	// Show visualization feature panels
+	if m.showFlamegraph {
+		return renderFlamegraphUI(m, m.width)
+	}
+	if m.showTimeline {
+		return renderTimelineSliderUI(m, m.width)
+	}
+	if m.showTreeView {
+		return renderTreeViewUI(m, m.width)
+	}
+	if m.showAuthorComparison {
+		return renderAuthorComparisonUI(m, m.width)
+	}
+	if m.showFileHeatmap {
+		return renderFileHeatmapUI(m, m.width)
+	}
+
+	// Show team/AI feature panels (will be added in team functions)
+	if m.showTeamStats {
+		return renderTeamStatsUI(m, m.width)
+	}
+	if m.showReviewUI {
+		return renderReviewerSuggestionsUI(m, m.width)
+	}
+	if m.showVelocity {
+		return renderVelocityUI(m, m.width)
+	}
+	if m.showClassification {
+		return renderClassificationUI(m, m.width)
+	}
+	if m.showSecrets {
+		return renderSecretsUI(m, m.width)
+	}
+	if m.showChangelog {
+		return renderChangelogUI(m, m.width)
+	}
+
+	// Show git ops panels
+	if m.showRebaseUI {
+		return renderRebaseUI(m, m.width)
+	}
+	if m.showCherryPickUI {
+		return renderCherryPickUI(m, m.width)
 	}
 
 	listW := listPanelWidth(m.width)
@@ -792,6 +1014,83 @@ func firstVisibleHash(m model) string {
 		return ""
 	}
 	return vc[0].hash
+}
+
+func renderHelpOverlay(m model) string {
+	var sb strings.Builder
+
+	w := m.width
+	if w < 40 {
+		w = 40
+	}
+	h := m.height
+	if h < 10 {
+		h = 10
+	}
+
+	// Render help text centered on screen
+	help := `
+KEYBINDING REFERENCE
+
+NAVIGATION
+  j/k          Scroll commit list / diff panel
+  g/G          Jump to first / last commit
+  5j           Jump 5 commits (count prefix works with j/k)
+  l/h          Switch between commit and diff panels
+  Tab          Toggle between commit and diff
+
+VIEWING
+  f            Toggle file list
+  b            Show branch picker
+  B            Show blame for current file
+  /            Search commits by subject, author, or hash
+  Ctrl+/       Clear search
+
+CLIPBOARD & EDITOR
+  y            Copy current commit hash
+  e            Open current commit in $EDITOR
+
+FEATURES (NEW)
+  a            Analytics submenu (ownership, hotspots, bisect, etc.)
+  v            Visualizations submenu (graphs, timelines, etc.)
+  t            Team/AI submenu (stats, suggestions, insights)
+  r            Interactive rebase preview
+  c            Cherry-pick mode
+  i            Integration & export (GitHub, Jira, etc.)
+
+HELP & EXIT
+  ?            This help overlay
+  Esc          Close any panel / clear search
+  q            Quit application
+
+Tips:
+  • Use Esc to close any feature panel and return to main view
+  • Press the same key again to toggle features on/off
+  • Count prefix (5j) works for navigation in commit list
+`
+
+	// Split into lines and render
+	lines := strings.Split(strings.TrimSpace(help), "\n")
+	contentHeight := h - 4
+	if len(lines) > contentHeight {
+		lines = lines[:contentHeight]
+	}
+
+	for _, line := range lines {
+		sb.WriteString(msgStyle.Render(line))
+		sb.WriteString("\n")
+	}
+
+	// Add footer
+	footerText := " Press ? to close  │  q to quit "
+	padding := w - len(footerText)
+	if padding < 0 {
+		padding = 0
+	}
+	footer := strings.Repeat(" ", padding/2) + footerText
+	sb.WriteString(alertStyle.Render(footer))
+
+	return sb.String()
 }
 
 const Version = "0.1.0"

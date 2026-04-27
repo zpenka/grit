@@ -121,6 +121,89 @@ func renderProductivityMetrics(metrics map[string]interface{}, width int) string
 	return RenderAnalysisUI("Productivity Metrics", metrics)
 }
 
+// --- Analytics Menu Dispatch ---
+
+const analyticsMenuLen = 7
+
+var analyticsMenuItems = []string{
+	"Code Ownership",
+	"Hotspot Detection",
+	"Commit Linting",
+	"Bisect",
+	"Activity Heatmap",
+	"Author Stats",
+	"Complexity Analysis",
+}
+
+// dispatchAnalyticsFeature activates the analytics feature at the given menu index.
+func dispatchAnalyticsFeature(m model, idx int) model {
+	if idx < 0 || idx >= analyticsMenuLen {
+		return m
+	}
+
+	switch idx {
+	case 0: // Code Ownership
+		m.showCodeOwnership = !m.showCodeOwnership
+		if m.showCodeOwnership && len(m.codeOwnership) == 0 {
+			m.codeOwnership = analyzeCodeOwnership(m.commits)
+		}
+	case 1: // Hotspots
+		m.showHotspots = !m.showHotspots
+		if m.showHotspots && len(m.hotspots) == 0 {
+			m.hotspots = detectHotspots(m.commits)
+		}
+	case 2: // Commit Linting
+		m.showLinting = !m.showLinting
+		if m.showLinting && len(m.lintingResults) == 0 {
+			for _, c := range m.commits {
+				m.lintingResults = append(m.lintingResults, lintCommitMessage(c.subject, c.hash))
+			}
+		}
+	case 3: // Bisect
+		if !m.bisectState.active {
+			m = initiateBisect(m)
+		} else {
+			m.bisectState.active = false
+			m.showBisectUI = false
+		}
+	case 4: // Activity Heatmap
+		m.showActivityHeatmap = !m.showActivityHeatmap
+		if m.showActivityHeatmap && len(m.authorActivityHeatmap) == 0 {
+			m.authorActivityHeatmap = buildActivityHeatmap(m.commits)
+		}
+	case 5: // Author Stats
+		m.showAnalytics = !m.showAnalytics
+		if m.showAnalytics {
+			m.authorStats = calculateAuthorStats(m.commits)
+			m.timeStats = calculateTimeStats(m.commits)
+		}
+	case 6: // Complexity
+		m.showComplexity = !m.showComplexity
+		if m.showComplexity && len(m.commitMetrics) == 0 {
+			m = analyzeComplexity(m)
+		}
+	}
+	return m
+}
+
+// renderAnalyticsMenuOverlay renders the analytics feature menu.
+func renderAnalyticsMenuOverlay(m model, width int) string {
+	var items []string
+	for i, item := range analyticsMenuItems {
+		prefix := "  "
+		if i == m.analyticsMenuIdx {
+			prefix = "▶ "
+		}
+		items = append(items, prefix+item)
+	}
+
+	config := RenderConfig{
+		Title: "ANALYTICS FEATURES",
+		Items: items,
+	}
+	return RenderStandardUI(config)
+}
+
 // --- UI Integration ---
 
 // renderRebaseUI renders the interactive rebase interface.

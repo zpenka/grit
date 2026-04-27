@@ -22,6 +22,53 @@ go build -o grit .
 
 Run from any git repository. Requires Go 1.21+.
 
+## UI Layout
+
+The grit terminal UI is organized into a **two-panel layout**:
+
+```
+═══════════════════════════════════════════════════════════════════════════
+ git log  main  /path/to/repo
+
+┌─────────────────────────┬──────────────────────────────────────────────┐
+│  Commit List            │  Diff / Feature Panel                         │
+│  ─────────────────────  │  ──────────────────────────────────────────  │
+│  abc1234  alice         │  @@ -5,3 +5,4 @@                            │
+│  def5678  bob           │  - old line                                  │
+│  abc9012  alice         │  + new line                                  │
+└─────────────────────────┴──────────────────────────────────────────────┘
+
+ j/k navigate  5j jump 5  l/Tab diff  / search  f files  b branch  ? help q quit
+```
+
+Press **`?`** at any time to see the help overlay listing all keybindings.
+
+## Keybinding Reference
+
+| Category | Key | Action |
+|----------|-----|--------|
+| **Navigation** | `j` / `k` | Move down / up in commit list |
+| | `5j` | Jump 5 commits (count prefix works with j/k) |
+| | `g` / `G` | Go to first / last commit |
+| | `l` / `h` | Switch focus to diff / commit list |
+| | `Tab` | Toggle between panels |
+| **Viewing** | `f` | Toggle file list |
+| | `b` | Show branch picker |
+| | `B` | Show blame for current file |
+| | `/` | Search commits by subject, author, or hash |
+| | `Ctrl+/` | Clear search |
+| **Clipboard** | `y` | Copy current commit hash |
+| | `e` | Open current commit in `$EDITOR` |
+| **Features** | `a` | Analytics submenu (ownership, hotspots, bisect, linting, heatmap, stats, complexity) |
+| | `v` | Visualization submenu (flamegraph, timeline, tree view, author comparison, file heatmap) |
+| | `t` | Team/AI submenu (team stats, reviewer suggestions, velocity, classification, security, changelog) |
+| | `r` | Interactive rebase preview |
+| | `c` | Cherry-pick mode (toggle commits to pick) |
+| | `x` | Cycle reset mode (soft → mixed → hard) |
+| **Help** | `?` | Show this help overlay |
+| | `Esc` | Close any panel |
+| **Exit** | `q` | Quit grit |
+
 ## Installation
 
 ```bash
