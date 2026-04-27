@@ -1,3 +1,19 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The git operations module (engine_git_ops.go) provides high-level git workflow
+// tools including interactive rebase, cherry-pick, reset, and commit amendment.
+// It wraps git commands with UI enhancements like conflict detection and
+// operation previewing.
+//
+// Key functions:
+//   - parseRebaseSequence: Plan interactive rebase operations
+//   - previewRebaseOperations: Show outcome without applying
+//   - performCherryPick: Apply commits to current branch
+//   - resetCommit: Undo commits (soft/hard)
+//   - amendCommit: Modify most recent commit
+//
+// Git operations are interactive and preview-based, reducing the risk of
+// unintended changes. All operations can be reviewed before execution.
 package grit
 
 import (

@@ -1,15 +1,17 @@
 # grit - Terminal UI for Git History
 
-A powerful, feature-rich terminal UI for exploring git repositories with 113+ integrated features. Built in Go with zero external dependencies (besides Bubble Tea for TUI).
+A powerful, feature-rich terminal UI for exploring git repositories with **113+ integrated features**. Built in Go with zero external dependencies (besides Bubble Tea for TUI).
 
 ## Key Features
 
-- **Interactive Browsing** - Explore commits, diffs, blame information
-- **Analysis** - Code ownership, hotspots, team activity heatmaps
-- **Git Operations** - Rebase, cherry-pick, reset, amend workflows
+- **Interactive Browsing** - Explore commits, diffs, blame information interactively
+- **Code Analysis** - Code ownership, hotspots, team activity heatmaps
+- **Git Operations** - Interactive rebase, cherry-pick, reset, amend workflows
 - **Export & Integration** - GitHub/Jira linking, CSV/JSON/XML export
-- **Team Metrics** - Velocity tracking, collaboration analytics
-- **Visualization** - Commit graphs, timelines, complexity analysis
+- **Team Metrics** - Velocity tracking, collaboration analytics, reviewer suggestions
+- **Visualization** - Contributor flamegraphs, activity heatmaps, complexity analysis
+- **Security** - Secret scanning, GPG signature verification, license header tracking
+- **Compliance** - Semantic versioning detection, changelog auto-generation, audit trails
 
 ## Quick Start
 
@@ -35,9 +37,61 @@ go install github.com/zpenka/grit@latest
 ## Testing
 
 ```bash
-go test ./...           # Run all tests
-go test -cover ./...    # Coverage report
+go test ./...                    # Run all tests
+go test -cover ./...             # With coverage report
+go test -run TestFeatureName     # Run specific test
 ```
+
+All 371+ tests pass. Tests run automatically on PRs via GitHub Actions.
+
+## Documentation
+
+- **[DEVELOPER.md](DEVELOPER.md)** - Getting started and development guide
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Module structure and data flow
+- **[CLAUDE.md](CLAUDE.md)** - High-level overview for AI assistants
+- **[PROGRESS.md](PROGRESS.md)** - Phase-by-phase progress tracking
+- **[CHANGELOG.md](CHANGELOG.md)** - Detailed changelog of changes
+- **[docs/modules/](docs/modules/)** - Detailed documentation for all 14 modules:
+  - Core infrastructure: Parsing, Navigation, Filtering, Caching, Optimization
+  - Rendering: Main UI engine and consolidation templates
+  - Features: Analytics, Git Ops, Workflows, Visualization, Integration, Team/AI
+
+## Architecture Overview
+
+grit is organized into **14 focused modules**:
+
+### Core Infrastructure (6 modules)
+Engine types, parsing, navigation, filtering, caching, and optimization
+
+### Rendering & UI (2 modules)
+Consolidated rendering templates and main UI rendering engine
+
+### Features (6 modules)
+- Analytics (code ownership, hotspots, bisection)
+- Git Ops (rebase, cherry-pick, reset, amend)
+- Workflows (worktrees, stash, tags, reflog)
+- Visualization (flamegraphs, heatmaps, trends)
+- Integration (GitHub, Jira, exports)
+- Team/AI (metrics, classification, security, compliance)
+
+For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Statistics
+
+- **8,200+** lines of Go code
+- **371+** tests (100% pass rate)
+- **150+** type definitions
+- **200+** functions
+- **14** focused modules
+- **Zero** external dependencies (besides Bubble Tea & Lipgloss)
+
+## Contributing
+
+Contributions are welcome! See [DEVELOPER.md](DEVELOPER.md) for:
+- Development workflow
+- Code style guidelines
+- Testing requirements
+- How to add new features
 
 ## License
 

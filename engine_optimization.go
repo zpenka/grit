@@ -1,6 +1,19 @@
-package grit
-
+// Package grit provides a terminal UI for exploring git history.
+//
+// The optimization module (engine_optimization.go) provides performance utilities
+// including cache metrics tracking, lazy loading support, and parallel processing
+// helpers.
+//
+// Key types and functions:
+//   - CacheMetrics: Tracks cache hit/miss rates and evictions
+//   - lazyLoad: On-demand computation wrapper with memoization
+//   - parallelMap: Concurrent processing of commits
+//
+// This module enables grit to handle large repositories (10k+ commits) with
+// responsive UI performance. Metrics help identify optimization opportunities.
+//
 // Performance optimization patterns and utilities
+package grit
 
 // CacheMetrics tracks cache performance
 type CacheMetrics struct {

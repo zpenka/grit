@@ -1,10 +1,28 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The team and AI module (engine_team_ai.go) combines team collaboration
+// analytics with AI-powered insights. It includes team velocity tracking,
+// reviewer suggestions, commit classification, anomaly detection, and compliance
+// monitoring.
+//
+// Key functions:
+//   - calculateTeamStats: Summarize commits per team member
+//   - suggestReviewers: ML-based reviewer selection
+//   - classifyCommit: Categorize commits (feature, fix, refactor, etc.)
+//   - detectAnomalies: Find unusual commits (large changes, etc.)
+//   - checkSigningCompliance: Verify GPG signature requirements
+//   - detectSecrets: Scan for hardcoded credentials
+//   - detectSemver: Identify release-related commits
+//
+// This module is designed for team leads, security auditors, and release
+// managers. Features help maintain code quality and security standards.
+//
+// --- Advanced Git Operations (5 features) ---
 package grit
 
 import (
 	"strings"
 )
-
-// --- Advanced Git Operations (5 features) ---
 
 // Feature 1: Interactive Rebase with Live Preview
 func previewRebaseOperations(ops []rebaseOp) rebasePreview {

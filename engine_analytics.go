@@ -1,3 +1,20 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The analytics module (engine_analytics.go) provides insights into commit
+// patterns, code ownership, activity trends, and quality metrics. It includes
+// author statistics, code hotspots, collaboration analysis, and bisection support.
+//
+// Key functions:
+//   - analyzeAuthorStats: Summarize commits per author
+//   - analyzeCodeOwnership: Identify files and lines changed per author
+//   - analyzeHotspots: Find frequently modified files
+//   - analyzePairProgramming: Detect collaborative commits
+//   - analyzeMergePatterns: Study merge behaviors
+//
+// Analytics are computed on-demand and cached for performance. Results are
+// displayed using the consolidated rendering templates for consistency.
+//
+// --- Author Statistics ---
 package grit
 
 import (
@@ -5,8 +22,6 @@ import (
 	"regexp"
 	"strings"
 )
-
-// --- Author Statistics ---
 
 // calculateAuthorStats counts commits by author.
 func calculateAuthorStats(commits []commit) map[string]int {

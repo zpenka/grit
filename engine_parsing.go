@@ -1,3 +1,17 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The parsing module (engine_parsing.go) handles conversion of raw git command
+// output into structured data types. It parses commit logs, diffs, and file
+// listings from git commands, transforming text output into strongly-typed Go
+// structs for use throughout the application.
+//
+// Key functions:
+//   - parseCommits: Convert git log output to commit structs
+//   - parseDiff: Parse unified diff format into diff line structs
+//   - parseFileItems: Extract file paths from git ls-tree output
+//
+// The parsing module serves as the bridge between raw git data and the internal
+// type system. All data entering the system flows through these functions.
 package grit
 
 import (

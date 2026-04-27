@@ -1,3 +1,18 @@
+// Package grit provides a terminal UI for exploring git history.
+//
+// The visualization module (engine_visualization.go) generates textual charts
+// and graphs for commit patterns. It includes contributor flamegraphs, timeline
+// heatmaps, complexity trends, and network diagrams for merge relationships.
+//
+// Key functions:
+//   - generateContributorFlamegraph: Hierarchical contributor visualization
+//   - buildActivityHeatmap: Grid showing commits over time
+//   - computeComplexityTrend: Track code complexity over history
+//   - buildMergeNetworkDiagram: Show branch merge relationships
+//   - generateHistogramBuckets: Data-driven charting helpers
+//
+// Visualizations use ANSI colors and Unicode box characters for terminal-friendly
+// output. They help identify patterns in large histories at a glance.
 package grit
 
 import (
