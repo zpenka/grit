@@ -127,7 +127,7 @@ All code changes require review before merging. Reviewers look for:
 - New features must include documentation
 - Public functions need godoc comments
 - Complex logic needs inline comments explaining WHY
-- Architecture changes need ARCHITECTURE.md updates
+- Architecture changes need docs/modules/ updates
 
 ### Documentation Files
 - **DEVELOPER.md**: Development guide

@@ -7,8 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **grit** is a terminal UI for exploring git history with 113+ integrated features. It enables interactive browsing of commits, diffs, blame information, analytics, and more—all within the terminal using Go and the Bubble Tea TUI framework.
 
 **Key Stats:**
-- 8,200+ lines of Go code
-- 908 tests (100% pass rate)
+- 9,390 lines of Go code
+- 914 tests (100% pass rate)
 - 150+ type definitions
 - 200+ functions
 - Zero external dependencies (besides Bubble Tea & Lipgloss for UI)
@@ -107,7 +107,7 @@ grit/
 ├─ TESTING
 ├── engine_test_helpers.go            # Test utilities
 ├── engine_test.go                    # Core test helpers
-├── *_test.go                         # 371 feature tests (organized by topic)
+├── *_test.go                         # 914 feature tests (organized by topic)
 ├── core/
 │   ├── types.go         # Core data structures
 │   ├── parser.go        # Commit/diff parsing
@@ -166,7 +166,7 @@ Follow this 6-step pattern:
 5. Add keybinding handler in `handleKeyBinding()`
 6. Update README.md with feature documentation
 
-Example: See ARCHITECTURE.md for a detailed walkthrough of adding "Code Hotspots."
+Example: See docs/modules/ for detailed documentation on feature implementation patterns.
 
 ## Performance Considerations
 
@@ -197,9 +197,7 @@ Check cache metrics via model fields to identify optimization opportunities.
 
 ## References
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)**: Module structure, data flow, and design patterns
 - **[DEVELOPER.md](DEVELOPER.md)**: Complete developer guide and contribution workflow
-- **[PROGRESS.md](PROGRESS.md)**: Phase-by-phase progress tracking
 - **[CHANGELOG.md](CHANGELOG.md)**: Detailed changelog of features and changes
 - **[README.md](README.md)**: User-facing documentation and quick start
-- **[docs/modules/](docs/modules/)**: Detailed documentation for all 14 modules
+- **[docs/modules/](docs/modules/)**: Detailed documentation for all 13 modules
