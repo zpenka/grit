@@ -1105,7 +1105,7 @@ KEYBINDING REFERENCE
 
 NAVIGATION
   j/k          Scroll commit list / diff panel
-  g/G          Jump to first / last commit
+  g/G          Jump to first / last commit (in list) / git ops menu (g key)
   5j           Jump 5 commits (count prefix works with j/k)
   l/h          Switch between commit and diff panels
   Tab          Toggle between commit and diff
@@ -1121,23 +1121,23 @@ CLIPBOARD & EDITOR
   y            Copy current commit hash
   e            Open current commit in $EDITOR
 
-FEATURES (NEW)
-  a            Analytics submenu (ownership, hotspots, bisect, etc.)
-  v            Visualizations submenu (graphs, timelines, etc.)
-  t            Team/AI submenu (stats, suggestions, insights)
-  r            Interactive rebase preview
-  c            Cherry-pick mode
-  i            Integration & export (GitHub, Jira, etc.)
+SUBMENUS (Press key to open, j/k to navigate, Enter to select)
+  a            Analytics (ownership, hotspots, bisect, heatmap, stats)
+  v            Visualizations (graphs, timeline, tree, author comparison)
+  t            Team/AI (stats, suggestions, velocity, security, changelog)
+  i            Integration (GitHub PR, Jira, export, issue refs)
+  g            Git Ops (rebase, cherry-pick, reset modes)
 
 HELP & EXIT
   ?            This help overlay
   Esc          Close any panel / clear search
   q            Quit application
 
-Tips:
-  • Use Esc to close any feature panel and return to main view
-  • Press the same key again to toggle features on/off
-  • Count prefix (5j) works for navigation in commit list
+MENU TIPS:
+  • j/k        Navigate in any menu
+  • Enter      Select highlighted feature
+  • Esc        Close menu and return to main view
+  • Same key   Toggle submenu (press 'a' again to close analytics menu)
 `
 
 	// Split into lines and render

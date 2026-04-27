@@ -43,6 +43,15 @@ The grit terminal UI is organized into a **two-panel layout**:
 
 Press **`?`** at any time to see the help overlay listing all keybindings.
 
+### Submenu Navigation
+
+When you open a submenu (a, v, t, i, g):
+- **`j` / `k`** - Move down / up to highlight different options
+- **`Enter` / `Space`** - Select and activate the highlighted feature
+- **`Esc`** or repeat the key - Close the menu and return to main view
+
+For example: Press `a` → use `j/k` to navigate → press `Enter` to activate "Code Ownership" → press `Esc` to close menu.
+
 ## Keybinding Reference
 
 | Category | Key | Action |
@@ -59,13 +68,15 @@ Press **`?`** at any time to see the help overlay listing all keybindings.
 | | `Ctrl+/` | Clear search |
 | **Clipboard** | `y` | Copy current commit hash |
 | | `e` | Open current commit in `$EDITOR` |
-| **Features** | `a` | Analytics submenu (ownership, hotspots, bisect, linting, heatmap, stats, complexity) |
-| | `v` | Visualization submenu (flamegraph, timeline, tree view, author comparison, file heatmap) |
-| | `t` | Team/AI submenu (team stats, reviewer suggestions, velocity, classification, security, changelog) |
-| | `r` | Interactive rebase preview |
-| | `c` | Cherry-pick mode (toggle commits to pick) |
-| | `x` | Cycle reset mode (soft → mixed → hard) |
-| **Help** | `?` | Show this help overlay |
+| **Submenus** | `a` | Analytics (ownership, hotspots, bisect, linting, heatmap, stats, complexity) |
+| | `v` | Visualizations (flamegraph, timeline, tree view, author comparison, file heatmap) |
+| | `t` | Team/AI (team stats, suggestions, velocity, classification, security, changelog) |
+| | `i` | Integration (GitHub PR links, Jira tickets, export, issue references) |
+| | `g` | Git Operations (rebase, cherry-pick, reset) |
+| **Git Ops** | `r` | Interactive rebase preview (also available in 'g' menu) |
+| | `c` | Cherry-pick mode (toggle commits to pick; also in 'g' menu) |
+| | `x` | Cycle reset mode (soft → mixed → hard; also in 'g' menu) |
+| **Help** | `?` | Show keybinding help overlay |
 | | `Esc` | Close any panel |
 | **Exit** | `q` | Quit grit |
 
