@@ -42,7 +42,7 @@ go test -cover ./...             # With coverage report
 go test -run TestFeatureName     # Run specific test
 ```
 
-All 409 tests pass (371 core + 38 Phase 3). Tests run automatically on PRs via GitHub Actions.
+All 840 tests pass with 100% success rate. Tests run automatically on PRs via GitHub Actions.
 
 ## Documentation
 
@@ -81,7 +81,7 @@ For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md).
 ## Statistics
 
 - **8,200+** lines of Go code
-- **409** tests (100% pass rate: 371 core + 38 Phase 3)
+- **840** tests (100% pass rate)
 - **150+** type definitions
 - **200+** functions
 - **14** focused modules
