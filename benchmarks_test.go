@@ -78,3 +78,73 @@ func BenchmarkRenderUI(b *testing.B) {
 		_ = m
 	}
 }
+
+// BenchmarkParseDiff measures diff parsing performance (hot path).
+func BenchmarkParseDiff(b *testing.B) {
+	diffOutput := ""
+	for i := 0; i < 100; i++ {
+		diffOutput += "diff --git a/file.go b/file.go\n"
+		diffOutput += "--- a/file.go\n"
+		diffOutput += "+++ b/file.go\n"
+		diffOutput += "@@ -1,5 +1,8 @@\n"
+		diffOutput += " context\n"
+		diffOutput += "+added line\n"
+		diffOutput += "-removed line\n"
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		parseDiff(diffOutput)
+	}
+}
+
+// BenchmarkBuildTimeline measures timeline visualization performance.
+func BenchmarkBuildTimeline(b *testing.B) {
+	commits := makeCommits(1000)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		buildTimeline(commits)
+	}
+}
+
+// BenchmarkBuildFileHeatmap measures file heatmap O(n) scan.
+func BenchmarkBuildFileHeatmap(b *testing.B) {
+	commits := makeCommits(5000)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		buildFileHeatmap(commits)
+	}
+}
+
+// BenchmarkDetectSecrets measures security scanning performance.
+func BenchmarkDetectSecrets(b *testing.B) {
+	content := ""
+	for i := 0; i < 1000; i++ {
+		content += "line of code\n"
+		if i%100 == 0 {
+			content += "password = 'secret123'\n"
+		}
+	}
+	hash := "abc123abc123abc123abc123abc123abc123"
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		detectSecrets(hash, content)
+	}
+}
+
+// BenchmarkVisibleCommits measures filtering + cursor performance.
+func BenchmarkVisibleCommits(b *testing.B) {
+	m := model{
+		commits: makeCommits(10000),
+		cursor:  5000,
+		query:   "fix",
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		visibleCommits(m)
+	}
+}
