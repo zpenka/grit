@@ -2,6 +2,52 @@
 
 All notable changes to grit are documented here. This file follows the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [Phase 4] - 2026-04-26 (In Progress)
+
+### Added - Performance Monitoring & Optimization
+
+**Benchmarks & Profiling:**
+- Added 5 new benchmarks in `benchmarks_test.go` (diff, timeline, heatmap, secrets, visibleCommits)
+- Added allocation tracking tests in `performance_test.go`
+- Established baseline metrics for hot paths
+
+**Performance Tests:**
+- `TestAllocationsParseCommits` - 109 allocs/op baseline
+- `TestAllocationsFilterCommits` - 100 allocs/op baseline
+- `TestDiffCacheHitRate` - cache effectiveness validation
+- `TestVisibleCommitsAllocationUnderLoad` - filtering at scale
+
+### Changed - Dependency Updates
+
+**Upgraded:**
+- bubbletea: v0.24.0 → v1.3.10 (fully backward compatible)
+- lipgloss: v0.10.0 → v1.1.0  
+- Go: 1.21 → 1.24.0
+
+**Impact:** Zero breaking changes, all 409 tests passing
+
+### Improved - Filtering Performance
+
+**Single-pass visibleCommits optimization:**
+- Consolidated 3 chained filter operations into single loop
+- Eliminated intermediate slice allocations
+- Memory usage: 561KB → 170KB (70% reduction)
+- Speed: maintained at ~793µs
+
+**Pre-allocation optimizations:**
+- filterCommits: capacity = len/2 (~50% expected matches)
+- filterCommitsByAuthor: capacity = len/5 (~20% per author)
+- filterCommitsSince: capacity = len/3 (~30% recent)
+
+### Stats
+
+- **Benchmarks**: 6 → 11 (5 new performance benchmarks)
+- **Performance tests**: 0 → 7 (allocation & cache validation)
+- **Memory reduction**: 70% on main filtering hot path
+- **Commits**: 3 (dep update + benchmarks + optimization)
+
+---
+
 ## [Phase 3] - 2026-04-26
 
 ### Added - Feature Completeness & Release Readiness

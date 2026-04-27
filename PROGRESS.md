@@ -120,6 +120,43 @@ Each module README includes:
 
 ---
 
+## Phase 4: Performance & Optimization 🔄 IN PROGRESS
+
+### What We Did
+
+Upgraded dependencies and established performance baselines, then optimized critical filtering paths.
+
+### Dependency Updates
+
+- bubbletea v0.24.0 → v1.3.10 (fully backward compatible)
+- lipgloss v0.10.0 → v1.1.0
+- Go 1.21 → 1.24.0
+- All 409 tests passing, no code changes needed
+
+### Performance Baselines Established
+
+Added 5 new benchmarks + allocation tests (see benchmarks_test.go, performance_test.go):
+- BenchmarkParseDiff: 18µs, 71KB heap (parsing hot path)
+- BenchmarkBuildTimeline: 13µs, minimal heap
+- BenchmarkBuildFileHeatmap: 197µs, 160KB (5k allocs) 
+- BenchmarkDetectSecrets: 80µs
+- BenchmarkVisibleCommits: 793µs, 170KB (filtering hot path) ← main optimization target
+
+### Performance Optimizations
+
+**Single-pass visibleCommits filtering**
+- Combined 3 chained filter operations into single loop
+- Result: 70% memory reduction (561KB → 170KB)
+- Speed maintained (787-793µs)
+- Eliminated intermediate slice allocations
+
+**Pre-allocation optimizations**
+- filterCommits: len/2 capacity
+- filterCommitsByAuthor: len/5 capacity
+- filterCommitsSince: len/3 capacity
+
+---
+
 ## Phase 3: Feature Completeness & Release Readiness ✅ COMPLETE
 
 ### What We Did
