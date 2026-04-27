@@ -17,8 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Building
 ```bash
-go build -o grit .      # Build binary
-go build -o grit ./cmd/grit  # If using cmd package layout
+go build -o grit ./cmd/grit  # Build binary
 ```
 
 ### Testing
@@ -31,8 +30,8 @@ go test ./core -v                # Verbose output for core package
 
 ### Running
 ```bash
-./grit                   # Run the built binary from repo root
-go run . 2>&1            # Run directly without building
+./grit                           # Run the built binary from repo root
+go run ./cmd/grit 2>&1           # Run directly without building
 ```
 
 ### Linting & Quality
