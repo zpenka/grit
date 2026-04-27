@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Key Stats:**
 - 8,200+ lines of Go code
-- 371+ tests
-- 100+ type definitions
+- 505 tests (100% pass rate)
+- 150+ type definitions
 - 200+ functions
 - Zero external dependencies (besides Bubble Tea & Lipgloss for UI)
 

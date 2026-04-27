@@ -46,11 +46,13 @@ All 409 tests pass (371 core + 38 Phase 3). Tests run automatically on PRs via G
 
 ## Documentation
 
+**Start here:** [**DOCS.md**](DOCS.md) - Complete documentation map organized by audience and task
+
 - **[DEVELOPER.md](DEVELOPER.md)** - Getting started and development guide
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Module structure and data flow
 - **[CLAUDE.md](CLAUDE.md)** - High-level overview for AI assistants
-- **[PROGRESS.md](PROGRESS.md)** - Phase-by-phase progress tracking
-- **[CHANGELOG.md](CHANGELOG.md)** - Detailed changelog of changes
+- **[CHANGELOG.md](CHANGELOG.md)** - Detailed changelog of changes by phase
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and code standards
+- **[VERSION.md](VERSION.md)** - Release process and semantic versioning
 - **[docs/modules/](docs/modules/)** - Detailed documentation for all 14 modules:
   - Core infrastructure: Parsing, Navigation, Filtering, Caching, Optimization
   - Rendering: Main UI engine and consolidation templates

@@ -2,6 +2,8 @@
 
 All notable changes to grit are documented here. This file follows the [Keep a Changelog](https://keepachangelog.com/) format.
 
+**📚 For complete documentation overview, see [DOCS.md](DOCS.md)**
+
 ## [Phase 4] - 2026-04-26 (In Progress)
 
 ### Added - Performance Monitoring & Optimization
