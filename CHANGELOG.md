@@ -21,21 +21,28 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 
 ### Added - Comprehensive Test Coverage
 
-**Test Suite Expansion:**
-- Added 105+ new test functions for `engine_rendering.go` coverage
-- Increased from 371 core tests to 840 total tests
+**Phase 1: engine_rendering.go Coverage:**
+- Added 105+ new test functions for rendering module
 - Coverage improved from 50.6% to 66.2% (15.6 percentage point gain)
 - Minimal "happy path" tests follow pattern of one test per function
-- All tests verify function execution without panic on valid minimal input
 
-**Functions Now Covered:**
-- Graph operations, file tracking, filtering
-- Stash/reflog operations, signature verification
-- Code churn analysis, expertise detection, performance analysis
-- Merge strategies, conflict detection, team analytics
-- Export/reporting (CSV, JSON, XML, PDF)
-- Compliance, security scanning, external integrations
-- Real-time features, WebSocket operations
+**Phase 2: engine_analytics.go Coverage:**
+- Added 37 new test functions covering previously untested analytics functions
+- Coverage improved from 66.2% to 70.7% (4.5 percentage point gain)
+- Functions now covered: renderAuthorStats, renderTimeStats, renderProductivityMetrics, renderAnalyticsPanel, renderBisectUI, bisect recovery, undo/redo, code ownership, hotspot analysis, commit linting, complexity analysis, heatmaps, merge analysis, commit coupling, extension filtering, dependency tracking
+
+**Test Suite Metrics:**
+- Increased from 371 core tests to 908 total tests (+537 tests)
+- Overall package coverage improved from 50.6% to 71.0% (20.4pp cumulative)
+- Minimal "happy path" tests verify function execution without panic
+- All tests pass with 100% success rate
+
+**Phase 3: engine_cache.go & grit.go Coverage:**
+- Added 31 new test functions covering core infrastructure and main UI functions
+- `engine_cache_test.go`: 18 tests covering diff/stat/regex caches and lazy loading
+- `grit_test.go`: 13 tests covering clipboard, editor, fetch operations, and rendering
+- Functions now covered: copyToClipboard, openInEditor, fetchCommits, fetchDiff, fetchBranches, fetchBlame, flashCmd, renderCommitRow, renderFileRow, renderBranchRow, renderBlameRow, renderDiffRow, firstVisibleHash, newDiffCache, DiffCacheSet/Get, newStatCache, StatCacheGetOrCompute, newRegexCache, RegexCacheCompile, lazyLoadDiff, lazyLoadGraph, lazyLoadStats, safeIsFileModified, safeParseCommitGraph
+- Coverage improved from 70.7% to 71.0% (0.3pp gain, focusing on critical infrastructure)
 
 ### Changed - Dependency Updates
 
@@ -44,7 +51,7 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 - lipgloss: v0.10.0 → v1.1.0  
 - Go: 1.21 → 1.24.0
 
-**Impact:** Zero breaking changes, all 840 tests passing
+**Impact:** Zero breaking changes, all 877 tests passing
 
 ### Improved - Filtering Performance
 
@@ -61,10 +68,12 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 
 ### Stats
 
+- **Total tests**: 877 → 908 (+31 new tests in engine_cache_test.go & grit_test.go)
 - **Benchmarks**: 6 → 11 (5 new performance benchmarks)
 - **Performance tests**: 0 → 7 (allocation & cache validation)
 - **Memory reduction**: 70% on main filtering hot path
-- **Commits**: 3 (dep update + benchmarks + optimization)
+- **Coverage**: 70.7% → 71.0% (infrastructure & core UI functions)
+- **Commits**: 4 (analytics + cache + grit + optimization)
 
 ---
 

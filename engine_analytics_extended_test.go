@@ -414,3 +414,188 @@ func TestCalculateComplexityScore_HighComplexity(t *testing.T) {
 		t.Error("high complexity metrics should produce positive score")
 	}
 }
+func TestRenderAuthorStats_Valid(t *testing.T) {
+	stats := make(map[string]int)
+	stats["Alice"] = 5
+	_ = renderAuthorStats(stats, 80)
+}
+
+func TestRenderTimeStats_Valid(t *testing.T) {
+	stats := make(map[string]int)
+	stats["recent"] = 10
+	_ = renderTimeStats(stats, 80)
+}
+
+func TestRenderProductivityMetrics_Valid(t *testing.T) {
+	metrics := make(map[string]interface{})
+	metrics["commits"] = 42
+	_ = renderProductivityMetrics(metrics, 80)
+}
+
+func TestRenderRebaseUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderRebaseUI(m, 80)
+}
+
+func TestRenderAnalyticsPanel_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderAnalyticsPanel(m, 80)
+}
+
+func TestRenderBisectUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderBisectUI(m, 80)
+}
+
+func TestExtractReflogEntries_Valid(t *testing.T) {
+	output := "abc1234 HEAD@{0}: commit: test\ndef5678 HEAD@{1}: commit: another"
+	_ = extractReflogEntries(output)
+}
+
+func TestEnableReflogRecovery_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = enableReflogRecovery(m)
+}
+
+func TestFindLostCommits_Valid(t *testing.T) {
+	fsckOutput := "dangling commit abc1234\ndangling commit def5678"
+	_ = findLostCommits(fsckOutput)
+}
+
+func TestRenderLostCommitsUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderLostCommitsUI(m, 80)
+}
+
+func TestPushUndo_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = pushUndo(m, "abc1234")
+}
+
+func TestPerformUndo_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = performUndo(m)
+}
+
+func TestRenderUndoMenu_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderUndoMenu(m, 80)
+}
+
+func TestDetectCodeOwners_Valid(t *testing.T) {
+	ownership := make(map[string]codeOwnershipData)
+	_ = detectCodeOwners(ownership)
+}
+
+func TestRenderCodeOwnershipUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderCodeOwnershipUI(m, 80)
+}
+
+func TestRenderHotspotsUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderHotspotsUI(m, 80)
+}
+
+func TestRenderLintingUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderLintingUI(m, 80)
+}
+
+func TestAnalyzeCommitSize_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = analyzeCommitSize(m)
+}
+
+func TestRenderLargeCommitsUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderLargeCommitsUI(m, 80)
+}
+
+func TestAnalyzeComplexity_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = analyzeComplexity(m)
+}
+
+func TestRenderComplexityUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderComplexityUI(m, 80)
+}
+
+func TestRenderSemanticSearchUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderSemanticSearchUI(m, 80)
+}
+
+func TestBuildActivityHeatmap_Valid(t *testing.T) {
+	_ = buildActivityHeatmap([]commit{{when: "2024-01-01"}})
+}
+
+func TestFindPeakHour_Valid(t *testing.T) {
+	data := authorActivityData{}
+	_ = findPeakHour(data)
+}
+
+func TestRenderActivityHeatmapUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderActivityHeatmapUI(m, 80)
+}
+
+func TestAnalyzeMerges_Valid(t *testing.T) {
+	_ = analyzeMerges([]commit{{hash: "a"}})
+}
+
+func TestRenderMergeAnalysisUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderMergeAnalysisUI(m, 80)
+}
+
+func TestAnalyzeCommitCoupling_Valid(t *testing.T) {
+	_ = analyzeCommitCoupling([]commit{{hash: "a"}})
+}
+
+func TestRenderCouplingAnalysisUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderCouplingAnalysisUI(m, 80)
+}
+
+func TestToggleExtensionFilter_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = toggleExtensionFilter(m, "go")
+}
+
+func TestRenderExtensionFilterUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderExtensionFilterUI(m, 80)
+}
+
+func TestFilterByExtension_Valid(t *testing.T) {
+	_ = filterByExtension([]commit{{hash: "a"}}, "go")
+}
+
+func TestTrackDependencyChanges_Valid(t *testing.T) {
+	_ = trackDependencyChanges([]commit{{hash: "a"}})
+}
+
+func TestRenderDependenciesUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderDependenciesUI(m, 80)
+}
+
+func TestExtractFilesFromSubject_Valid(t *testing.T) {
+	_ = extractFilesFromSubject("update file.go and main.go")
+}
+
+func TestDetectFastForwardMerges_Valid(t *testing.T) {
+	_ = detectFastForwardMerges([]commit{{hash: "a"}})
+}
+
+func TestRenderFastForwardsUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderFastForwardsUI(m, 80)
+}
+
+func TestRenderCommitGroupsUI_Valid(t *testing.T) {
+	m := newModel(".")
+	_ = renderCommitGroupsUI(m, 80)
+}
