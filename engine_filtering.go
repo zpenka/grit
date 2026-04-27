@@ -27,7 +27,8 @@ func filterCommits(commits []commit, query string) []commit {
 		return commits
 	}
 	q := strings.ToLower(query)
-	var out []commit
+	// Pre-allocate with capacity to reduce append reallocations (~50% expected match rate)
+	out := make([]commit, 0, len(commits)/2)
 	for _, c := range commits {
 		if strings.Contains(strings.ToLower(c.subject), q) ||
 			strings.Contains(strings.ToLower(c.author), q) ||
@@ -65,19 +66,43 @@ func filterCommitsWithCache(cache *FilterCache, commits []commit, query string) 
 
 // visibleCommits returns the commit list after applying all active filters:
 // search query, author filter, and time-based filter.
+// Optimized to single-pass filtering to reduce allocations.
 func visibleCommits(m model) []commit {
-	result := m.commits
-	// Apply time filter first
-	if m.sinceFilter > 0 {
-		result = filterCommitsSince(result, m.sinceFilter)
+	if len(m.commits) == 0 {
+		return m.commits
 	}
-	// Apply author filter
-	if m.authorFilter != "" {
-		result = filterCommitsByAuthor(result, m.authorFilter)
+
+	// Fast path: no filters
+	if m.sinceFilter <= 0 && m.authorFilter == "" && m.query == "" {
+		return m.commits
 	}
-	// Apply search query filter last
-	result = filterCommits(result, m.query)
-	return result
+
+	// Single-pass filtering to avoid intermediate slices
+	// Start with small capacity to avoid over-allocation
+	q := strings.ToLower(m.query)
+	out := make([]commit, 0, 128)
+
+	for _, c := range m.commits {
+		// Check time filter
+		if m.sinceFilter > 0 && !isWithinDays(c.when, m.sinceFilter) {
+			continue
+		}
+		// Check author filter
+		if m.authorFilter != "" && !strings.EqualFold(c.author, m.authorFilter) {
+			continue
+		}
+		// Check query filter
+		if m.query != "" {
+			if !strings.Contains(strings.ToLower(c.subject), q) &&
+				!strings.Contains(strings.ToLower(c.author), q) &&
+				!strings.Contains(strings.ToLower(c.shortHash), q) {
+				continue
+			}
+		}
+		// All filters passed
+		out = append(out, c)
+	}
+	return out
 }
 
 // filterCommitsByAuthor returns commits whose author exactly matches the given author
@@ -86,7 +111,8 @@ func filterCommitsByAuthor(commits []commit, author string) []commit {
 	if author == "" {
 		return commits
 	}
-	var out []commit
+	// Pre-allocate with capacity (~10-20% of commits per author)
+	out := make([]commit, 0, len(commits)/5)
 	for _, c := range commits {
 		if strings.EqualFold(c.author, author) {
 			out = append(out, c)
@@ -102,7 +128,8 @@ func filterCommitsSince(commits []commit, days int) []commit {
 	if days <= 0 {
 		return commits
 	}
-	var out []commit
+	// Pre-allocate (~30% of commits typically within last N days)
+	out := make([]commit, 0, len(commits)/3)
 	for _, c := range commits {
 		if isWithinDays(c.when, days) {
 			out = append(out, c)
