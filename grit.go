@@ -785,7 +785,25 @@ func firstVisibleHash(m model) string {
 	return vc[0].hash
 }
 
+const Version = "0.1.0"
+
 func Run() {
+	// Handle CLI flags
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "-v", "--version":
+			fmt.Printf("grit v%s\n", Version)
+			return
+		case "-h", "--help":
+			fmt.Println("grit - Terminal UI for exploring git history")
+			fmt.Println("Usage: grit [options]")
+			fmt.Println("Options:")
+			fmt.Println("  -v, --version  Show version")
+			fmt.Println("  -h, --help     Show this help message")
+			return
+		}
+	}
+
 	out, _ := exec.Command("git", "rev-parse", "--show-toplevel").Output()
 	repoPath := strings.TrimSpace(string(out))
 	if repoPath == "" {

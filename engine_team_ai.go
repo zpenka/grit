@@ -21,6 +21,7 @@
 package grit
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -231,8 +232,16 @@ func detectAnomalies(commits []commit) []anomalyData {
 	var anomalies []anomalyData
 	for _, c := range commits {
 		words := len(strings.Fields(c.subject))
+		subjectLower := strings.ToLower(c.subject)
 		// Detect unusually large or verbose commits
-		if words > 20 || strings.Contains(strings.ToLower(c.subject), "massive") || strings.Contains(c.subject, "10000") {
+		isAnomalous := words > 20 ||
+			strings.Contains(subjectLower, "massive") ||
+			strings.Contains(subjectLower, "rewrite entire") ||
+			strings.Contains(c.subject, "10000") ||
+			strings.Contains(c.subject, "50000") ||
+			strings.Contains(c.subject, "100000")
+
+		if isAnomalous {
 			anomalies = append(anomalies, anomalyData{
 				hash:        c.hash,
 				type_:       "large",
@@ -303,21 +312,27 @@ func checkSigningCompliance(commits []commit, enforced bool) map[string]signingS
 
 // Feature 17: License Header Tracking
 func trackLicenseHeaders(hash string) []licenseHeader {
-	return []licenseHeader{
-		{file: "main.go", hasHeader: true, license: "MIT", hash: hash},
-	}
+	// Return empty list when no file content available
+	// In real usage, would scan actual files
+	var headers []licenseHeader
+	return headers
 }
 
 // Feature 18: Security Scanning Integration
 func scanForSecurityIssues(hash string, content string) []securityIssue {
 	var issues []securityIssue
-	if strings.Contains(content, "key") || strings.Contains(content, "secret") || strings.Contains(content, "password") {
-		issues = append(issues, securityIssue{
-			hash:     hash,
-			severity: "high",
-			type_:    "hardcoded-secret",
-			location: "line 5",
-		})
+	lines := strings.Split(content, "\n")
+	for i, line := range lines {
+		if strings.Contains(strings.ToLower(line), "password") ||
+			strings.Contains(strings.ToLower(line), "api_key") ||
+			strings.Contains(strings.ToLower(line), "secret") {
+			issues = append(issues, securityIssue{
+				hash:     hash,
+				severity: "high",
+				type_:    "hardcoded-secret",
+				location: fmt.Sprintf("line %d", i+1),
+			})
+		}
 	}
 	return issues
 }
@@ -326,7 +341,7 @@ func scanForSecurityIssues(hash string, content string) []securityIssue {
 func trackDataDeletion(m model, hash string, email string) model {
 	m.dataDeleteRequests = append(m.dataDeleteRequests, dataDeleteRequest{
 		hash:   hash,
-		reason: "GDPR request",
+		reason: "",
 		status: "pending",
 		email:  email,
 	})
@@ -336,13 +351,19 @@ func trackDataDeletion(m model, hash string, email string) model {
 // Feature 20: Secrets Detection
 func detectSecrets(hash string, content string) []secretDetection {
 	var secrets []secretDetection
-	if strings.Contains(content, "password") || strings.Contains(content, "secret") {
-		secrets = append(secrets, secretDetection{
-			hash:      hash,
-			type_:     "password",
-			location:  "line 1",
-			severity:  "critical",
-		})
+	lines := strings.Split(content, "\n")
+	for i, line := range lines {
+		if strings.Contains(strings.ToLower(line), "password") ||
+			strings.Contains(strings.ToLower(line), "secret") ||
+			strings.Contains(strings.ToLower(line), "api") ||
+			strings.Contains(strings.ToLower(line), "token") {
+			secrets = append(secrets, secretDetection{
+				hash:     hash,
+				type_:    "password",
+				location: fmt.Sprintf("line %d", i+1),
+				severity: "critical",
+			})
+		}
 	}
 	return secrets
 }

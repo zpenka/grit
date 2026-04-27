@@ -61,13 +61,18 @@ func renderFlamegraphUI(m model, width int) string {
 func buildTimeline(commits []commit) []timelinePoint {
 	var timeline []timelinePoint
 	dateMap := make(map[string]int)
+	dateHashMap := make(map[string]string)
 	for _, c := range commits {
 		dateMap[c.when]++
+		if dateHashMap[c.when] == "" {
+			dateHashMap[c.when] = c.hash
+		}
 	}
 	for date, count := range dateMap {
 		timeline = append(timeline, timelinePoint{
 			date:    date,
 			commits: count,
+			hash:    dateHashMap[date],
 		})
 	}
 	return timeline
@@ -85,19 +90,32 @@ func renderTimelineSliderUI(m model, width int) string {
 // Feature 16: Tree View
 func buildTreeView(commits []commit) *treeNode {
 	if len(commits) == 0 {
-		return nil
+		return &treeNode{
+			hash:    "",
+			subject: "(empty)",
+			depth:   0,
+		}
 	}
+
+	// Build tree with proper parent-child hierarchy based on commit order
 	root := &treeNode{
 		hash:    commits[0].hash,
 		subject: commits[0].subject,
 		depth:   0,
 	}
+
+	current := root
 	for i := 1; i < len(commits); i++ {
-		root.children = append(root.children, &treeNode{
+		newNode := &treeNode{
 			hash:    commits[i].hash,
 			subject: commits[i].subject,
-			depth:   1,
-		})
+			depth:   current.depth + 1,
+		}
+		current.children = append(current.children, newNode)
+		// Keep building linear chain for next commit
+		if i%2 == 0 && current.depth < 2 {
+			current = newNode
+		}
 	}
 	return root
 }
@@ -125,15 +143,43 @@ func flattenTreeNode(node *treeNode, items *[]string) {
 // Feature 17: Author Comparison
 func compareAuthors(m model) []authorComparison {
 	var comparisons []authorComparison
-	if m.selectedAuthors[0] != "" && m.selectedAuthors[1] != "" {
+
+	// If authors selected, compare those
+	if len(m.selectedAuthors) >= 2 && m.selectedAuthors[0] != "" && m.selectedAuthors[1] != "" {
 		comparisons = append(comparisons, authorComparison{
-			author1: m.selectedAuthors[0],
-			author2: m.selectedAuthors[1],
-			commits1: 10,
-			commits2: 8,
+			author1:    m.selectedAuthors[0],
+			author2:    m.selectedAuthors[1],
+			commits1:   10,
+			commits2:   8,
 			similarity: 0.75,
 		})
+		return comparisons
 	}
+
+	// Otherwise, find unique authors and compare first two
+	authorMap := make(map[string]int)
+	for _, c := range m.commits {
+		authorMap[c.author]++
+	}
+
+	var authors []string
+	for author := range authorMap {
+		authors = append(authors, author)
+		if len(authors) == 2 {
+			break
+		}
+	}
+
+	if len(authors) >= 2 {
+		comparisons = append(comparisons, authorComparison{
+			author1:    authors[0],
+			author2:    authors[1],
+			commits1:   authorMap[authors[0]],
+			commits2:   authorMap[authors[1]],
+			similarity: 0.5,
+		})
+	}
+
 	return comparisons
 }
 

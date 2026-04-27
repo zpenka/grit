@@ -27,7 +27,7 @@ platforms=(
 for platform in "${platforms[@]}"; do
   IFS=':' read -r os arch <<< "$platform"
 
-  output_name="grit-${version}-${os}-${arch}"
+  output_name="grit-${VERSION}-${os}-${arch}"
   if [ "$os" = "windows" ]; then
     output_name="${output_name}.exe"
   fi
