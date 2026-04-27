@@ -398,6 +398,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.teamMenuIdx = 0
 		m.countBuf = ""
 		return m, nil
+	case "i":
+		m.showIntegrationMenu = !m.showIntegrationMenu
+		m.integrationMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
 	case "r":
 		m.showRebaseUI = !m.showRebaseUI
 		if m.showRebaseUI && len(m.rebaseSequence) == 0 {
@@ -484,6 +489,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.showTeamMenu = false
 		case "esc", "t":
 			m.showTeamMenu = false
+		}
+		return m, nil
+	}
+
+	// Integration menu navigation
+	if m.showIntegrationMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.integrationMenuIdx < integrationMenuLen-1 {
+				m.integrationMenuIdx++
+			}
+		case "k", "up":
+			if m.integrationMenuIdx > 0 {
+				m.integrationMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchIntegrationFeature(m, m.integrationMenuIdx)
+			m.showIntegrationMenu = false
+		case "esc", "i":
+			m.showIntegrationMenu = false
 		}
 		return m, nil
 	}
@@ -635,6 +660,11 @@ func (m model) View() string {
 	// Show team menu overlay if requested
 	if m.showTeamMenu {
 		return renderTeamMenuOverlay(m, m.width)
+	}
+
+	// Show integration menu overlay if requested
+	if m.showIntegrationMenu {
+		return renderIntegrationMenuOverlay(m, m.width)
 	}
 
 	// Show analytics feature panels
@@ -862,9 +892,9 @@ func (m model) View() string {
 	case m.showFiles:
 		sb.WriteString(msgStyle.Render("j/k  navigate   Enter  jump to file   f/Esc  back"))
 	case m.focus == panelDiff:
-		sb.WriteString(msgStyle.Render("j/k  scroll   d/u  half-page   g/G  top/bottom   h/Tab  commits   q  quit"))
+		sb.WriteString(msgStyle.Render("j/k  scroll   d/u  half-page   g/G  top/bottom   h/Tab  commits   ?  help   q  quit"))
 	default:
-		sb.WriteString(msgStyle.Render("j/k  navigate   5j  jump 5   l/Tab  diff   /  search   f  files   b  branches   B  blame   y  copy   e  editor   q  quit"))
+		sb.WriteString(msgStyle.Render("j/k  navigate   5j  jump 5   l/Tab  diff   /  search   f  files   b  branches   ?  help   q  quit"))
 	}
 	sb.WriteString("\n\n")
 

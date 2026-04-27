@@ -150,3 +150,72 @@ func renderIssueRefsUI(m model, width int) string {
 	return RenderAnalysisUI("Issue References", data)
 }
 
+// --- Integration Menu ---
+
+const integrationMenuLen = 5
+
+var integrationMenuItems = []string{
+	"GitHub PR Links",
+	"Jira Tickets",
+	"Export to Markdown",
+	"Export Patch Series",
+	"Issue References",
+}
+
+// renderIntegrationMenuOverlay displays the integration menu with navigation hints.
+func renderIntegrationMenuOverlay(m model, width int) string {
+	var items []string
+	for i, item := range integrationMenuItems {
+		prefix := "  "
+		if i == m.integrationMenuIdx {
+			prefix = "▶ "
+		}
+		items = append(items, prefix+item)
+	}
+
+	config := RenderConfig{
+		Title: "INTEGRATION FEATURES",
+		Items: items,
+	}
+
+	output := RenderStandardUI(config)
+	output += "\n " + msgStyle.Render("j/k")
+	output += " move • "
+	output += msgStyle.Render("Enter")
+	output += " select • "
+	output += msgStyle.Render("Esc")
+	output += " close\n"
+
+	return output
+}
+
+// dispatchIntegrationFeature activates the integration feature at the given menu index.
+func dispatchIntegrationFeature(m model, idx int) model {
+	if idx < 0 || idx >= integrationMenuLen {
+		return m
+	}
+
+	switch idx {
+	case 0: // GitHub PR Links
+		m.showPRLinks = !m.showPRLinks
+		if m.showPRLinks && len(m.prReferences) == 0 {
+			m.prReferences = extractPRReferences(m.commits)
+		}
+	case 1: // Jira Tickets
+		m.showJiraLinks = !m.showJiraLinks
+		if m.showJiraLinks && len(m.jiraLinks) == 0 {
+			m.jiraLinks = extractJiraTickets(m.commits)
+		}
+	case 2: // Export to Markdown
+		m.pendingExports = append(m.pendingExports, exportToMarkdown(m.commits))
+	case 3: // Export Patch Series
+		m.pendingExports = append(m.pendingExports, exportPatchSeries(m.commits))
+	case 4: // Issue References
+		m.showIssueRefs = !m.showIssueRefs
+		if m.showIssueRefs && len(m.issueReferences) == 0 {
+			m.issueReferences = extractIssueReferences(m.commits)
+		}
+	}
+	return m
+}
+

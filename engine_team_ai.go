@@ -532,7 +532,16 @@ func renderTeamMenuOverlay(m model, width int) string {
 		Title: "TEAM & AI FEATURES",
 		Items: items,
 	}
-	return RenderStandardUI(config)
+
+	output := RenderStandardUI(config)
+	output += "\n " + msgStyle.Render("j/k")
+	output += " move • "
+	output += msgStyle.Render("Enter")
+	output += " select • "
+	output += msgStyle.Render("Esc")
+	output += " close\n"
+
+	return output
 }
 
 // --- Team Feature Render Functions ---
