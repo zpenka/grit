@@ -22,12 +22,13 @@ var (
 	removeStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#E74C3C"))
 	hunkStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#4ECDC4"))
 	metaStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	msgStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#AAAAAA"))
+	msgStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#CCCCCC"))
 	alertStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
-	divStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
+	divStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#444444"))
 	focusIndStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D"))
-	lineNumStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#555555"))
-	selectedBg    = lipgloss.Color("#2A2A2A")
+	activePanelStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
+	lineNumStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#777777"))
+	selectedBg    = lipgloss.Color("#3A3A4A")
 )
 
 type commitsLoadedMsg []commit
@@ -252,9 +253,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Search mode
 	if m.searching {
-		switch km.Type {
-		case tea.KeyEsc:
+		switch km.String() {
+		case "esc":
 			m.searching = false
+		case "enter":
+			m.searching = false
+		case "ctrl+/":
 			m.query = ""
 			m.cursor = 0
 			vc := visibleCommits(m)
@@ -262,9 +266,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.loading = true
 				return m, fetchDiff(m.repoPath, vc[0].hash)
 			}
-		case tea.KeyEnter:
-			m.searching = false
-		case tea.KeyBackspace:
+		case "backspace":
 			runes := []rune(m.query)
 			if len(runes) > 0 {
 				prevFirst := firstVisibleHash(m)
@@ -489,7 +491,7 @@ func (m model) View() string {
 	var sb strings.Builder
 
 	// Title bar
-	sb.WriteString("\n ")
+	sb.WriteString(" ")
 	sb.WriteString(titleStyle.Render("git log"))
 	if m.currentRef != "" {
 		sb.WriteString("  ")
@@ -504,20 +506,28 @@ func (m model) View() string {
 	switch {
 	case m.showBranch:
 		hdrText := fmt.Sprintf("Branches (%d)", len(m.branches))
-		listHdr = focusIndStyle.Render("▌") + " " + titleStyle.Render(hdrText)
+		if m.focus == panelList {
+			listHdr = "▌ " + activePanelStyle.Render(hdrText)
+		} else {
+			listHdr = "  " + msgStyle.Render(hdrText)
+		}
 	case m.showFiles:
 		hdrText := fmt.Sprintf("Files (%d)", len(m.fileItems))
-		listHdr = focusIndStyle.Render("▌") + " " + titleStyle.Render(hdrText)
+		if m.focus == panelList {
+			listHdr = "▌ " + activePanelStyle.Render(hdrText)
+		} else {
+			listHdr = "  " + msgStyle.Render(hdrText)
+		}
 	case m.query != "":
 		hdrText := fmt.Sprintf("Commits [/%s] %d", m.query, len(vc))
 		if m.focus == panelList {
-			listHdr = focusIndStyle.Render("▌") + " " + titleStyle.Render(hdrText)
+			listHdr = "▌ " + activePanelStyle.Render(hdrText)
 		} else {
 			listHdr = "  " + msgStyle.Render(hdrText)
 		}
 	default:
 		if m.focus == panelList {
-			listHdr = focusIndStyle.Render("▌") + " " + titleStyle.Render("Commits")
+			listHdr = "▌ " + activePanelStyle.Render("Commits")
 		} else {
 			listHdr = "  " + msgStyle.Render("Commits")
 		}
@@ -528,9 +538,9 @@ func (m model) View() string {
 	switch {
 	case m.showBlame:
 		file := currentFile(m)
-		hdrText := hashStyle.Render("blame") + "  " + msgStyle.Render(file)
+		hdrText := hashStyle.Render("BLAME") + " " + msgStyle.Render(file)
 		if m.focus == panelDiff {
-			diffHdr = focusIndStyle.Render("▌") + " " + hdrText
+			diffHdr = "▌ " + activePanelStyle.Render(hdrText)
 		} else {
 			diffHdr = "  " + hdrText
 		}
@@ -543,7 +553,7 @@ func (m model) View() string {
 		hdrText := hashStyle.Render(c.shortHash) + "  " +
 			msgStyle.Render(truncate(c.subject, diffW-12))
 		if m.focus == panelDiff {
-			diffHdr = focusIndStyle.Render("▌") + " " + hdrText
+			diffHdr = "▌ " + activePanelStyle.Render(hdrText)
 		} else {
 			diffHdr = "  " + hdrText
 		}
@@ -615,12 +625,12 @@ func (m model) View() string {
 	}
 
 	// Footer
-	sb.WriteString("\n ")
+	sb.WriteString("\n")
 	switch {
 	case m.flash != "":
 		sb.WriteString(alertStyle.Render(m.flash))
 	case m.searching:
-		sb.WriteString(msgStyle.Render("[/] " + m.query + "█   Esc clear   Enter confirm"))
+		sb.WriteString(msgStyle.Render("[/] " + m.query + "█   Esc exit   Ctrl+/ clear"))
 	case m.countBuf != "":
 		sb.WriteString(msgStyle.Render(fmt.Sprintf("[%s] j/k  jump   other key  cancel", m.countBuf)))
 	case m.showBlame:
@@ -636,8 +646,7 @@ func (m model) View() string {
 	}
 	sb.WriteString("\n\n")
 
-	content := sb.String()
-	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, content)
+	return sb.String()
 }
 
 func renderCommitRow(m model, vc []commit, idx int, w int) string {
