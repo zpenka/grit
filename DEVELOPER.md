@@ -23,7 +23,7 @@ go test -run TestName      # Specific test
 go test -v ./...           # Verbose output
 ```
 
-All 877 tests should pass. Tests run automatically on PRs via GitHub Actions.
+All 908 tests should pass. Tests run automatically on PRs via GitHub Actions.
 
 ## Architecture Overview
 

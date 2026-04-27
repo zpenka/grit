@@ -32,10 +32,17 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 - Functions now covered: renderAuthorStats, renderTimeStats, renderProductivityMetrics, renderAnalyticsPanel, renderBisectUI, bisect recovery, undo/redo, code ownership, hotspot analysis, commit linting, complexity analysis, heatmaps, merge analysis, commit coupling, extension filtering, dependency tracking
 
 **Test Suite Metrics:**
-- Increased from 371 core tests to 877 total tests (+506 tests)
-- Overall package coverage improved from 50.6% to 70.7% (20.1pp cumulative)
+- Increased from 371 core tests to 908 total tests (+537 tests)
+- Overall package coverage improved from 50.6% to 71.0% (20.4pp cumulative)
 - Minimal "happy path" tests verify function execution without panic
 - All tests pass with 100% success rate
+
+**Phase 3: engine_cache.go & grit.go Coverage:**
+- Added 31 new test functions covering core infrastructure and main UI functions
+- `engine_cache_test.go`: 18 tests covering diff/stat/regex caches and lazy loading
+- `grit_test.go`: 13 tests covering clipboard, editor, fetch operations, and rendering
+- Functions now covered: copyToClipboard, openInEditor, fetchCommits, fetchDiff, fetchBranches, fetchBlame, flashCmd, renderCommitRow, renderFileRow, renderBranchRow, renderBlameRow, renderDiffRow, firstVisibleHash, newDiffCache, DiffCacheSet/Get, newStatCache, StatCacheGetOrCompute, newRegexCache, RegexCacheCompile, lazyLoadDiff, lazyLoadGraph, lazyLoadStats, safeIsFileModified, safeParseCommitGraph
+- Coverage improved from 70.7% to 71.0% (0.3pp gain, focusing on critical infrastructure)
 
 ### Changed - Dependency Updates
 
@@ -61,10 +68,12 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 
 ### Stats
 
+- **Total tests**: 877 → 908 (+31 new tests in engine_cache_test.go & grit_test.go)
 - **Benchmarks**: 6 → 11 (5 new performance benchmarks)
 - **Performance tests**: 0 → 7 (allocation & cache validation)
 - **Memory reduction**: 70% on main filtering hot path
-- **Commits**: 3 (dep update + benchmarks + optimization)
+- **Coverage**: 70.7% → 71.0% (infrastructure & core UI functions)
+- **Commits**: 4 (analytics + cache + grit + optimization)
 
 ---
 
