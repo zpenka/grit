@@ -283,3 +283,249 @@ func TestIsFileModifiedInCommit_ValidFile(t *testing.T) {
 	result := isFileModifiedInCommit("abc123", "file.go")
 	_ = result // Verify it returns a bool (value depends on git state)
 }
+
+// ============================================================================
+// ENHANCED COVERAGE: Parsing Module
+// ============================================================================
+
+func TestParseCommitsWithPool_Empty(t *testing.T) {
+	result := parseCommitsWithPool("")
+	if result != nil {
+		t.Error("parseCommitsWithPool should return nil for empty input")
+	}
+}
+
+func TestParseCommitsWithPool_SingleCommit(t *testing.T) {
+	input := "abc1234567890123456789012345678901234\x00abc1234\x00Alice\x001h ago\x00Fix bug\n"
+	commits := parseCommitsWithPool(input)
+	if len(commits) != 1 {
+		t.Fatalf("expected 1 commit, got %d", len(commits))
+	}
+	if commits[0].hash != "abc1234567890123456789012345678901234" {
+		t.Errorf("hash mismatch: got %s", commits[0].hash)
+	}
+	if commits[0].author != "Alice" {
+		t.Errorf("author mismatch: got %s", commits[0].author)
+	}
+}
+
+func TestParseCommitsWithPool_MultipleCommits(t *testing.T) {
+	input := "hash1\x00h1\x00Author1\x001h ago\x00Msg1\nhash2\x00h2\x00Author2\x002h ago\x00Msg2\n"
+	commits := parseCommitsWithPool(input)
+	if len(commits) != 2 {
+		t.Fatalf("expected 2 commits, got %d", len(commits))
+	}
+}
+
+func TestParseCommitsWithPool_MalformedLines(t *testing.T) {
+	input := "valid123456789012345678901234567890\x00v123\x00Author\x001h ago\x00Msg\ninvalid-no-fields\nhash2\x00h2\x00Auth2\x002h ago\x00Msg2\n"
+	commits := parseCommitsWithPool(input)
+	if len(commits) != 2 {
+		t.Fatalf("should skip malformed lines, got %d commits", len(commits))
+	}
+}
+
+// ============================================================================
+// ENHANCED COVERAGE: Diff Batch Processing Module
+// ============================================================================
+
+func TestProcessDiffBatch_Empty(t *testing.T) {
+	processor := &BatchProcessor{}
+	lines := []diffLine{}
+	result := processDiffBatch(processor, lines)
+	if len(result) != 0 {
+		t.Error("processDiffBatch should return empty slice for empty input")
+	}
+}
+
+func TestProcessDiffBatch_AddedLines(t *testing.T) {
+	processor := &BatchProcessor{}
+	lines := []diffLine{
+		{text: "+new line 1", kind: lineAdded},
+		{text: "+new line 2", kind: lineAdded},
+	}
+	result := processDiffBatch(processor, lines)
+	if len(result) != 2 {
+		t.Fatalf("expected 2 lines, got %d", len(result))
+	}
+	for _, line := range result {
+		if line.kind != lineAdded {
+			t.Error("batch processing should preserve line kind")
+		}
+	}
+}
+
+func TestProcessDiffBatch_MixedLines(t *testing.T) {
+	processor := &BatchProcessor{}
+	lines := []diffLine{
+		{text: "-old line", kind: lineRemoved},
+		{text: " context line", kind: lineContext},
+		{text: "+new line", kind: lineAdded},
+		{text: "@@ -1,5 +1,6 @@", kind: lineHunk},
+	}
+	result := processDiffBatch(processor, lines)
+	if len(result) != 4 {
+		t.Fatalf("expected 4 lines, got %d", len(result))
+	}
+}
+
+// ============================================================================
+// ENHANCED COVERAGE: Filtering Module
+// ============================================================================
+
+func TestIsWithinDays_TodayString(t *testing.T) {
+	// "0 days ago" should be within any day threshold
+	result := isWithinDays("0 days ago", 1)
+	if !result {
+		t.Error("0 days ago should be within 1 day")
+	}
+}
+
+func TestIsWithinDays_OneDayAgo(t *testing.T) {
+	result := isWithinDays("1 day ago", 1)
+	if !result {
+		t.Error("1 day ago should be within 1 day")
+	}
+}
+
+func TestIsWithinDays_TwoDaysAgo(t *testing.T) {
+	result := isWithinDays("2 days ago", 1)
+	if result {
+		t.Error("2 days ago should NOT be within 1 day")
+	}
+}
+
+func TestIsWithinDays_WeekThreshold(t *testing.T) {
+	result := isWithinDays("1 week ago", 7)
+	if !result {
+		t.Error("1 week ago should be within 7 days")
+	}
+}
+
+func TestIsWithinDays_InvalidFormat(t *testing.T) {
+	result := isWithinDays("invalid date string", 30)
+	if result {
+		t.Error("invalid format should return false")
+	}
+}
+
+func TestFilterCommitsWithCache_Empty(t *testing.T) {
+	cache := &FilterCache{}
+	commits := []commit{}
+	result := filterCommitsWithCache(cache, commits, "test")
+	if len(result) != 0 {
+		t.Error("empty commits should return empty slice")
+	}
+}
+
+func TestFilterCommitsWithCache_NoQuery(t *testing.T) {
+	cache := &FilterCache{}
+	commits := []commit{
+		{hash: "abc", author: "test", subject: "msg"},
+	}
+	result := filterCommitsWithCache(cache, commits, "")
+	if len(result) != 1 {
+		t.Error("no query should return all commits")
+	}
+}
+
+func TestFilterCommitsWithCache_MatchingSubject(t *testing.T) {
+	cache := &FilterCache{}
+	commits := []commit{
+		{hash: "abc", author: "test", subject: "fix bug"},
+		{hash: "def", author: "test", subject: "add feature"},
+	}
+	result := filterCommitsWithCache(cache, commits, "fix")
+	if len(result) != 1 || result[0].subject != "fix bug" {
+		t.Error("should filter by subject")
+	}
+}
+
+func TestFilterCommitsWithCache_MatchingAuthor(t *testing.T) {
+	cache := &FilterCache{}
+	commits := []commit{
+		{hash: "abc", author: "Alice", subject: "msg"},
+		{hash: "def", author: "Bob", subject: "msg"},
+	}
+	result := filterCommitsWithCache(cache, commits, "Alice")
+	if len(result) != 1 || result[0].author != "Alice" {
+		t.Error("should filter by author")
+	}
+}
+
+// ============================================================================
+// ENHANCED COVERAGE: Navigation Module
+// ============================================================================
+
+func TestScrollToDiffLine_InvalidIndex(t *testing.T) {
+	m := newModel(".")
+	m.diffLines = []diffLine{
+		{text: "line 1"},
+		{text: "line 2"},
+	}
+	m.diffOffset = 0
+	m = scrollToDiffLine(m, -1)
+	// Should handle gracefully without crashing
+	if m.diffOffset < 0 {
+		t.Error("diffOffset should not be negative")
+	}
+}
+
+func TestScrollToDiffLine_BeyondEnd(t *testing.T) {
+	m := newModel(".")
+	m.diffLines = []diffLine{
+		{text: "line 1"},
+		{text: "line 2"},
+	}
+	m.height = 10
+	m = scrollToDiffLine(m, 100)
+	// Should handle gracefully without crashing
+	if m.diffOffset < 0 {
+		t.Error("diffOffset should not be negative")
+	}
+}
+
+func TestScrollToDiffLine_ValidPosition(t *testing.T) {
+	m := newModel(".")
+	m.diffLines = make([]diffLine, 50)
+	m.height = 10
+	m = scrollToDiffLine(m, 25)
+	// Should scroll without errors
+	if m.diffOffset > 25 && m.height > 0 {
+		t.Errorf("diffOffset %d should generally position near target line 25", m.diffOffset)
+	}
+}
+
+func TestAddToNavHistory_NewEntry(t *testing.T) {
+	m := newModel(".")
+	m.navHistory = []int{}
+	m.navHistoryIdx = 0
+	originalLen := len(m.navHistory)
+	m = addToNavHistory(m, 5)
+	if len(m.navHistory) != originalLen+1 {
+		t.Error("should add new entry to history")
+	}
+	if m.navHistory[len(m.navHistory)-1] != 5 {
+		t.Error("should store the position in history")
+	}
+}
+
+func TestAddToNavHistory_TracksCursor(t *testing.T) {
+	m := newModel(".")
+	m.cursor = 10
+	originalLen := len(m.navHistory)
+	m = addToNavHistory(m, 10)
+	if len(m.navHistory) <= originalLen {
+		t.Error("should add new history entry")
+	}
+}
+
+func TestAddToNavHistory_Multiple(t *testing.T) {
+	m := newModel(".")
+	m = addToNavHistory(m, 1)
+	m = addToNavHistory(m, 2)
+	m = addToNavHistory(m, 3)
+	if len(m.navHistory) < 3 {
+		t.Errorf("should have at least 3 entries, got %d", len(m.navHistory))
+	}
+}
