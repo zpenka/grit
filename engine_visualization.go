@@ -239,3 +239,68 @@ func renderFileHeatmapUI(m model, width int) string {
 	})
 }
 
+// --- Visualization Menu Dispatch ---
+
+const vizMenuLen = 5
+
+var vizMenuItems = []string{
+	"Contributor Flamegraph",
+	"Timeline Slider",
+	"Tree View",
+	"Author Comparison",
+	"File Heatmap",
+}
+
+// dispatchVizFeature activates the visualization feature at the given menu index.
+func dispatchVizFeature(m model, idx int) model {
+	if idx < 0 || idx >= vizMenuLen {
+		return m
+	}
+
+	switch idx {
+	case 0: // Flamegraph
+		m.showFlamegraph = !m.showFlamegraph
+		if m.showFlamegraph && len(m.contributorFlameData) == 0 {
+			m.contributorFlameData = buildContributorFlame(m.commits)
+		}
+	case 1: // Timeline
+		m.showTimeline = !m.showTimeline
+		if m.showTimeline && len(m.timelinePoints) == 0 {
+			m.timelinePoints = buildTimeline(m.commits)
+		}
+	case 2: // Tree View
+		m.showTreeView = !m.showTreeView
+		if m.showTreeView && m.treeRoot == nil {
+			m.treeRoot = buildTreeView(m.commits)
+		}
+	case 3: // Author Comparison
+		m.showAuthorComparison = !m.showAuthorComparison
+		if m.showAuthorComparison && len(m.authorComparisons) == 0 {
+			m.authorComparisons = compareAuthors(m)
+		}
+	case 4: // File Heatmap
+		m.showFileHeatmap = !m.showFileHeatmap
+		if m.showFileHeatmap && len(m.fileHeatmap) == 0 {
+			m.fileHeatmap = buildFileHeatmap(m.commits)
+		}
+	}
+	return m
+}
+
+// renderVisualizationMenuOverlay renders the visualization feature menu.
+func renderVisualizationMenuOverlay(m model, width int) string {
+	var items []string
+	for i, item := range vizMenuItems {
+		prefix := "  "
+		if i == m.vizMenuIdx {
+			prefix = "▶ "
+		}
+		items = append(items, prefix+item)
+	}
+
+	config := RenderConfig{
+		Title: "VISUALIZATION FEATURES",
+		Items: items,
+	}
+	return RenderStandardUI(config)
+}

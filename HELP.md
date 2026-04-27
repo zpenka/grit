@@ -21,55 +21,54 @@ grit -v                 # Version
 
 ## Keyboard Navigation
 
-### Movement
+### Commit List Navigation
 | Key | Action |
 |-----|--------|
-| `↑` / `k` | Move up / Previous commit |
-| `↓` / `j` | Move down / Next commit |
-| `←` / `h` | Scroll left |
-| `→` / `l` | Scroll right |
-| `Page Up` | Jump up (10 commits) |
-| `Page Down` | Jump down (10 commits) |
-| `Home` | First commit |
-| `End` | Last commit |
+| `j` / `↓` | Move down to next commit |
+| `k` / `↑` | Move up to previous commit |
+| `5j` | Jump 5 commits down (count prefix works with j/k) |
+| `g` | Jump to first commit |
+| `G` | Jump to last commit |
+| `/` | Search commits by subject, author, or hash |
+| `Ctrl+/` | Clear search |
 
 ### Panel Navigation
 | Key | Action |
 |-----|--------|
-| `Tab` | Switch panel (commit → diff → files) |
-| `Shift+Tab` | Previous panel |
-| `1` | Commit list panel |
-| `2` | Diff panel |
-| `3` | File tree panel |
-| `4` | Feature results panel |
+| `Tab` / `l` | Switch to diff panel |
+| `h` | Switch to commit list |
+| `f` | Toggle file list panel |
+| `b` | Show branch picker |
+| `B` | Show blame for current file |
 
-### Search & Filter
+### Feature Panels
 | Key | Action |
 |-----|--------|
-| `/` | Search commits (text, author, hash) |
-| `?` | Advanced filter options |
-| `n` | Find next match |
-| `N` | Find previous match |
-| `Esc` | Clear search |
+| `a` | Analytics submenu (ownership, hotspots, linting, bisect, heatmap, stats, complexity) |
+| `v` | Visualization submenu (flamegraph, timeline, tree view, author comparison, file heatmap) |
+| `t` | Team/AI submenu (team stats, reviewer suggestions, velocity, classification, security, changelog) |
+| `r` | Interactive rebase preview |
+| `c` | Cherry-pick mode (toggle commits to pick) |
+| `x` | Cycle reset mode (soft → mixed → hard) |
 
-### Features
+### Diff Panel Navigation
 | Key | Action |
 |-----|--------|
-| `a` | Code ownership analysis |
-| `s` | Code statistics & hotspots |
-| `b` | Bisect regression |
-| `t` | Team velocity metrics |
-| `v` | Visualizations |
-| `e` | Export (CSV/JSON/XML) |
-| `c` | Copy commit hash |
+| `j` / `↓` | Scroll down one line |
+| `k` / `↑` | Scroll up one line |
+| `d` / `space` | Scroll down half page |
+| `u` | Scroll up half page |
+| `g` | Jump to top |
+| `G` | Jump to bottom |
 
 ### General
 | Key | Action |
 |-----|--------|
-| `?` | Show help |
-| `q` / `Ctrl+C` | Quit |
-| `r` | Refresh |
-| `u` | Undo last action |
+| `y` | Copy current commit hash |
+| `e` | Open commit diff in `$EDITOR` |
+| `?` | Show help overlay |
+| `Esc` | Close any open panel or menu |
+| `q` / `Ctrl+C` | Quit grit |
 
 ## Examples
 
@@ -77,45 +76,47 @@ grit -v                 # Version
 ```bash
 grit                    # Start grit
 /bug                    # Search for commits with "bug"
-n                       # Find next match
+j                       # Move to next result
 ```
 
 ### Analyze code ownership
 ```bash
 grit                    # Start grit
-a                       # View code ownership analysis
+a                       # Open analytics submenu
+[navigate with j/k and press Enter to select Code Ownership]
 ```
 
-### Explore with bisect
+### Use bisect to find a regression
 ```bash
 grit                    # Start grit
-b                       # Start bisect
-[mark commits as good/bad]
+a                       # Open analytics submenu
+[navigate to Bisect and press Enter]
+[mark commits as good/bad in the bisect UI]
 ```
 
-### Export results
+### View team metrics
 ```bash
 grit                    # Start grit
-e                       # Export
-[select format: CSV/JSON/XML]
+t                       # Open team/AI submenu
+[navigate with j/k and select Team Statistics]
+```
+
+### Explore visualizations
+```bash
+grit                    # Start grit
+v                       # Open visualization submenu
+[navigate with j/k and select Contributor Flamegraph]
 ```
 
 ## Tips & Tricks
 
-1. **Search is case-insensitive** - `/FIX` finds "fix", "Fix", "FIX"
-2. **Author filter** - Use `/author:john` to filter by author
-3. **Date filter** - Use `?` to access advanced date range filters
-4. **Bookmarks** - Save interesting commits with `m` to revisit
+1. **Quick navigation** - Use count prefixes: `5j` jumps 5 commits down
+2. **Search is live** - Type `/` and characters appear as you type
+3. **Fast navigation** - `g` goes to first commit, `G` goes to last
+4. **Multiple panels** - Open file list with `f` to jump between files
 5. **Diff caching** - First view of diff is slower, subsequent views are cached
 6. **Large repos** - grit handles 10k+ commits with lazy loading
-
-## Environment Variables
-
-```bash
-GRIT_CACHE_SIZE=100       # Diff cache entries (default: 50)
-GRIT_REPO_PATH=/path      # Default repository
-GRIT_COLOR_THEME=dark     # Color theme
-```
+7. **Press ? for help** - The help overlay shows all keybindings at any time
 
 ## Performance Notes
 
