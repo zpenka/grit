@@ -87,7 +87,7 @@ For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Contributing
 
-Contributions are welcome! See [DEVELOPER.md](DEVELOPER.md) for:
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines, and [DEVELOPER.md](DEVELOPER.md) for:
 - Development workflow
 - Code style guidelines
 - Testing requirements
