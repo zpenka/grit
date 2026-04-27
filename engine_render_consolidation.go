@@ -44,6 +44,19 @@ func BuildItemsList(items []string) RenderConfig {
 	}
 }
 
+// renderMenuOverlay renders a menu with consistent navigation hints.
+// This DRY helper reduces duplication across all menu renderers.
+func renderMenuOverlay(config RenderConfig) string {
+	output := RenderStandardUI(config)
+	output += "\n " + msgStyle.Render("j/k")
+	output += " move • "
+	output += msgStyle.Render("Enter")
+	output += " select • "
+	output += msgStyle.Render("Esc")
+	output += " close\n"
+	return output
+}
+
 // RenderConfig holds common rendering parameters
 type RenderConfig struct {
 	Title       string

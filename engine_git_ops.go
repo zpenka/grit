@@ -158,5 +158,62 @@ func amendLastCommit(m model, message string) model {
 	return m
 }
 
+// --- Git Ops Menu ---
+
+const gitOpsMenuLen = 3
+
+var gitOpsMenuItems = []string{
+	"Interactive Rebase",
+	"Cherry-pick Mode",
+	"Reset Mode",
+}
+
+// renderGitOpsMenuOverlay displays the git ops menu with navigation hints.
+func renderGitOpsMenuOverlay(m model, width int) string {
+	var items []string
+	for i, item := range gitOpsMenuItems {
+		prefix := "  "
+		if i == m.gitOpsMenuIdx {
+			prefix = "▶ "
+		}
+		items = append(items, prefix+item)
+	}
+
+	config := RenderConfig{
+		Title: "GIT OPERATIONS",
+		Items: items,
+	}
+	return renderMenuOverlay(config)
+}
+
+// dispatchGitOpsFeature activates the git ops feature at the given menu index.
+func dispatchGitOpsFeature(m model, idx int) model {
+	if idx < 0 || idx >= gitOpsMenuLen {
+		return m
+	}
+
+	switch idx {
+	case 0: // Interactive Rebase
+		m.showRebaseUI = !m.showRebaseUI
+		if m.showRebaseUI && len(m.rebaseSequence) == 0 {
+			m.rebaseSequence = parseRebaseSequence(m.commits)
+		}
+	case 1: // Cherry-pick Mode
+		m.showCherryPickUI = !m.showCherryPickUI
+	case 2: // Reset Mode
+		switch m.resetMode {
+		case "":
+			m.resetMode = "soft"
+		case "soft":
+			m.resetMode = "mixed"
+		case "mixed":
+			m.resetMode = "hard"
+		default:
+			m.resetMode = ""
+		}
+	}
+	return m
+}
+
 // ===== OPTION B: COLLABORATION & ANALYTICS =====
 

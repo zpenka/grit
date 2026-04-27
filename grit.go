@@ -203,7 +203,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	// Esc clears all feature panels (except structural ones)
-	if km.String() == "esc" && !m.showBlame && !m.showBranch && !m.showFiles && !m.searching && !m.showAnalyticsMenu && !m.showVisualizationMenu && !m.showTeamMenu {
+	if km.String() == "esc" && !m.showBlame && !m.showBranch && !m.showFiles && !m.searching && !m.showAnalyticsMenu && !m.showVisualizationMenu && !m.showTeamMenu && !m.showIntegrationMenu && !m.showGitOpsMenu {
 		m.showHelp = false
 		m.showCodeOwnership = false
 		m.showHotspots = false
@@ -431,6 +431,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.countBuf = ""
 		return m, nil
+	case "g":
+		m.showGitOpsMenu = !m.showGitOpsMenu
+		m.gitOpsMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
 	}
 
 	// Analytics menu navigation
@@ -509,6 +514,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.showIntegrationMenu = false
 		case "esc", "i":
 			m.showIntegrationMenu = false
+		}
+		return m, nil
+	}
+
+	// Git ops menu navigation
+	if m.showGitOpsMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.gitOpsMenuIdx < gitOpsMenuLen-1 {
+				m.gitOpsMenuIdx++
+			}
+		case "k", "up":
+			if m.gitOpsMenuIdx > 0 {
+				m.gitOpsMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchGitOpsFeature(m, m.gitOpsMenuIdx)
+			m.showGitOpsMenu = false
+		case "esc", "g":
+			m.showGitOpsMenu = false
 		}
 		return m, nil
 	}
@@ -667,6 +692,11 @@ func (m model) View() string {
 		return renderIntegrationMenuOverlay(m, m.width)
 	}
 
+	// Show git ops menu overlay if requested
+	if m.showGitOpsMenu {
+		return renderGitOpsMenuOverlay(m, m.width)
+	}
+
 	// Show analytics feature panels
 	if m.showCodeOwnership {
 		return renderCodeOwnershipUI(m, m.width)
@@ -725,6 +755,17 @@ func (m model) View() string {
 	}
 	if m.showChangelog {
 		return renderChangelogUI(m, m.width)
+	}
+
+	// Show integration feature panels
+	if m.showPRLinks {
+		return renderPRLinksUI(m, m.width)
+	}
+	if m.showJiraLinks {
+		return renderJiraLinksUI(m, m.width)
+	}
+	if m.showIssueRefs {
+		return renderIssueRefsUI(m, m.width)
 	}
 
 	// Show git ops panels

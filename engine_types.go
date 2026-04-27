@@ -188,6 +188,8 @@ type model struct {
 	teamMenuIdx       int
 	showIntegrationMenu bool
 	integrationMenuIdx  int
+	showGitOpsMenu      bool
+	gitOpsMenuIdx       int
 	// Bisect & Recovery
 	bisectState         bisectState
 	showBisectUI        bool
