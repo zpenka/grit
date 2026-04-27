@@ -785,7 +785,7 @@ func firstVisibleHash(m model) string {
 	return vc[0].hash
 }
 
-const Version = "0.1.0"
+const Version = "1.0.0"
 
 func Run() {
 	// Handle CLI flags

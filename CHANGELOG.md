@@ -4,7 +4,62 @@ All notable changes to grit are documented here. This file follows the [Keep a C
 
 **📚 For complete documentation overview, see [DOCS.md](DOCS.md)**
 
-## [Phase 4] - 2026-04-26 (In Progress)
+## [1.0.0] - 2026-04-27 (Stable Release)
+
+### Release Summary
+
+grit reaches **v1.0.0** — a stable, production-ready terminal UI for git history exploration. This release consolidates two major phases of optimization, documentation, and feature completeness.
+
+**Key Highlights:**
+- **505 tests** (100% pass rate) across 14 focused modules
+- **Performance optimization** — 70% memory reduction on critical filtering paths, benchmarks established
+- **Production-grade tooling** — CLI flags, version management, release build scripts
+- **Zero external dependencies** besides Bubble Tea & Lipgloss for TUI
+- **Go 1.24** and latest library versions (bubbletea 1.3.10, lipgloss 1.1.0)
+
+### Completed in This Release
+
+#### Phase 5: Code Quality, UX, and Release
+- **TDD test coverage** across all feature modules (38 new tests added)
+- **Feature stub fixes** — replaced hardcoded values with real implementations
+- **CLI flags** — version (`-v`/`--version`) and help (`-h`/`--help`) flags fully working
+- **Release tooling** — build script fixed, cross-platform binary generation working (linux, darwin, windows)
+- **Tests**: 371 → 409, then to 505 (Phase 5 + Phase 4 + earlier improvements)
+
+#### Phase 4: Performance & Dependencies  
+- **Dependency upgrades** — Go 1.21 → 1.24.0, bubbletea v0.24 → v1.3.10, lipgloss v0.10 → v1.1.0
+- **Benchmark suite** — Added 5 new performance benchmarks (11 total)
+- **Filtering optimization** — Single-pass `visibleCommits()` reducing memory 561KB → 170KB (70% reduction)
+- **Allocation tracking** — 7 new performance tests establishing baselines for regression prevention
+- **Cache validation** — Diff cache hit rates, stats cache memoization, memory pool verification
+
+### Stats
+
+- **Tests**: 505 total (100% pass rate)
+- **Modules**: 14 (Core infrastructure, Rendering, Features)
+- **Features**: 113+ integrated capabilities
+- **Lines of Code**: 8,200+ Go code
+- **Type Definitions**: 150+
+- **Functions**: 200+
+- **External Dependencies**: 0 (besides UI framework)
+
+### Installation
+
+```bash
+go install github.com/zpenka/grit@v1.0.0
+# or download binary for your platform from GitHub Releases
+```
+
+### Documentation
+
+- **[DOCS.md](DOCS.md)** — Complete documentation map (start here)
+- **[README.md](README.md)** — User-facing overview
+- **[DEVELOPER.md](DEVELOPER.md)** — Development guide
+- **[docs/modules/](docs/modules/)** — 14 detailed module guides
+
+---
+
+## [Phase 4] - 2026-04-26
 
 ### Added - Performance Monitoring & Optimization
 

@@ -93,7 +93,7 @@ func TestProgressAndChangelogConsolidation(t *testing.T) {
 	}
 
 	content := string(data)
-	phases := []string{"Phase 1", "Phase 2", "Phase 3"}
+	phases := []string{"Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5"}
 
 	for _, phase := range phases {
 		if !strings.Contains(content, phase) {
