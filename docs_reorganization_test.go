@@ -6,11 +6,11 @@ import (
 	"testing"
 )
 
-// TestDocumentationIndexExists validates docs/README.md serves as documentation index.
+// TestDocumentationIndexExists validates DOCS.md serves as documentation index.
 func TestDocumentationIndexExists(t *testing.T) {
-	data, err := os.ReadFile("docs/README.md")
+	data, err := os.ReadFile("DOCS.md")
 	if err != nil {
-		t.Fatalf("docs/README.md should exist as documentation index, got error: %v", err)
+		t.Fatalf("DOCS.md should exist as documentation index, got error: %v", err)
 	}
 
 	content := string(data)
@@ -18,13 +18,13 @@ func TestDocumentationIndexExists(t *testing.T) {
 		"Core Infrastructure",
 		"Rendering",
 		"Features",
-		"Table of Contents",
+		"Module Documentation",
 		"modules/",
 	}
 
 	for _, section := range requiredSections {
 		if !strings.Contains(content, section) {
-			t.Errorf("docs/README.md missing section: %s", section)
+			t.Errorf("DOCS.md missing section: %s", section)
 		}
 	}
 }
@@ -41,7 +41,7 @@ func TestDocsNavigationFileExists(t *testing.T) {
 		"README",
 		"DEVELOPER",
 		"CONTRIBUTING",
-		"ARCHITECTURE",
+		"Module Documentation",
 		"modules/",
 		"Quick Start",
 	}
@@ -53,7 +53,7 @@ func TestDocsNavigationFileExists(t *testing.T) {
 	}
 }
 
-// TestModuleDocumentationIndexed validates all modules are documented in docs/README.md.
+// TestModuleDocumentationIndexed validates all modules are documented in DOCS.md.
 func TestModuleDocumentationIndexed(t *testing.T) {
 	modules := []string{
 		"PARSING.md",
@@ -71,15 +71,15 @@ func TestModuleDocumentationIndexed(t *testing.T) {
 		"TEAM_AI.md",
 	}
 
-	data, err := os.ReadFile("docs/README.md")
+	data, err := os.ReadFile("DOCS.md")
 	if err != nil {
-		t.Fatalf("docs/README.md not found: %v", err)
+		t.Fatalf("DOCS.md not found: %v", err)
 	}
 
 	content := string(data)
 	for _, module := range modules {
 		if !strings.Contains(content, module) {
-			t.Errorf("docs/README.md missing module: %s", module)
+			t.Errorf("DOCS.md missing module: %s", module)
 		}
 	}
 }
@@ -124,12 +124,10 @@ func TestDocumentationStructure(t *testing.T) {
 		"README.md":                     true,
 		"DOCS.md":                       true,
 		"CLAUDE.md":                     true,
-		"ARCHITECTURE.md":               true,
 		"DEVELOPER.md":                  true,
 		"CONTRIBUTING.md":               true,
 		"VERSION.md":                    true,
 		"CHANGELOG.md":                  true,
-		"docs/README.md":                true,
 		".github/pull_request_template.md": true,
 		"docs/modules/PARSING.md":       true,
 		"docs/modules/ANALYTICS.md":     true,
@@ -174,7 +172,6 @@ func TestDocumentationLinking(t *testing.T) {
 		"README",
 		"DEVELOPER",
 		"CONTRIBUTING",
-		"ARCHITECTURE",
 		"VERSION",
 		"CHANGELOG",
 		"docs/modules",
