@@ -23,11 +23,11 @@ go test -run TestName      # Specific test
 go test -v ./...           # Verbose output
 ```
 
-All 908 tests should pass. Tests run automatically on PRs via GitHub Actions.
+All 914 tests should pass. Tests run automatically on PRs via GitHub Actions.
 
 ## Architecture Overview
 
-grit is organized into **14 focused modules**:
+grit is organized into **13 focused modules**:
 
 ### Core Infrastructure
 These provide foundational functionality:
@@ -248,7 +248,7 @@ fmt.Printf("Debug: value=%v\n", value)
 
 - [CLAUDE.md](CLAUDE.md) - Project overview and architecture
 - [README.md](README.md) - User-facing documentation
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Architectural overview
+- [docs/modules/](docs/modules/) - Architectural overview and detailed module docs
 - Go standard library: https://golang.org/pkg/
 - Bubble Tea: https://github.com/charmbracelet/bubbletea
 - Lipgloss: https://github.com/charmbracelet/lipgloss

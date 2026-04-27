@@ -13,7 +13,7 @@ Complete guide to all grit documentation. Start here to find what you're looking
 - [VERSION.md](VERSION.md) - Release process
 
 **Need architecture details?**
-- [ARCHITECTURE.md](ARCHITECTURE.md) - System design
+- [docs/modules/](docs/modules/) - Detailed module documentation
 - [docs/README.md](docs/README.md) - Module documentation index
 
 ---
@@ -25,14 +25,13 @@ Complete guide to all grit documentation. Start here to find what you're looking
 | Document | Purpose |
 |----------|---------|
 | [README.md](README.md) | Project overview, installation, features |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | How grit is organized |
+| [docs/modules/](docs/modules/) | How grit is organized (13 modules) |
 
 ### For Developers
 
 | Document | Purpose |
 |----------|---------|
 | [DEVELOPER.md](DEVELOPER.md) | Setup, building, testing, common tasks |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Module structure and data flow |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Code style, testing, contribution workflow |
 | [docs/README.md](docs/README.md) | Module-by-module reference |
 | [docs/modules/](docs/modules/) | Deep dive into each module (13 files) |
@@ -50,7 +49,7 @@ Complete guide to all grit documentation. Start here to find what you're looking
 | Document | Purpose |
 |----------|---------|
 | [CLAUDE.md](CLAUDE.md) | Architecture guidance for AI development |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System design and module overview |
+| [docs/modules/](docs/modules/) | System design and module overview |
 
 ---
 
@@ -84,9 +83,10 @@ Complete guide to all grit documentation. Start here to find what you're looking
 - Performance considerations
 - Security best practices
 
-### [ARCHITECTURE.md](ARCHITECTURE.md)
+### Module Documentation
 **System architecture overview**
-- Module organization (14 modules)
+Located in [docs/modules/](docs/modules/):
+- Module organization (13 modules)
 - Data flow diagrams
 - Design patterns
 - Performance architecture
@@ -164,11 +164,11 @@ Located in [.github/](./github/):
 - **GitHub templates**: 3 files
 
 ### Code Coverage
-- **Total code**: 8,200+ lines of Go
-- **Tests**: 371+ (100% passing)
+- **Total code**: 9,390 lines of Go
+- **Tests**: 914 (100% passing)
 - **Type definitions**: 150+
 - **Functions**: 200+
-- **Modules**: 14 focused modules
+- **Modules**: 13 focused modules
 
 ---
 
@@ -178,7 +178,7 @@ Located in [.github/](./github/):
 
 **...understand the codebase**
 1. Start: [README.md](README.md) - Overview
-2. Deep dive: [ARCHITECTURE.md](ARCHITECTURE.md) - Design
+2. Deep dive: [docs/modules/](docs/modules/) - Design
 3. Learn modules: [docs/README.md](docs/README.md) - Index
 4. Specific module: [docs/modules/](docs/modules/) - Details
 
@@ -216,7 +216,6 @@ Root Level (User & Developer Docs)
 ├── README.md                 # Project overview
 ├── DEVELOPER.md              # Dev setup & workflow
 ├── CONTRIBUTING.md           # Contribution guidelines
-├── ARCHITECTURE.md           # System design
 ├── VERSION.md                # Release strategy
 ├── CHANGELOG.md              # Change history
 ├── CLAUDE.md                 # AI assistant guidance
@@ -267,7 +266,7 @@ All documentation includes:
 
 | Phase | Completed | Files | Focus |
 |-------|-----------|-------|-------|
-| Phase 1 | ✅ 2026-04-26 | Code | Code organization into 14 modules |
+| Phase 1 | ✅ 2026-04-26 | Code | Code organization into 13 modules |
 | Phase 2 | ✅ 2026-04-26 | Docs | Godoc comments + module READMEs |
 | Phase 3 | ✅ 2026-04-26 | Contrib | Maintenance, contribution, versioning |
 | Phase 4 | ✅ 2026-04-27 | Docs | Documentation reorganization |

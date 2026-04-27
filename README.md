@@ -42,7 +42,7 @@ go test -cover ./...             # With coverage report
 go test -run TestFeatureName     # Run specific test
 ```
 
-All 908 tests pass with 100% success rate. Tests run automatically on PRs via GitHub Actions.
+All 914 tests pass with 100% success rate. Tests run automatically on PRs via GitHub Actions.
 
 ## Documentation
 
@@ -53,7 +53,7 @@ All 908 tests pass with 100% success rate. Tests run automatically on PRs via Gi
 - **[CHANGELOG.md](CHANGELOG.md)** - Detailed changelog of changes by phase
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and code standards
 - **[VERSION.md](VERSION.md)** - Release process and semantic versioning
-- **[docs/modules/](docs/modules/)** - Detailed documentation for all 14 modules:
+- **[docs/modules/](docs/modules/)** - Detailed documentation for all 13 modules:
   - Core infrastructure: Parsing, Navigation, Filtering, Caching, Optimization
   - Rendering: Main UI engine and consolidation templates
   - Features: Analytics, Git Ops, Workflows, Visualization, Integration, Team/AI
@@ -68,7 +68,7 @@ Engine types, parsing, navigation, filtering, caching, and optimization
 ### Rendering & UI (2 modules)
 Consolidated rendering templates and main UI rendering engine
 
-### Features (6 modules)
+### Features (5 modules)
 - Analytics (code ownership, hotspots, bisection)
 - Git Ops (rebase, cherry-pick, reset, amend)
 - Workflows (worktrees, stash, tags, reflog)
@@ -76,15 +76,15 @@ Consolidated rendering templates and main UI rendering engine
 - Integration (GitHub, Jira, exports)
 - Team/AI (metrics, classification, security, compliance)
 
-For detailed architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md).
+For detailed module documentation, see [docs/modules/](docs/modules/).
 
 ## Statistics
 
-- **8,200+** lines of Go code
-- **908** tests (100% pass rate)
+- **9,390** lines of Go code
+- **914** tests (100% pass rate)
 - **150+** type definitions
 - **200+** functions
-- **14** focused modules
+- **13** focused modules
 - **Zero** external dependencies (besides Bubble Tea & Lipgloss)
 
 ## Contributing
