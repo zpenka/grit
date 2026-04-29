@@ -301,3 +301,267 @@ func TestGitOpsMenuHasResetOption(t *testing.T) {
 		t.Error("Git ops menu should include reset option")
 	}
 }
+
+// ============================================================================
+// Export to Markdown Tests
+// ============================================================================
+
+func TestExportToMarkdownBasic(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123def456", shortHash: "abc123", author: "Alice", subject: "Add feature X"},
+		{hash: "def456ghi789", shortHash: "def456", author: "Bob", subject: "Fix bug Y"},
+	}
+
+	result := exportToMarkdown(commits)
+
+	// Check format
+	if result.format != "markdown" {
+		t.Errorf("Expected format 'markdown', got %q", result.format)
+	}
+
+	// Check filename
+	if result.filename != "commits.md" {
+		t.Errorf("Expected filename 'commits.md', got %q", result.filename)
+	}
+
+	// Check commits are preserved
+	if len(result.commits) != len(commits) {
+		t.Errorf("Expected %d commits, got %d", len(commits), len(result.commits))
+	}
+
+	// Check content structure
+	content := result.content
+	if !strings.Contains(content, "# Commit History") {
+		t.Error("Content should contain markdown heading '# Commit History'")
+	}
+
+	// Check content contains commit data
+	if !strings.Contains(content, "abc123") {
+		t.Error("Content should contain first commit hash")
+	}
+	if !strings.Contains(content, "def456") {
+		t.Error("Content should contain second commit hash")
+	}
+	if !strings.Contains(content, "Add feature X") {
+		t.Error("Content should contain first commit subject")
+	}
+	if !strings.Contains(content, "Fix bug Y") {
+		t.Error("Content should contain second commit subject")
+	}
+	if !strings.Contains(content, "Alice") {
+		t.Error("Content should contain first commit author")
+	}
+	if !strings.Contains(content, "Bob") {
+		t.Error("Content should contain second commit author")
+	}
+}
+
+func TestExportToMarkdownEmpty(t *testing.T) {
+	commits := []commit{}
+
+	result := exportToMarkdown(commits)
+
+	// Check format and filename still set
+	if result.format != "markdown" {
+		t.Errorf("Expected format 'markdown', got %q", result.format)
+	}
+	if result.filename != "commits.md" {
+		t.Errorf("Expected filename 'commits.md', got %q", result.filename)
+	}
+
+	// Check content has heading even for empty list
+	content := result.content
+	if !strings.Contains(content, "# Commit History") {
+		t.Error("Content should contain markdown heading even for empty commits")
+	}
+
+	// Should not panic
+	if len(result.commits) != 0 {
+		t.Error("Empty input should result in empty commits slice")
+	}
+}
+
+func TestExportToMarkdownSingleCommit(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123def456", shortHash: "abc123", author: "Charlie", subject: "Initial commit"},
+	}
+
+	result := exportToMarkdown(commits)
+
+	content := result.content
+	if !strings.Contains(content, "# Commit History") {
+		t.Error("Content should contain markdown heading")
+	}
+	if !strings.Contains(content, "abc123") {
+		t.Error("Content should contain commit hash")
+	}
+	if !strings.Contains(content, "Charlie") {
+		t.Error("Content should contain author")
+	}
+	if !strings.Contains(content, "Initial commit") {
+		t.Error("Content should contain subject")
+	}
+
+	// Verify format
+	if !strings.Contains(content, "-") {
+		t.Error("Markdown should use bullet list format with dashes")
+	}
+}
+
+func TestExportToMarkdownPreservesCommitOrder(t *testing.T) {
+	commits := []commit{
+		{hash: "111", shortHash: "111", author: "Author1", subject: "First"},
+		{hash: "222", shortHash: "222", author: "Author2", subject: "Second"},
+		{hash: "333", shortHash: "333", author: "Author3", subject: "Third"},
+	}
+
+	result := exportToMarkdown(commits)
+	content := result.content
+
+	// Find positions of each hash in content
+	pos1 := strings.Index(content, "111")
+	pos2 := strings.Index(content, "222")
+	pos3 := strings.Index(content, "333")
+
+	if pos1 == -1 || pos2 == -1 || pos3 == -1 {
+		t.Error("Content should contain all commit hashes")
+		return
+	}
+
+	if pos1 >= pos2 || pos2 >= pos3 {
+		t.Error("Commits should be in order in the content")
+	}
+}
+
+// ============================================================================
+// Export Patch Series Tests
+// ============================================================================
+
+func TestExportPatchSeriesBasic(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123def456", shortHash: "abc123", author: "Alice", subject: "Add feature X"},
+		{hash: "def456ghi789", shortHash: "def456", author: "Bob", subject: "Fix bug Y"},
+	}
+
+	result := exportPatchSeries(commits)
+
+	// Check format
+	if result.format != "patch" {
+		t.Errorf("Expected format 'patch', got %q", result.format)
+	}
+
+	// Check filename
+	if result.filename != "series.patch" {
+		t.Errorf("Expected filename 'series.patch', got %q", result.filename)
+	}
+
+	// Check commits are preserved
+	if len(result.commits) != len(commits) {
+		t.Errorf("Expected %d commits, got %d", len(commits), len(result.commits))
+	}
+
+	// Check content structure
+	content := result.content
+	if !strings.Contains(content, "From:") {
+		t.Error("Patch content should contain 'From:' header")
+	}
+
+	// Check for Subject headers for each commit
+	if !strings.Contains(content, "Subject: Add feature X") {
+		t.Error("Content should contain first commit subject in patch format")
+	}
+	if !strings.Contains(content, "Subject: Fix bug Y") {
+		t.Error("Content should contain second commit subject in patch format")
+	}
+}
+
+func TestExportPatchSeriesEmpty(t *testing.T) {
+	commits := []commit{}
+
+	result := exportPatchSeries(commits)
+
+	// Check format and filename still set
+	if result.format != "patch" {
+		t.Errorf("Expected format 'patch', got %q", result.format)
+	}
+	if result.filename != "series.patch" {
+		t.Errorf("Expected filename 'series.patch', got %q", result.filename)
+	}
+
+	// Check content has From header even for empty list
+	content := result.content
+	if !strings.Contains(content, "From:") {
+		t.Error("Patch content should contain 'From:' header even for empty commits")
+	}
+
+	// Should not panic
+	if len(result.commits) != 0 {
+		t.Error("Empty input should result in empty commits slice")
+	}
+}
+
+func TestExportPatchSeriesSingleCommit(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123def456", shortHash: "abc123", author: "Charlie", subject: "Initial commit"},
+	}
+
+	result := exportPatchSeries(commits)
+
+	content := result.content
+	if !strings.Contains(content, "From:") {
+		t.Error("Content should contain From header")
+	}
+	if !strings.Contains(content, "Subject: Initial commit") {
+		t.Error("Content should contain commit subject in patch format")
+	}
+
+	// Should have only one Subject line for single commit
+	subjectCount := strings.Count(content, "Subject:")
+	if subjectCount != 1 {
+		t.Errorf("Expected 1 Subject header for single commit, got %d", subjectCount)
+	}
+}
+
+func TestExportPatchSeriesPreservesCommitOrder(t *testing.T) {
+	commits := []commit{
+		{hash: "111", shortHash: "111", author: "Author1", subject: "First"},
+		{hash: "222", shortHash: "222", author: "Author2", subject: "Second"},
+		{hash: "333", shortHash: "333", author: "Author3", subject: "Third"},
+	}
+
+	result := exportPatchSeries(commits)
+	content := result.content
+
+	// Find positions of each subject in content
+	posFirst := strings.Index(content, "Subject: First")
+	posSecond := strings.Index(content, "Subject: Second")
+	posThird := strings.Index(content, "Subject: Third")
+
+	if posFirst == -1 || posSecond == -1 || posThird == -1 {
+		t.Error("Content should contain all commit subjects")
+		return
+	}
+
+	if posFirst >= posSecond || posSecond >= posThird {
+		t.Error("Commits should be in order in the patch content")
+	}
+}
+
+func TestExportPatchSeriesFromHeader(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", shortHash: "abc123", author: "Test Author", subject: "Test"},
+	}
+
+	result := exportPatchSeries(commits)
+	content := result.content
+
+	// From header should be present at start
+	if !strings.HasPrefix(strings.TrimSpace(content), "From:") {
+		t.Error("Patch content should start with From header")
+	}
+
+	// Should contain the default email
+	if !strings.Contains(content, "user@example.com") {
+		t.Error("From header should contain user@example.com")
+	}
+}
