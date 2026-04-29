@@ -599,3 +599,25 @@ func TestRenderCommitGroupsUI_Valid(t *testing.T) {
 	m := newModel(".")
 	_ = renderCommitGroupsUI(m, 80)
 }
+
+// TestCalculateBisectProgress_SingleCommit tests progress with single commit
+func TestCalculateBisectProgress_SingleCommit(t *testing.T) {
+	state := bisectState{
+		candidates: []string{"hash1"},
+	}
+
+	progress := calculateBisectProgress(state)
+
+	AssertEqual(t, 1, progress, "single commit should return 1")
+}
+
+// TestCalculateBisectProgress_MultipleCommits tests progress calculation
+func TestCalculateBisectProgress_MultipleCommits(t *testing.T) {
+	state := bisectState{
+		candidates: []string{"h1", "h2", "h3", "h4", "h5"},
+	}
+
+	progress := calculateBisectProgress(state)
+
+	AssertTrue(t, progress > 0, "progress should be positive")
+}

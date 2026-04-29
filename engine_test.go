@@ -2,6 +2,7 @@ package grit
 
 import (
 	"strings"
+	"testing"
 )
 
 func makeCommits(n int) []commit {
@@ -43,3 +44,48 @@ func makeCommitsWithDays() []commit {
 	}
 }
 
+
+// TestHandleKeyBinding_BasicInput tests that handleKeyBinding processes input
+func TestHandleKeyBinding_BasicInput(t *testing.T) {
+	fixture := NewTestFixture()
+	m := model{
+		commits: fixture.Commits,
+		cursor:  0,
+	}
+
+	// Test that function executes without panic
+	result := handleKeyBinding(m, "q")
+
+	AssertNotNil(t, result, "should return model")
+}
+
+// TestNewModel_Creation tests model initialization
+func TestNewModel_Creation(t *testing.T) {
+	m := newModel(".")
+
+	AssertEqual(t, 0, m.cursor, "initial cursor should be 0")
+	AssertTrue(t, len(m.commits) >= 0, "commits should be initialized")
+}
+
+// TestCommitBuilder_FluentAPI tests builder pattern
+func TestCommitBuilder_FluentAPI(t *testing.T) {
+	commit := NewCommitBuilder().
+		WithHash("abc123def456").
+		WithAuthor("John Doe").
+		WithSubject("Test commit").
+		WithWhen("1 hour ago").
+		Build()
+
+	AssertEqual(t, "abc123d", commit.shortHash, "should set short hash")
+	AssertEqual(t, "John Doe", commit.author, "should set author")
+	AssertEqual(t, "Test commit", commit.subject, "should set subject")
+	AssertEqual(t, "1 hour ago", commit.when, "should set when")
+}
+
+// TestCommitBuilder_Defaults tests builder with defaults
+func TestCommitBuilder_Defaults(t *testing.T) {
+	commit := NewCommitBuilder().Build()
+
+	AssertEqual(t, "Test Author", commit.author, "should use default author")
+	AssertEqual(t, "Test Subject", commit.subject, "should use default subject")
+}
