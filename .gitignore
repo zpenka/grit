@@ -3,3 +3,8 @@ grit
 
 # Claude Code
 .claude/
+
+# Coverage artifacts
+coverage.out
+coverage.html
+*.coverprofile
