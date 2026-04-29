@@ -621,3 +621,126 @@ func TestCalculateBisectProgress_MultipleCommits(t *testing.T) {
 
 	AssertTrue(t, progress > 0, "progress should be positive")
 }
+
+// TestGroupCommits tests the groupCommits function with various grouping modes
+func TestGroupCommits_EmptyInput(t *testing.T) {
+	commits := []commit{}
+	groups := groupCommits(commits, "date")
+
+	AssertEqual(t, 0, len(groups), "empty input should return empty slice")
+}
+
+func TestGroupCommits_ByDate(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", when: "2024-01-15", subject: "Feature A"},
+		{hash: "def456", when: "2024-01-15", subject: "Feature B"},
+		{hash: "ghi789", when: "2024-01-15", subject: "Feature C"},
+		{hash: "jkl012", when: "2024-01-16", subject: "Fix bug"},
+		{hash: "mno345", when: "2024-01-16", subject: "Docs update"},
+	}
+
+	groups := groupCommits(commits, "date")
+
+	AssertEqual(t, 2, len(groups), "should have 2 date groups")
+
+	// Verify group contents
+	dateGroups := make(map[string]int)
+	for _, g := range groups {
+		dateGroups[g.name] = len(g.commits)
+		AssertEqual(t, "date", g.groupBy, "groupBy should be set to 'date'")
+	}
+
+	AssertEqual(t, 3, dateGroups["2024-01-15"], "should have 3 commits on 2024-01-15")
+	AssertEqual(t, 2, dateGroups["2024-01-16"], "should have 2 commits on 2024-01-16")
+}
+
+func TestGroupCommits_ByBranch(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", subject: "feature: add login"},
+		{hash: "def456", subject: "feature: add signup"},
+		{hash: "ghi789", subject: "feature: add dashboard"},
+		{hash: "jkl012", subject: "bugfix: fix timeout"},
+		{hash: "mno345", subject: "bugfix: fix crash"},
+		{hash: "pqr678", subject: "docs: update readme"},
+	}
+
+	groups := groupCommits(commits, "branch")
+
+	AssertEqual(t, 3, len(groups), "should have 3 branch groups (feature, bugfix, docs)")
+
+	// Verify group contents
+	branchGroups := make(map[string]int)
+	for _, g := range groups {
+		branchGroups[g.name] = len(g.commits)
+		AssertEqual(t, "branch", g.groupBy, "groupBy should be set to 'branch'")
+	}
+
+	AssertEqual(t, 3, branchGroups["feature:"], "should have 3 'feature:' commits")
+	AssertEqual(t, 2, branchGroups["bugfix:"], "should have 2 'bugfix:' commits")
+	AssertEqual(t, 1, branchGroups["docs:"], "should have 1 'docs:' commit")
+}
+
+func TestGroupCommits_UnknownGroupMode(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", when: "2024-01-15", subject: "Feature A"},
+		{hash: "def456", when: "2024-01-15", subject: "Feature B"},
+		{hash: "ghi789", when: "2024-01-16", subject: "Fix bug"},
+	}
+
+	groups := groupCommits(commits, "unknown")
+
+	AssertEqual(t, 1, len(groups), "unknown mode should fall back to default grouping")
+	AssertEqual(t, "default", groups[0].name, "should have 'default' group name")
+	AssertEqual(t, 3, len(groups[0].commits), "should have all 3 commits in default group")
+	AssertEqual(t, "unknown", groups[0].groupBy, "groupBy should preserve the mode string")
+}
+
+func TestGroupCommits_DefaultGrouping(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", when: "2024-01-15", subject: "Feature A"},
+		{hash: "def456", when: "2024-01-16", subject: "Feature B"},
+		{hash: "ghi789", when: "2024-01-17", subject: "Fix bug"},
+	}
+
+	groups := groupCommits(commits, "")
+
+	AssertEqual(t, 1, len(groups), "empty mode should use default grouping")
+	AssertEqual(t, "default", groups[0].name, "should have 'default' group name")
+	AssertEqual(t, 3, len(groups[0].commits), "should have all 3 commits in default group")
+}
+
+func TestGroupCommits_PreservesCommitHashes(t *testing.T) {
+	commits := []commit{
+		{hash: "hash1", when: "2024-01-15", subject: "Commit 1"},
+		{hash: "hash2", when: "2024-01-15", subject: "Commit 2"},
+		{hash: "hash3", when: "2024-01-16", subject: "Commit 3"},
+	}
+
+	groups := groupCommits(commits, "date")
+
+	// Collect all hashes from groups
+	hashMap := make(map[string]bool)
+	for _, g := range groups {
+		for _, hash := range g.commits {
+			hashMap[hash] = true
+		}
+	}
+
+	AssertTrue(t, hashMap["hash1"], "should preserve hash1")
+	AssertTrue(t, hashMap["hash2"], "should preserve hash2")
+	AssertTrue(t, hashMap["hash3"], "should preserve hash3")
+	AssertEqual(t, 3, len(hashMap), "should have all 3 hashes")
+}
+
+func TestGroupCommits_SingleCommit(t *testing.T) {
+	commits := []commit{
+		{hash: "abc123", when: "2024-01-15", subject: "Single feature"},
+	}
+
+	groups := groupCommits(commits, "date")
+
+	AssertEqual(t, 1, len(groups), "should have 1 group")
+	AssertEqual(t, "2024-01-15", groups[0].name, "group name should be the date")
+	AssertEqual(t, 1, len(groups[0].commits), "group should have 1 commit")
+	AssertEqual(t, "abc123", groups[0].commits[0], "should preserve the commit hash")
+}
