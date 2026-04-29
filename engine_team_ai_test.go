@@ -183,3 +183,24 @@ func TestDetectAnomalies_FindsUnusualCommits(t *testing.T) {
 		t.Error("detectAnomalies should find unusual commits")
 	}
 }
+
+// TestClassifyCommit_WithMerge tests merge commit detection
+func TestClassifyCommit_WithMerge(t *testing.T) {
+	classification := classifyCommit("Merge pull request #123", "abc123")
+
+	AssertTrue(t, classification.category != "", "should classify merge commit")
+}
+
+// TestClassifyCommit_FeatureCommit tests feature commit classification
+func TestClassifyCommit_FeatureCommit(t *testing.T) {
+	classification := classifyCommit("feat: Add new feature", "def456")
+
+	AssertTrue(t, classification.category != "", "should classify feature commit")
+}
+
+// TestClassifyCommit_Refactor tests refactor commit classification
+func TestClassifyCommit_Refactor(t *testing.T) {
+	classification := classifyCommit("refactor: Clean up code structure", "ghi789")
+
+	AssertTrue(t, classification.category != "", "should classify refactor commit")
+}

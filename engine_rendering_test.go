@@ -1084,3 +1084,16 @@ func TestTrackSprintVelocity_Valid(t *testing.T) {
 func TestTrackStorageQuota_Valid(t *testing.T) {
 	_ = trackStorageQuota(".")
 }
+
+// TestRenderFileTimeline_WithCommits tests timeline rendering with data
+func TestRenderFileTimeline_WithCommits(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa", author: "Alice", subject: "Change 1", when: "1 hour ago"},
+		{hash: "bbb", author: "Bob", subject: "Change 2", when: "2 hours ago"},
+	}
+
+	result := renderFileTimeline(commits, "main.go", 80)
+
+	AssertTrue(t, len(result) > 0, "should render timeline")
+	AssertStringContains(t, result, "main.go", "should contain filename")
+}
