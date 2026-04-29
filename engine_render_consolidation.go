@@ -36,13 +36,6 @@ func BuildAnalysisData(pairs ...interface{}) map[string]interface{} {
 	return data
 }
 
-// BuildItemsList creates a list of strings for RenderStandardUI.
-// This is a convenience function to ensure consistent formatting.
-func BuildItemsList(items []string) RenderConfig {
-	return RenderConfig{
-		Items: items,
-	}
-}
 
 // renderMenuOverlay renders a menu with consistent navigation hints.
 // This DRY helper reduces duplication across all menu renderers.

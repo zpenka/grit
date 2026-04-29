@@ -523,10 +523,6 @@ func TestGetSignatureStatus_Valid(t *testing.T) {
 	_ = getSignatureStatus(c)
 }
 
-func TestRenderCommitSigningUI_Valid(t *testing.T) {
-	_ = renderCommitSigningUI([]commit{{hash: "a"}})
-}
-
 func TestGetCodeReviewStats_Valid(t *testing.T) {
 	_ = getCodeReviewStats([]commit{{hash: "a"}})
 }
@@ -562,10 +558,6 @@ func TestPlanTeamCapacity_Valid(t *testing.T) {
 
 func TestCalculateTeamVelocityTrend_Valid(t *testing.T) {
 	_ = calculateTeamVelocityTrend()
-}
-
-func TestRenderTeamAnalyticsUI_Valid(t *testing.T) {
-	_ = renderTeamAnalyticsUI()
 }
 
 func TestValidateCommitMessages_Valid(t *testing.T) {
@@ -606,10 +598,6 @@ func TestGenerateComplianceReport_Valid(t *testing.T) {
 
 func TestAuditAllOperations_Valid(t *testing.T) {
 	_ = auditAllOperations()
-}
-
-func TestRenderComplianceUI_Valid(t *testing.T) {
-	_ = renderComplianceUI()
 }
 
 func TestExportToCSV_Valid(t *testing.T) {
@@ -1038,67 +1026,9 @@ func TestRecoverFromStash_Valid(t *testing.T) {
 	_ = recoverFromStash("stash@{0}")
 }
 
-func TestRenderAIInsightsUI_Valid(t *testing.T) {
-	_ = renderAIInsightsUI([]commit{{hash: "a"}})
-}
-
-func TestRenderAdvancedFilterUI_Valid(t *testing.T) {
-	_ = renderAdvancedFilterUI()
-}
-
 func TestRenderBookmarkMarker_Valid(t *testing.T) {
 	m := newModel(".")
 	_ = renderBookmarkMarker(m, 0)
-}
-
-func TestRenderChurnAnalysisUI_Valid(t *testing.T) {
-	_ = renderChurnAnalysisUI([]commit{{hash: "a"}})
-}
-
-func TestRenderCollaborationUI_Valid(t *testing.T) {
-	_ = renderCollaborationUI([]commit{{hash: "a"}})
-}
-
-func TestRenderCommitComparisonUI_Valid(t *testing.T) {
-	left := commit{hash: "a", subject: "test"}
-	right := commit{hash: "b", subject: "test"}
-	_ = renderCommitComparisonUI(left, right)
-}
-
-func TestRenderCoverageAnalysisUI_Valid(t *testing.T) {
-	_ = renderCoverageAnalysisUI([]commit{{hash: "a"}})
-}
-
-func TestRenderDependencyGraphUI_Valid(t *testing.T) {
-	_ = renderDependencyGraphUI([]commit{{hash: "a"}})
-}
-
-func TestRenderDeveloperExperienceUI_Valid(t *testing.T) {
-	_ = renderDeveloperExperienceUI()
-}
-
-func TestRenderDiffAnalysisUI_Valid(t *testing.T) {
-	_ = renderDiffAnalysisUI("test")
-}
-
-func TestRenderExpertiseMapUI_Valid(t *testing.T) {
-	_ = renderExpertiseMapUI([]commit{{hash: "a"}})
-}
-
-func TestRenderFlameGraphUI_Valid(t *testing.T) {
-	_ = renderFlameGraphUI([]commit{{hash: "a"}})
-}
-
-func TestRenderGitOperationsUI_Valid(t *testing.T) {
-	_ = renderGitOperationsUI([]commit{{hash: "a"}})
-}
-
-func TestRenderHotspotUI_Valid(t *testing.T) {
-	_ = renderHotspotUI([]commit{{hash: "a"}})
-}
-
-func TestRenderIntegrationUI_Valid(t *testing.T) {
-	_ = renderIntegrationUI()
 }
 
 func TestRenderLineCommentMarker_Valid(t *testing.T) {
@@ -1106,29 +1036,9 @@ func TestRenderLineCommentMarker_Valid(t *testing.T) {
 	_ = renderLineCommentMarker(m, 0)
 }
 
-func TestRenderPerformanceOptimizationUI_Valid(t *testing.T) {
-	_ = renderPerformanceOptimizationUI()
-}
-
-func TestRenderRegressionAnalysisUI_Valid(t *testing.T) {
-	_ = renderRegressionAnalysisUI([]commit{{hash: "a"}})
-}
-
-func TestRenderRepositoryManagementUI_Valid(t *testing.T) {
-	_ = renderRepositoryManagementUI()
-}
-
-func TestRenderSearchUI_Valid(t *testing.T) {
-	_ = renderSearchUI()
-}
-
 func TestRenderStatsBadgeInList_Valid(t *testing.T) {
 	stats := commitStatistics{filesChanged: 1, insertions: 5, deletions: 2}
 	_ = renderStatsBadgeInList(stats, 20)
-}
-
-func TestRenderTimelineUI_Valid(t *testing.T) {
-	_ = renderTimelineUI([]commit{{hash: "a"}})
 }
 
 func TestSendSlackNotification_Valid(t *testing.T) {

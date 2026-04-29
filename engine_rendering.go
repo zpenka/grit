@@ -823,17 +823,6 @@ func verifyCommitSignature(c *commit) *SignatureVerification {
 func getSignatureStatus(c *commit) string {
 	return "unverified"
 }
-
-// renderCommitSigningUI displays commit signature verification status using the analysis UI template.
-func renderCommitSigningUI(commits []commit) string {
-	data := make(map[string]interface{})
-	for _, c := range commits {
-		status := getSignatureStatus(&c)
-		data[fmt.Sprintf("%s Signature Status", c.shortHash)] = status
-	}
-	return RenderAnalysisUI("Commit Signing & Signature Verification", data)
-}
-
 // --- Collaboration Features ---
 
 type CodeReviewStats struct {
@@ -885,17 +874,6 @@ func buildCollaborationMetrics(commits []commit) *CollaborationMetrics {
 		CommitsPerAuthor: authorsMap,
 	}
 }
-
-// renderCollaborationUI displays team collaboration metrics using the analysis UI template.
-func renderCollaborationUI(commits []commit) string {
-	metrics := buildCollaborationMetrics(commits)
-	data := make(map[string]interface{})
-	data["Total Authors"] = metrics.TotalAuthors
-	data["Code Reviews"] = metrics.CodeReview.TotalReviews
-	data["Pair Programming Sessions"] = metrics.PairProgramming.TotalPairs
-	return RenderAnalysisUI("Collaboration Metrics", data)
-}
-
 // --- Rich Visualization ---
 
 type FlameGraph struct {
@@ -921,21 +899,6 @@ func buildDependencyGraph(commits []commit) *DependencyGraph {
 		Edges: make(map[string][]string),
 	}
 }
-
-// renderFlameGraphUI displays flame graph visualization using the metric bar template.
-func renderFlameGraphUI(commits []commit) string {
-	data := make(map[string]interface{})
-	data["Total Commits"] = len(commits)
-	return RenderAnalysisUI("Flame Graph", data)
-}
-
-// renderDependencyGraphUI displays dependency graph visualization using the analysis UI template.
-func renderDependencyGraphUI(commits []commit) string {
-	data := make(map[string]interface{})
-	data["Total Commits"] = len(commits)
-	return RenderAnalysisUI("Dependency Graph", data)
-}
-
 // --- Interactive Timeline ---
 
 type TimelineScrubber struct {
@@ -965,19 +928,6 @@ func buildInteractiveTimeline(commits []commit) map[string]interface{} {
 		"count":   len(commits),
 	}
 }
-
-// renderTimelineUI displays commit timeline using the standard UI template.
-func renderTimelineUI(commits []commit) string {
-	var items []string
-	for i, c := range commits {
-		items = append(items, fmt.Sprintf("%d. %s: %s", i+1, c.shortHash, c.subject))
-	}
-	return RenderStandardUI(RenderConfig{
-		Title: "Timeline",
-		Items: items,
-	})
-}
-
 // --- Side-by-Side Comparison ---
 
 type CommitComparison struct {
@@ -996,46 +946,6 @@ func compareCommits(left, right commit) *CommitComparison {
 		SameMeta: sameMeta,
 	}
 }
-
-// renderCommitComparisonUI displays side-by-side commit comparison using the comparison table template.
-func renderCommitComparisonUI(left, right commit) string {
-	items := map[string][2]interface{}{
-		"Hash":    {left.shortHash, right.shortHash},
-		"Subject": {left.subject, right.subject},
-		"Author":  {left.author, right.author},
-		"Date":    {left.when, right.when},
-	}
-	return RenderComparisonTable("Commit Comparison", "Left", "Right", items)
-}
-
-// --- Search & Filter UI ---
-
-// renderSearchUI displays advanced search options using the standard UI template.
-func renderSearchUI() string {
-	items := []string{
-		"Query: ",
-		"Options: regex, date, author, files",
-	}
-	return RenderStandardUI(RenderConfig{
-		Title: "Advanced Search",
-		Items: items,
-	})
-}
-
-// renderAdvancedFilterUI displays available filter options using the standard UI template.
-func renderAdvancedFilterUI() string {
-	items := []string{
-		"Author Filter",
-		"Date Range Filter",
-		"File Pattern Filter",
-		"Regex Search",
-	}
-	return RenderStandardUI(RenderConfig{
-		Title: "Advanced Filters",
-		Items: items,
-	})
-}
-
 // --- Advanced Analytics: Code Churn Analysis ---
 
 type FileChurn struct {
@@ -1081,18 +991,6 @@ func getChurnMetricsForFile(filename string, changes int, lines int) *FileChurn 
 		RemoveLines: 0,
 	}
 }
-
-// renderChurnAnalysisUI renders code churn analysis using consolidated rendering.
-func renderChurnAnalysisUI(commits []commit) string {
-	churn := analyzeCodeChurn(commits)
-	data := make(map[string]interface{})
-	data["Files Analyzed"] = len(churn)
-	for name, metrics := range churn {
-		data[name] = fmt.Sprintf("%d changes", metrics.ChangeCount)
-	}
-	return RenderAnalysisUI("Code Churn Analysis", data)
-}
-
 // --- Advanced Analytics: Author Expertise Detection ---
 
 type AuthorExpertise struct {
@@ -1152,17 +1050,6 @@ func getAuthorSpecialties(author string, commits []commit) []string {
 	}
 	return specialties
 }
-
-// renderExpertiseMapUI displays author expertise mapping using the analysis UI template.
-func renderExpertiseMapUI(commits []commit) string {
-	expertise := detectAuthorExpertise(commits)
-	data := make(map[string]interface{})
-	for author, exp := range expertise {
-		data[author] = len(exp.Files)
-	}
-	return RenderAnalysisUI("Author Expertise Map", data)
-}
-
 // --- Advanced Analytics: Hotspot Detection ---
 
 type FileHotspot struct {
@@ -1215,17 +1102,6 @@ func getRelatedFiles(commits []commit, filename string) []string {
 	}
 	return related
 }
-
-// renderHotspotUI displays code hotspots detected in the repository using the analysis UI template.
-func renderHotspotUI(commits []commit) string {
-	hotspots := detectCodeHotspots(commits)
-	data := make(map[string]interface{})
-	for _, h := range hotspots {
-		data[h.FileName] = h.ChangeCount
-	}
-	return RenderAnalysisUI("Code Hotspots", data)
-}
-
 // --- Advanced Analytics: Performance Regression Detection ---
 
 type PerformanceRegression struct {
@@ -1280,22 +1156,6 @@ func getCommitsAffectingPerformance(commits []commit, threshold float64) []commi
 	}
 	return result
 }
-
-// renderRegressionAnalysisUI displays performance regression analysis using the analysis UI template.
-func renderRegressionAnalysisUI(commits []commit) string {
-	regressions := detectPerformanceRegression(commits)
-	data := make(map[string]interface{})
-	data["Regressions"] = len(regressions)
-	for _, r := range regressions {
-		hash := r.CommitHash
-		if len(hash) > 7 {
-			hash = hash[:7]
-		}
-		data[hash] = fmt.Sprintf("%.2f%% degradation", r.DegradationPct)
-	}
-	return RenderAnalysisUI("Performance Regression Analysis", data)
-}
-
 // --- Advanced Analytics: Test Coverage Correlation ---
 
 type CoverageMetric struct {
@@ -1368,17 +1228,6 @@ func calculateCoverageRisk(totalLines int, uncoveredLines int, changedLines int)
 	riskRatio := float64(uncoveredLines) / float64(totalLines)
 	return riskRatio * float64(changedLines)
 }
-
-// renderCoverageAnalysisUI displays test coverage analysis using the analysis UI template.
-func renderCoverageAnalysisUI(commits []commit) string {
-	coverage := trackCoverageByFile(commits)
-	data := make(map[string]interface{})
-	for file, metric := range coverage {
-		data[file] = fmt.Sprintf("%.1f%% coverage", metric.CoveragePercent)
-	}
-	return RenderAnalysisUI("Test Coverage Analysis", data)
-}
-
 // --- Option 4: Advanced Diff & Review Features ---
 
 type SemanticDiffAnalysis struct {
@@ -1482,17 +1331,6 @@ func identifyFunctionsAdded(diff string) []string {
 	}
 	return functions
 }
-
-// renderDiffAnalysisUI displays semantic diff analysis using the analysis UI template.
-func renderDiffAnalysisUI(diff string) string {
-	analysis := analyzeSemanticDiff(diff)
-	data := make(map[string]interface{})
-	data["Functions Added"] = len(analysis.FunctionsAdded)
-	data["Functions Removed"] = len(analysis.FunctionsRemoved)
-	data["Classes Changed"] = analysis.ClassesChanged
-	return RenderAnalysisUI("Diff Analysis", data)
-}
-
 // --- Option 5: Machine Learning & AI ---
 
 type CommitFeatures struct {
@@ -1601,27 +1439,6 @@ func extractFeaturesForML(c *commit) map[string]interface{} {
 		"complexity": 0.5,
 	}
 }
-
-// renderAIInsightsUI displays AI-powered insights about commits using the analysis UI template.
-func renderAIInsightsUI(commits []commit) string {
-	data := make(map[string]interface{})
-	data["Analyzed Commits"] = len(commits)
-
-	bugRisks := 0
-	for _, c := range commits {
-		risk := predictBugRisk(&c)
-		if risk > 0.3 {
-			bugRisks++
-		}
-	}
-	data["High Bug Risk Commits"] = bugRisks
-
-	anomalies := detectAnomalies(commits)
-	data["Anomalies Detected"] = len(anomalies)
-
-	return RenderAnalysisUI("AI-Powered Insights", data)
-}
-
 // --- Option 6: Performance Optimization & Scale ---
 
 type IncrementalScanState struct {
@@ -1746,17 +1563,6 @@ func getCachedResults(key string) map[string]interface{} {
 		"valid": true,
 	}
 }
-
-// renderPerformanceOptimizationUI displays performance optimization settings using the analysis UI template.
-func renderPerformanceOptimizationUI() string {
-	data := make(map[string]interface{})
-	data["Incremental Scanning"] = "enabled"
-	data["Distributed Indexing"] = "4 shards"
-	data["Database Persistence"] = "active"
-	data["Memory Optimization"] = "50% reduction"
-	return RenderAnalysisUI("Performance Optimization", data)
-}
-
 // --- Option 5: Advanced Git Operations ---
 
 type RebaseSimulation struct {
@@ -1901,17 +1707,6 @@ func detectConflictProne(commits []commit) []*ConflictProneness {
 	}
 	return prone
 }
-
-// renderGitOperationsUI displays available git operations using the analysis UI template.
-func renderGitOperationsUI(commits []commit) string {
-	data := make(map[string]interface{})
-	data["Rebase Simulation"] = "ready"
-	data["Merge Strategy"] = "squash recommended"
-	data["Cherry-pick"] = "optimized"
-	data["Stashes"] = len(analyzeStashContents())
-	return RenderAnalysisUI("Git Operations", data)
-}
-
 // --- Option 7: Advanced Repository Management ---
 
 type MultiRepoAnalysis struct {
@@ -2055,18 +1850,6 @@ func detectDependencyCycles(repos []string) [][]string {
 	}
 	return cycles
 }
-
-// renderRepositoryManagementUI displays repository management settings using the analysis UI template.
-func renderRepositoryManagementUI() string {
-	data := make(map[string]interface{})
-	data["Multi-repo Analysis"] = "active"
-	data["Mirror Sync"] = "synced"
-	data["Backup Strategy"] = "incremental daily"
-	data["Health Score"] = "92%"
-	data["Storage Usage"] = "70%"
-	return RenderAnalysisUI("Repository Management", data)
-}
-
 // --- Option 8: Developer Experience ---
 
 func formatOutputWithColors(text string) string {
@@ -2152,19 +1935,6 @@ func generateCompletion(commands []string) string {
 	}
 	return sb.String()
 }
-
-// renderDeveloperExperienceUI displays developer experience features using the analysis UI template.
-func renderDeveloperExperienceUI() string {
-	data := make(map[string]interface{})
-	data["CLI Formatting"] = "colors enabled"
-	data["Shell Auto-complete"] = "bash, zsh"
-	data["Git Hooks"] = "pre-commit, post-commit"
-	data["IDE Plugins"] = "VSCode, JetBrains"
-	data["Git Aliases"] = len(generateGitAliases())
-	data["Workflow Templates"] = len(createWorkflowTemplates())
-	return RenderAnalysisUI("Developer Experience", data)
-}
-
 // --- Option 1: Integration & External Data ---
 
 func integrateGitHubAPI(config map[string]string) string {
@@ -2237,19 +2007,6 @@ func setupWebhooks(webhookURL string) bool {
 func setupOIDC(config map[string]string) bool {
 	return len(config["provider"]) > 0
 }
-
-// renderIntegrationUI displays integrations and external connections using the analysis UI template.
-func renderIntegrationUI() string {
-	data := make(map[string]interface{})
-	data["GitHub API"] = "connected"
-	data["GitLab API"] = "available"
-	data["Jira"] = "linked"
-	data["Linear"] = "linked"
-	data["Slack"] = "notifications enabled"
-	data["Webhooks"] = "3 configured"
-	return RenderAnalysisUI("Integration & External Data", data)
-}
-
 // --- Option 2: Team & Organizational Features ---
 
 type SprintVelocity struct {
@@ -2369,18 +2126,6 @@ func calculateTeamVelocityTrend() map[string]interface{} {
 		"forecast":      180,
 	}
 }
-
-// renderTeamAnalyticsUI displays team and organizational analytics using the analysis UI template.
-func renderTeamAnalyticsUI() string {
-	data := make(map[string]interface{})
-	data["Team Size"] = 5
-	data["Sprint Velocity"] = "150 points"
-	data["Onboarding"] = "2 new members"
-	data["Knowledge Gaps"] = 3
-	data["Capacity Utilization"] = "85%"
-	return RenderAnalysisUI("Team & Organizational Analytics", data)
-}
-
 // --- Option 3: Quality & Compliance ---
 
 type MessageValidation struct {
@@ -2522,19 +2267,6 @@ func auditAllOperations() []*AuditLog {
 		{Timestamp: "2026-04-26T10:00:00Z", User: "alice", Action: "view", Details: "viewed log", Hash: "immutable_hash_1"},
 	}
 }
-
-// renderComplianceUI displays quality and compliance metrics using the analysis UI template.
-func renderComplianceUI() string {
-	data := make(map[string]interface{})
-	data["Commit Message Validation"] = "95% pass"
-	data["Conventional Commits"] = "enabled"
-	data["Breaking Changes"] = 0
-	data["License Compliance"] = "compliant"
-	data["Security Issues"] = "0 critical"
-	data["Audit Log"] = "immutable"
-	return RenderAnalysisUI("Quality & Compliance", data)
-}
-
 // --- Option 4: Data Export & Reporting ---
 
 func exportToCSV(commits []commit) string {
