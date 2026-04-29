@@ -744,3 +744,95 @@ func TestGroupCommits_SingleCommit(t *testing.T) {
 	AssertEqual(t, 1, len(groups[0].commits), "group should have 1 commit")
 	AssertEqual(t, "abc123", groups[0].commits[0], "should preserve the commit hash")
 }
+
+// TestDispatchAnalyticsFeature tests the dispatch function for analytics features
+func TestDispatchAnalyticsFeature_InvalidIndex(t *testing.T) {
+	m := newModel(".")
+
+	// Test negative index
+	result := dispatchAnalyticsFeature(m, -1)
+	AssertEqual(t, false, result.showCodeOwnership, "should not change state for invalid index")
+
+	// Test index >= analyticsMenuLen
+	result = dispatchAnalyticsFeature(m, 100)
+	AssertEqual(t, false, result.showCodeOwnership, "should not change state for out-of-range index")
+}
+
+func TestDispatchAnalyticsFeature_ToggleCodeOwnership(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(3)
+
+	// Enable code ownership
+	result := dispatchAnalyticsFeature(m, 0)
+	AssertEqual(t, true, result.showCodeOwnership, "should enable code ownership")
+
+	// Disable code ownership
+	result = dispatchAnalyticsFeature(result, 0)
+	AssertEqual(t, false, result.showCodeOwnership, "should disable code ownership")
+}
+
+func TestDispatchAnalyticsFeature_ToggleHotspots(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(3)
+
+	// Enable hotspots
+	result := dispatchAnalyticsFeature(m, 1)
+	AssertEqual(t, true, result.showHotspots, "should enable hotspots")
+
+	// Disable hotspots
+	result = dispatchAnalyticsFeature(result, 1)
+	AssertEqual(t, false, result.showHotspots, "should disable hotspots")
+}
+
+func TestDispatchAnalyticsFeature_ToggleLinting(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(2)
+	m.commits[0].subject = "fix: bad commit message with very long text that should be linted"
+	m.commits[1].subject = "feat: good commit message"
+
+	// Enable linting
+	result := dispatchAnalyticsFeature(m, 2)
+	AssertEqual(t, true, result.showLinting, "should enable linting")
+	AssertTrue(t, len(result.lintingResults) > 0, "should populate linting results")
+}
+
+func TestDispatchAnalyticsFeature_ToggleBisect(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(5)
+
+	// Enable bisect
+	result := dispatchAnalyticsFeature(m, 3)
+	AssertEqual(t, true, result.bisectState.active, "should activate bisect")
+
+	// Disable bisect
+	result = dispatchAnalyticsFeature(result, 3)
+	AssertEqual(t, false, result.bisectState.active, "should deactivate bisect")
+	AssertEqual(t, false, result.showBisectUI, "should hide bisect UI")
+}
+
+func TestDispatchAnalyticsFeature_ToggleActivityHeatmap(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(3)
+
+	// Enable activity heatmap
+	result := dispatchAnalyticsFeature(m, 4)
+	AssertEqual(t, true, result.showActivityHeatmap, "should enable activity heatmap")
+
+	// Disable activity heatmap
+	result = dispatchAnalyticsFeature(result, 4)
+	AssertEqual(t, false, result.showActivityHeatmap, "should disable activity heatmap")
+}
+
+func TestDispatchAnalyticsFeature_ToggleAuthorStats(t *testing.T) {
+	m := newModel(".")
+	m.commits = makeCommits(3)
+
+	// Enable author stats
+	result := dispatchAnalyticsFeature(m, 5)
+	AssertEqual(t, true, result.showAnalytics, "should enable analytics")
+	AssertTrue(t, len(result.authorStats) > 0, "should populate author stats")
+
+	// Disable author stats
+	result = dispatchAnalyticsFeature(result, 5)
+	AssertEqual(t, false, result.showAnalytics, "should disable analytics")
+}
