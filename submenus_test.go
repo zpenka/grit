@@ -752,6 +752,255 @@ func TestGitOpsMenuItemsMatchLen(t *testing.T) {
 	}
 }
 
+// ============================================================================
+// Workflows Submenu Tests
+// ============================================================================
+
+func TestUpdate_WorkflowsKeyTogglesMenu(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+
+	// Press "w"
+	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("w")}
+	m1, _ := m.Update(msg)
+	model1 := m1.(model)
+
+	if !model1.showWorkflowsMenu {
+		t.Error("pressing w should toggle showWorkflowsMenu to true")
+	}
+	if model1.workflowsMenuIdx != 0 {
+		t.Error("pressing w should reset workflowsMenuIdx to 0")
+	}
+
+	// Press "w" again to close
+	m2, _ := model1.Update(msg)
+	model2 := m2.(model)
+
+	if model2.showWorkflowsMenu {
+		t.Error("pressing w again should toggle showWorkflowsMenu to false")
+	}
+}
+
+func TestUpdate_WorkflowsMenuNavigation(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.showWorkflowsMenu = true
+	m.workflowsMenuIdx = 0
+	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
+
+	// Press "j" to move down
+	msgJ := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")}
+	m1, _ := m.Update(msgJ)
+	model1 := m1.(model)
+
+	if model1.workflowsMenuIdx != 1 {
+		t.Errorf("pressing j should move down, got idx %d", model1.workflowsMenuIdx)
+	}
+
+	// Press "k" to move up
+	msgK := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")}
+	m2, _ := model1.Update(msgK)
+	model2 := m2.(model)
+
+	if model2.workflowsMenuIdx != 0 {
+		t.Errorf("pressing k should move up, got idx %d", model2.workflowsMenuIdx)
+	}
+}
+
+func TestUpdate_WorkflowsMenuBoundsCheck(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.showWorkflowsMenu = true
+	m.workflowsMenuIdx = 4  // Last item (0-4 = 5 items)
+	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
+
+	// Press "j" at the end - should not go beyond bounds
+	msgJ := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")}
+	m1, _ := m.Update(msgJ)
+	model1 := m1.(model)
+
+	if model1.workflowsMenuIdx != 4 {
+		t.Error("pressing j at end should stay at last item")
+	}
+
+	// Now move to start and test k
+	m.workflowsMenuIdx = 0
+	msgK := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")}
+	m2, _ := m.Update(msgK)
+	model2 := m2.(model)
+
+	if model2.workflowsMenuIdx != 0 {
+		t.Error("pressing k at start should stay at first item")
+	}
+}
+
+func TestUpdate_WorkflowsMenuSelect(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.showWorkflowsMenu = true
+	m.workflowsMenuIdx = 0  // Worktrees
+	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
+
+	// Press "enter" to select
+	msg := tea.KeyMsg{Type: tea.KeyEnter}
+	m1, _ := m.Update(msg)
+	model1 := m1.(model)
+
+	if model1.showWorkflowsMenu {
+		t.Error("pressing enter should close workflows menu")
+	}
+	if !model1.showWorktrees {
+		t.Error("selecting item 0 should enable showWorktrees")
+	}
+}
+
+func TestUpdate_WorkflowsMenuEscapeClosesMenu(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.showWorkflowsMenu = true
+	m.workflowsMenuIdx = 2
+	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
+
+	// Press 'w' to toggle menu closed
+	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("w")}
+	m1, _ := m.Update(msg)
+	model1 := m1.(model)
+
+	if model1.showWorkflowsMenu {
+		t.Error("pressing w should close workflows menu when open")
+	}
+}
+
+func TestView_WorkflowsMenuOverlay(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 40
+	m.showWorkflowsMenu = true
+	m.workflowsMenuIdx = 0
+	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
+
+	view := m.View()
+
+	// Menu should contain workflows feature names
+	expectedStrings := []string{"Worktrees", "Submodules", "Named stashes", "Tag management", "GPG status"}
+	for _, expected := range expectedStrings {
+		if !strings.Contains(view, expected) {
+			t.Errorf("workflows menu should contain '%s'", expected)
+		}
+	}
+}
+
+func TestDispatchWorkflowsFeature_Worktrees(t *testing.T) {
+	m := newModel(".")
+	m.showWorktrees = false
+
+	m1 := dispatchWorkflowsFeature(m, 0)
+
+	if !m1.showWorktrees {
+		t.Error("dispatching worktrees should set showWorktrees")
+	}
+	// Lazy load should have been called (data may be empty with no git output)
+	// Just verify the flag was toggled
+	if m1.showWorktrees != !m.showWorktrees {
+		t.Error("dispatching should toggle showWorktrees")
+	}
+}
+
+func TestDispatchWorkflowsFeature_Submodules(t *testing.T) {
+	m := newModel(".")
+	m.showSubmodules = false
+
+	m1 := dispatchWorkflowsFeature(m, 1)
+
+	if !m1.showSubmodules {
+		t.Error("dispatching submodules should set showSubmodules")
+	}
+	// Lazy load should have been called (data may be empty with no git output)
+	// Just verify the flag was toggled
+	if m1.showSubmodules != !m.showSubmodules {
+		t.Error("dispatching should toggle showSubmodules")
+	}
+}
+
+func TestDispatchWorkflowsFeature_NamedStashes(t *testing.T) {
+	m := newModel(".")
+	m.showNamedStashes = false
+
+	m1 := dispatchWorkflowsFeature(m, 2)
+
+	if !m1.showNamedStashes {
+		t.Error("dispatching named stashes should set showNamedStashes")
+	}
+}
+
+func TestDispatchWorkflowsFeature_TagMgmt(t *testing.T) {
+	m := newModel(".")
+	m.showTagMgmt = false
+
+	m1 := dispatchWorkflowsFeature(m, 3)
+
+	if !m1.showTagMgmt {
+		t.Error("dispatching tag management should set showTagMgmt")
+	}
+}
+
+func TestDispatchWorkflowsFeature_GPGStatus(t *testing.T) {
+	m := newModel(".")
+	m.showGPGStatus = false
+	m.gpgStatuses = nil
+
+	m1 := dispatchWorkflowsFeature(m, 4)
+
+	if !m1.showGPGStatus {
+		t.Error("dispatching GPG status should set showGPGStatus")
+	}
+	// Lazy load attempts to populate gpgStatuses (may be empty if no output)
+	if m1.gpgStatuses == nil {
+		t.Error("dispatching GPG status should initialize gpgStatuses map")
+	}
+}
+
+func TestDispatchWorkflowsFeature_Toggle(t *testing.T) {
+	m := newModel(".")
+	m.showWorktrees = false
+
+	// Toggle on
+	m1 := dispatchWorkflowsFeature(m, 0)
+	if !m1.showWorktrees {
+		t.Error("first dispatch should enable showWorktrees")
+	}
+
+	// Toggle off
+	m2 := dispatchWorkflowsFeature(m1, 0)
+	if m2.showWorktrees {
+		t.Error("second dispatch should disable showWorktrees")
+	}
+}
+
+func TestDispatchWorkflowsFeature_OutOfRangeIndex(t *testing.T) {
+	m := newModel(".")
+	m.commits = []commit{{hash: "abc1", author: "alice", subject: "test"}}
+	originalShowWorktrees := m.showWorktrees
+
+	// Test out of range (should be >= 5 for new range)
+	m1 := dispatchWorkflowsFeature(m, 5)
+	if m1.showWorktrees != originalShowWorktrees {
+		t.Error("out of range index should return unchanged model")
+	}
+}
+
+func TestWorkflowsMenuItemsMatchLen(t *testing.T) {
+	if len(workflowsMenuItems) != workflowsMenuLen {
+		t.Errorf("workflowsMenuItems count (%d) should match workflowsMenuLen (%d)",
+			len(workflowsMenuItems), workflowsMenuLen)
+	}
+}
+
 // Helper function to create key messages
 func createKeyMsg(s string) interface{} {
 	return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(s)}
