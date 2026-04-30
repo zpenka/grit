@@ -67,9 +67,7 @@ Each module handles a logical feature group:
 ```
 User Input (Keybinding)
     ↓
-grit.go: handleKeyBinding()
-    ↓
-Update() method processes event
+grit.go: Update() method processes event
     ↓
 Model state changes (commits, cursor, filters, etc.)
     ↓
@@ -248,7 +246,7 @@ if m.showAnalytics && len(m.analyticsData) == 0 {
 ```
 Update() receives user input
     ↓
-Match key to handler (handleKeyBinding)
+Match key to keybinding (inline in Update)
     ↓
 Modify model based on action
     ↓
@@ -262,9 +260,8 @@ Terminal renders output
 ```
 
 **Key Files:**
-- `grit.go:Update()` - Main event dispatcher
+- `grit.go:Update()` - Main event dispatcher and keybinding handler
 - `grit.go:View()` - Main render orchestrator
-- `grit.go:handleKeyBinding()` - Key handling logic
 
 ## Testing Strategies
 
