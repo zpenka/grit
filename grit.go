@@ -1141,51 +1141,142 @@ func renderHelpOverlay(m model) string {
 		h = 10
 	}
 
-	// Render help text centered on screen
-	help := `
-KEYBINDING REFERENCE
+	// Build help text with dynamic menu items
+	var help strings.Builder
+	help.WriteString("KEYBINDING REFERENCE\n\n")
+	help.WriteString("NAVIGATION\n")
+	help.WriteString("  j/k          Scroll commit list / diff panel\n")
+	help.WriteString("  g/G          Jump to first / last commit (in list) / git ops menu (g key)\n")
+	help.WriteString("  5j           Jump 5 commits (count prefix works with j/k)\n")
+	help.WriteString("  l/h          Switch between commit and diff panels\n")
+	help.WriteString("  Tab          Toggle between commit and diff\n\n")
 
-NAVIGATION
-  j/k          Scroll commit list / diff panel
-  g/G          Jump to first / last commit (in list) / git ops menu (g key)
-  5j           Jump 5 commits (count prefix works with j/k)
-  l/h          Switch between commit and diff panels
-  Tab          Toggle between commit and diff
+	help.WriteString("VIEWING\n")
+	help.WriteString("  f            Toggle file list\n")
+	help.WriteString("  b            Show branch picker\n")
+	help.WriteString("  B            Show blame for current file\n")
+	help.WriteString("  /            Search commits by subject, author, or hash\n")
+	help.WriteString("  Ctrl+/       Clear search\n\n")
 
-VIEWING
-  f            Toggle file list
-  b            Show branch picker
-  B            Show blame for current file
-  /            Search commits by subject, author, or hash
-  Ctrl+/       Clear search
+	help.WriteString("CLIPBOARD & EDITOR\n")
+	help.WriteString("  y            Copy current commit hash\n")
+	help.WriteString("  e            Open current commit in $EDITOR\n\n")
 
-CLIPBOARD & EDITOR
-  y            Copy current commit hash
-  e            Open current commit in $EDITOR
+	// Dynamic SUBMENUS section built from *MenuItems slices
+	help.WriteString("SUBMENUS (j/k to navigate, Enter to select, key again or Esc to close)\n")
 
-SUBMENUS (Press key to open, j/k to navigate, Enter to select)
-  a            Analytics (ownership, hotspots, bisect, heatmap, stats)
-  v            Visualizations (graphs, timeline, tree, author comparison)
-  t            Team/AI (stats, suggestions, velocity, security, changelog)
-  i            Integration (GitHub PR, Jira, export, issue refs)
-  g            Git Ops (rebase, cherry-pick, reset modes)
+	// Analytics menu
+	help.WriteString("  a  Analytics\n")
+	for i := 0; i < len(analyticsMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(analyticsMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + analyticsMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
 
-HELP & EXIT
-  ?            This help overlay
-  Esc          Close any panel / clear search
-  q            Quit application
+	// Visualization menu
+	help.WriteString("  v  Visualizations\n")
+	for i := 0; i < len(vizMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(vizMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + vizMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
 
-MENU TIPS:
-  • j/k        Navigate in any menu
-  • Enter      Select highlighted feature
-  • Esc        Close menu and return to main view
-  • Same key   Toggle submenu (press 'a' again to close analytics menu)
-`
+	// Team/AI menu
+	help.WriteString("  t  Team / AI\n")
+	for i := 0; i < len(teamMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(teamMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + teamMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
+
+	// Integration menu
+	help.WriteString("  i  Integration\n")
+	for i := 0; i < len(integrationMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(integrationMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + integrationMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
+
+	// Git Ops menu
+	help.WriteString("  g  Git Ops\n")
+	for i := 0; i < len(gitOpsMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(gitOpsMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + gitOpsMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
+
+	// Workflows menu
+	help.WriteString("  w  Workflows\n")
+	for i := 0; i < len(workflowsMenuItems); i += 3 {
+		help.WriteString("     ")
+		for j := 0; j < 3 && i+j < len(workflowsMenuItems); j++ {
+			if j > 0 {
+				help.WriteString("  ")
+			}
+			help.WriteString("- " + workflowsMenuItems[i+j])
+		}
+		help.WriteString("\n")
+	}
+	help.WriteString("\n")
+
+	help.WriteString("HELP & EXIT\n")
+	help.WriteString("  ?            This help overlay\n")
+	help.WriteString("  Esc          Close any panel / clear search\n")
+	help.WriteString("  q            Quit application\n")
 
 	// Split into lines and render
-	lines := strings.Split(strings.TrimSpace(help), "\n")
+	lines := strings.Split(strings.TrimSpace(help.String()), "\n")
 	contentHeight := h - 4
-	if len(lines) > contentHeight {
+
+	// Ensure HELP & EXIT section is always visible by reserving space at the bottom
+	// "HELP & EXIT\n  ?\n  Esc\n  q\n" is at least 4 lines
+	helpSectionStartIdx := -1
+	for i := len(lines) - 1; i >= 0; i-- {
+		if strings.TrimSpace(lines[i]) == "HELP & EXIT" {
+			helpSectionStartIdx = i
+			break
+		}
+	}
+
+	if helpSectionStartIdx > 0 && len(lines) > contentHeight {
+		// If HELP & EXIT section would be cut off, trim from the menus section instead
+		helpSectionLines := len(lines) - helpSectionStartIdx
+		if helpSectionLines <= 4 && contentHeight > helpSectionLines {
+			lines = append(lines[:contentHeight-helpSectionLines], lines[helpSectionStartIdx:]...)
+		} else {
+			lines = lines[:contentHeight]
+		}
+	} else if len(lines) > contentHeight {
 		lines = lines[:contentHeight]
 	}
 
