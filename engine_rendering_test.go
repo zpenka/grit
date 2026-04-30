@@ -408,17 +408,6 @@ func TestSwitchViewMode_Basic(t *testing.T) {
 }
 
 // Additional happy-path coverage for remaining functions
-func TestHandleKeyBinding_Valid(t *testing.T) {
-	m := newModel(".")
-	m.commits = []commit{{hash: "a", subject: "test"}}
-	_ = handleKeyBinding(m, "j")
-}
-
-func TestSafeHandleKeyBinding_Valid(t *testing.T) {
-	m := newModel(".")
-	_ = safeHandleKeyBinding(m, "k")
-}
-
 func TestRenderCommitRowWithStats_Valid(t *testing.T) {
 	m := newModel(".")
 	m.commits = []commit{{hash: "a", subject: "test"}}

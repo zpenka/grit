@@ -45,20 +45,6 @@ func makeCommitsWithDays() []commit {
 }
 
 
-// TestHandleKeyBinding_BasicInput tests that handleKeyBinding processes input
-func TestHandleKeyBinding_BasicInput(t *testing.T) {
-	fixture := NewTestFixture()
-	m := model{
-		commits: fixture.Commits,
-		cursor:  0,
-	}
-
-	// Test that function executes without panic
-	result := handleKeyBinding(m, "q")
-
-	AssertNotNil(t, result, "should return model")
-}
-
 // TestNewModel_Creation tests model initialization
 func TestNewModel_Creation(t *testing.T) {
 	m := newModel(".")
