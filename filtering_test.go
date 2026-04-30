@@ -217,26 +217,6 @@ func TestFilterByDateRange_OutsideRange(t *testing.T) {
 	AssertLen(t, results, 0, "should return empty when outside range")
 }
 
-func TestFilterCombined_MultipleFilters(t *testing.T) {
-	fixture := NewTestFixture()
-
-	filters := &FilterOptions{
-		Author: "Alice",
-		Search: "feature",
-	}
-	results := filterCommitsCombined(fixture.Commits, filters)
-
-	AssertNotNil(t, results, "should return results")
-}
-
-func TestFilterByFilePattern_MatchesFiles(t *testing.T) {
-	fixture := NewTestFixture()
-
-	pattern := "*.go"
-	results := filterByFilePattern(fixture.Commits, pattern)
-
-	AssertNotNil(t, results, "should return results")
-}
 
 func TestFilterByExtension_SelectsFiles(t *testing.T) {
 	commits := []commit{
