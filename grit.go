@@ -436,6 +436,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.gitOpsMenuIdx = 0
 		m.countBuf = ""
 		return m, nil
+	case "w":
+		m.showWorkflowsMenu = !m.showWorkflowsMenu
+		m.workflowsMenuIdx = 0
+		m.countBuf = ""
+		return m, nil
 	}
 
 	// Analytics menu navigation
@@ -534,6 +539,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.showGitOpsMenu = false
 		case "esc", "g":
 			m.showGitOpsMenu = false
+		}
+		return m, nil
+	}
+
+	// Workflows menu navigation
+	if m.showWorkflowsMenu {
+		switch km.String() {
+		case "j", "down":
+			if m.workflowsMenuIdx < workflowsMenuLen-1 {
+				m.workflowsMenuIdx++
+			}
+		case "k", "up":
+			if m.workflowsMenuIdx > 0 {
+				m.workflowsMenuIdx--
+			}
+		case "enter", " ":
+			m = dispatchWorkflowsFeature(m, m.workflowsMenuIdx)
+			m.showWorkflowsMenu = false
+		case "esc", "w":
+			m.showWorkflowsMenu = false
 		}
 		return m, nil
 	}
@@ -695,6 +720,11 @@ func (m model) View() string {
 	// Show git ops menu overlay if requested
 	if m.showGitOpsMenu {
 		return renderGitOpsMenuOverlay(m, m.width)
+	}
+
+	// Show workflows menu overlay if requested
+	if m.showWorkflowsMenu {
+		return renderWorkflowsMenuOverlay(m, m.width)
 	}
 
 	// Show analytics feature panels

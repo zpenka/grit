@@ -147,3 +147,64 @@ func renderGPGStatusUI(m model, width int) string {
 	}
 	return RenderAnalysisUI("GPG Signatures", data)
 }
+
+// --- Workflows Submenu ---
+
+const workflowsMenuLen = 5
+
+var workflowsMenuItems = []string{
+	"Worktrees",
+	"Submodules",
+	"Named stashes",
+	"Tag management",
+	"GPG status",
+}
+
+// dispatchWorkflowsFeature activates the workflows feature at the given menu index.
+func dispatchWorkflowsFeature(m model, idx int) model {
+	if idx < 0 || idx >= workflowsMenuLen {
+		return m
+	}
+
+	switch idx {
+	case 0: // Worktrees
+		m.showWorktrees = !m.showWorktrees
+		if m.showWorktrees && len(m.worktrees) == 0 {
+			m.worktrees = loadWorktrees("")
+		}
+	case 1: // Submodules
+		m.showSubmodules = !m.showSubmodules
+		if m.showSubmodules && len(m.submodules) == 0 {
+			m.submodules = parseSubmodules("")
+		}
+	case 2: // Named Stashes
+		m.showNamedStashes = !m.showNamedStashes
+	case 3: // Tag Management
+		m.showTagMgmt = !m.showTagMgmt
+	case 4: // GPG Status
+		m.showGPGStatus = !m.showGPGStatus
+		if m.showGPGStatus && len(m.gpgStatuses) == 0 {
+			m.gpgStatuses = extractGPGSignatureStatus("")
+		}
+	}
+
+	return m
+}
+
+// renderWorkflowsMenuOverlay renders the workflows submenu overlay.
+func renderWorkflowsMenuOverlay(m model, width int) string {
+	var items []string
+	for i, item := range workflowsMenuItems {
+		prefix := "  "
+		if i == m.workflowsMenuIdx {
+			prefix = "▶ "
+		}
+		items = append(items, prefix+item)
+	}
+
+	config := RenderConfig{
+		Title: "WORKFLOWS FEATURES",
+		Items: items,
+	}
+	return renderMenuOverlay(config)
+}
