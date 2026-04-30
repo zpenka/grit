@@ -1,8 +1,140 @@
 package grit
 
 import (
+	"strings"
 	"testing"
 )
+
+// TestRenderLostCommitsUI tests renderLostCommitsUI with different states
+func TestRenderLostCommitsUI_EmptyList(t *testing.T) {
+	m := model{
+		lostCommits: []lostCommit{},
+	}
+	output := renderLostCommitsUI(m, 80)
+	if output == "" {
+		t.Error("renderLostCommitsUI should produce output even for empty list")
+	}
+	if !strings.Contains(output, "Lost Commits") {
+		t.Error("output should contain 'Lost Commits' title")
+	}
+}
+
+func TestRenderLostCommitsUI_WithCommits(t *testing.T) {
+	m := model{
+		lostCommits: []lostCommit{
+			{hash: "aaa111", shortHash: "aaa111", author: "Alice", subject: "Lost feature"},
+			{hash: "bbb222", shortHash: "bbb222", author: "Bob", subject: "Lost bugfix"},
+		},
+	}
+	output := renderLostCommitsUI(m, 80)
+	if output == "" {
+		t.Error("renderLostCommitsUI should produce output for non-empty list")
+	}
+	if !strings.Contains(output, "aaa111") {
+		t.Error("output should contain first lost commit hash")
+	}
+	if !strings.Contains(output, "bbb222") {
+		t.Error("output should contain second lost commit hash")
+	}
+}
+
+// TestRenderUndoMenu tests renderUndoMenu with various stack states
+func TestRenderUndoMenu_EmptyStack(t *testing.T) {
+	m := model{
+		undoStack:    []string{},
+		undoStackIdx: 0,
+	}
+	output := renderUndoMenu(m, 80)
+	if output == "" {
+		t.Error("renderUndoMenu should produce output")
+	}
+	if !strings.Contains(output, "Undo Stack") {
+		t.Error("output should contain 'Undo Stack' title")
+	}
+}
+
+func TestRenderUndoMenu_SingleItem(t *testing.T) {
+	m := model{
+		undoStack:    []string{"aaa111"},
+		undoStackIdx: 1,
+	}
+	output := renderUndoMenu(m, 80)
+	if !strings.Contains(output, "aaa111") {
+		t.Error("output should contain undo stack item")
+	}
+}
+
+func TestRenderUndoMenu_MultipleItems(t *testing.T) {
+	m := model{
+		undoStack:    []string{"aaa111", "bbb222", "ccc333"},
+		undoStackIdx: 2,
+	}
+	output := renderUndoMenu(m, 80)
+	if !strings.Contains(output, "aaa111") || !strings.Contains(output, "bbb222") || !strings.Contains(output, "ccc333") {
+		t.Error("output should contain all undo stack items")
+	}
+}
+
+// TestAnalyzeComplexity tests complexity analysis with different commit sets
+func TestAnalyzeComplexity_EmptyCommits(t *testing.T) {
+	m := model{
+		commits: []commit{},
+	}
+	result := analyzeComplexity(m)
+	if len(result.commitMetrics) != 0 {
+		t.Error("analyzeComplexity should return empty metrics for empty commits")
+	}
+}
+
+func TestAnalyzeComplexity_SingleSimpleCommit(t *testing.T) {
+	m := model{
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug"},
+		},
+	}
+	result := analyzeComplexity(m)
+	if len(result.commitMetrics) != 1 {
+		t.Errorf("expected 1 metric, got %d", len(result.commitMetrics))
+	}
+	metrics := result.commitMetrics[0]
+	if metrics.hash != "aaa111" {
+		t.Error("metric hash should match commit")
+	}
+	if metrics.complexity == 0 {
+		t.Error("complexity should be calculated")
+	}
+}
+
+func TestAnalyzeComplexity_LargeCommit(t *testing.T) {
+	// Large commit message with many words
+	m := model{
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Refactor module with new feature and update tests and fix bugs in processing"},
+		},
+	}
+	result := analyzeComplexity(m)
+	if len(result.commitMetrics) != 1 {
+		t.Errorf("expected 1 metric, got %d", len(result.commitMetrics))
+	}
+	metrics := result.commitMetrics[0]
+	if !metrics.isComplex {
+		t.Error("large commit should be marked as complex")
+	}
+}
+
+func TestAnalyzeComplexity_MultipleCommits(t *testing.T) {
+	m := model{
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Fix"},
+			{hash: "bbb222", shortHash: "bbb222", subject: "Add feature with tests"},
+			{hash: "ccc333", shortHash: "ccc333", subject: "Large refactor touching many files"},
+		},
+	}
+	result := analyzeComplexity(m)
+	if len(result.commitMetrics) != 3 {
+		t.Errorf("expected 3 metrics, got %d", len(result.commitMetrics))
+	}
+}
 
 // TestCalculateAuthorStats tests author statistics calculation
 func TestCalculateAuthorStats_EmptyCommits(t *testing.T) {

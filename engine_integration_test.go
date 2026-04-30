@@ -565,3 +565,206 @@ func TestExportPatchSeriesFromHeader(t *testing.T) {
 		t.Error("From header should contain user@example.com")
 	}
 }
+
+// TestExtractPRReferences tests PR reference extraction from commits
+func TestExtractPRReferences_EmptyCommits(t *testing.T) {
+	commits := []commit{}
+	refs := extractPRReferences(commits)
+	if len(refs) != 0 {
+		t.Errorf("extractPRReferences should return empty for empty commits, got %d", len(refs))
+	}
+}
+
+func TestExtractPRReferences_NoMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug in parser"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Update documentation"},
+	}
+	refs := extractPRReferences(commits)
+	if len(refs) != 0 {
+		t.Errorf("extractPRReferences should return empty for commits without PR refs, got %d", len(refs))
+	}
+}
+
+func TestExtractPRReferences_WithMatch(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug #456"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Normal commit without PR"},
+	}
+	refs := extractPRReferences(commits)
+	if len(refs) != 1 {
+		t.Errorf("extractPRReferences should find 1 PR ref, got %d", len(refs))
+	}
+	if refs[0].hash != "aaa111" {
+		t.Errorf("PR ref should be for first commit, got %s", refs[0].hash)
+	}
+}
+
+func TestExtractPRReferences_MultipleMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix #123"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Feature #456"},
+		{hash: "ccc333", shortHash: "ccc333", subject: "Closes #789"},
+	}
+	refs := extractPRReferences(commits)
+	if len(refs) != 3 {
+		t.Errorf("extractPRReferences should find 3 PR refs, got %d", len(refs))
+	}
+}
+
+// TestDispatchIntegrationFeature tests integration feature dispatch
+func TestDispatchIntegrationFeature_OutOfRange(t *testing.T) {
+	m := model{
+		showPRLinks:      false,
+		showJiraLinks:    false,
+		showIssueRefs:    false,
+		prReferences:     []githubPRReference{},
+		jiraLinks:        []jiraTicketLink{},
+		issueReferences:  []issueReference{},
+		pendingExports:   []exportData{},
+		commits:          []commit{},
+	}
+	original := m
+	result := dispatchIntegrationFeature(m, 999)
+	if result.showPRLinks != original.showPRLinks {
+		t.Error("dispatchIntegrationFeature should not modify model for out-of-range index")
+	}
+}
+
+func TestDispatchIntegrationFeature_GitHubPRLinks(t *testing.T) {
+	m := model{
+		showPRLinks:    false,
+		prReferences:   []githubPRReference{},
+		commits:        []commit{{hash: "aaa", subject: "Fix #123"}},
+	}
+	result := dispatchIntegrationFeature(m, 0)
+	if !result.showPRLinks {
+		t.Error("dispatchIntegrationFeature(0) should toggle PR links")
+	}
+	if len(result.prReferences) == 0 {
+		t.Error("dispatchIntegrationFeature(0) should populate prReferences")
+	}
+}
+
+func TestDispatchIntegrationFeature_JiraLinks(t *testing.T) {
+	m := model{
+		showJiraLinks: false,
+		jiraLinks:     []jiraTicketLink{},
+		commits:       []commit{},
+	}
+	result := dispatchIntegrationFeature(m, 1)
+	if !result.showJiraLinks {
+		t.Error("dispatchIntegrationFeature(1) should toggle Jira links")
+	}
+}
+
+func TestDispatchIntegrationFeature_MarkdownExport(t *testing.T) {
+	m := model{
+		pendingExports: []exportData{},
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Feature A"},
+		},
+	}
+	result := dispatchIntegrationFeature(m, 2)
+	if len(result.pendingExports) == 0 {
+		t.Error("dispatchIntegrationFeature(2) should create markdown export")
+	}
+}
+
+func TestDispatchIntegrationFeature_PatchExport(t *testing.T) {
+	m := model{
+		pendingExports: []exportData{},
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Feature A"},
+		},
+	}
+	result := dispatchIntegrationFeature(m, 3)
+	if len(result.pendingExports) == 0 {
+		t.Error("dispatchIntegrationFeature(3) should create patch export")
+	}
+}
+
+func TestDispatchIntegrationFeature_IssueReferences(t *testing.T) {
+	m := model{
+		showIssueRefs:   false,
+		issueReferences: []issueReference{},
+		commits:         []commit{},
+	}
+	result := dispatchIntegrationFeature(m, 4)
+	if !result.showIssueRefs {
+		t.Error("dispatchIntegrationFeature(4) should toggle issue references")
+	}
+}
+
+// TestExtractJiraTickets tests JIRA ticket extraction from commits
+func TestExtractJiraTickets_EmptyCommits(t *testing.T) {
+	commits := []commit{}
+	tickets := extractJiraTickets(commits)
+	if len(tickets) != 0 {
+		t.Errorf("extractJiraTickets should return empty for empty commits, got %d", len(tickets))
+	}
+}
+
+func TestExtractJiraTickets_NoMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug in code"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Update documentation"},
+	}
+	tickets := extractJiraTickets(commits)
+	if len(tickets) != 0 {
+		t.Errorf("extractJiraTickets should return empty for commits without tickets, got %d", len(tickets))
+	}
+}
+
+func TestExtractJiraTickets_WithMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug PROJ-123"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Update docs"},
+		{hash: "ccc333", shortHash: "ccc333", subject: "Feature TASK-456 implemented"},
+	}
+	tickets := extractJiraTickets(commits)
+	if len(tickets) != 2 {
+		t.Errorf("extractJiraTickets should find 2 tickets, got %d", len(tickets))
+	}
+	if tickets[0].hash != "aaa111" {
+		t.Errorf("first ticket should be for commit aaa111, got %s", tickets[0].hash)
+	}
+}
+
+// TestExtractIssueReferences tests GitHub issue reference extraction
+func TestExtractIssueReferences_EmptyCommits(t *testing.T) {
+	commits := []commit{}
+	refs := extractIssueReferences(commits)
+	if len(refs) != 0 {
+		t.Errorf("extractIssueReferences should return empty for empty commits, got %d", len(refs))
+	}
+}
+
+func TestExtractIssueReferences_NoMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fix bug without reference"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Update documentation"},
+	}
+	refs := extractIssueReferences(commits)
+	if len(refs) != 0 {
+		t.Errorf("extractIssueReferences should return empty for commits without issues, got %d", len(refs))
+	}
+}
+
+func TestExtractIssueReferences_WithMatches(t *testing.T) {
+	commits := []commit{
+		{hash: "aaa111", shortHash: "aaa111", subject: "Fixes #123"},
+		{hash: "bbb222", shortHash: "bbb222", subject: "Regular commit"},
+		{hash: "ccc333", shortHash: "ccc333", subject: "Closes #456 #789"},
+	}
+	refs := extractIssueReferences(commits)
+	if len(refs) != 2 {
+		t.Errorf("extractIssueReferences should find 2 refs, got %d", len(refs))
+	}
+	if len(refs[0].references) != 1 {
+		t.Errorf("first ref should have 1 issue, got %d", len(refs[0].references))
+	}
+	if len(refs[1].references) != 2 {
+		t.Errorf("second ref should have 2 issues, got %d", len(refs[1].references))
+	}
+}

@@ -522,3 +522,104 @@ func TestRenderFileTimeline_WithCommits(t *testing.T) {
 	AssertStringContains(t, result, "main.go", "should contain filename")
 }
 
+// TestRenderBookmarkList tests bookmark list rendering with different states
+func TestRenderBookmarkList_EmptyList(t *testing.T) {
+	m := model{
+		bookmarks: []string{},
+		commits:   []commit{},
+	}
+	output := renderBookmarkList(m, 80)
+	if output == "" {
+		t.Error("renderBookmarkList should produce output even for empty list")
+	}
+	if !strings.Contains(output, "Bookmarks") {
+		t.Error("output should contain 'Bookmarks' title")
+	}
+}
+
+func TestRenderBookmarkList_SingleBookmark(t *testing.T) {
+	m := model{
+		bookmarks: []string{"aaa111"},
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "Important commit"},
+		},
+	}
+	output := renderBookmarkList(m, 80)
+	if !strings.Contains(output, "aaa111") {
+		t.Error("output should contain bookmark hash")
+	}
+	if !strings.Contains(output, "Important commit") {
+		t.Error("output should contain bookmark commit subject")
+	}
+}
+
+func TestRenderBookmarkList_MultipleBookmarks(t *testing.T) {
+	m := model{
+		bookmarks: []string{"aaa111", "bbb222"},
+		commits: []commit{
+			{hash: "aaa111", shortHash: "aaa111", subject: "First important"},
+			{hash: "bbb222", shortHash: "bbb222", subject: "Second important"},
+			{hash: "ccc333", shortHash: "ccc333", subject: "Not bookmarked"},
+		},
+	}
+	output := renderBookmarkList(m, 80)
+	if !strings.Contains(output, "aaa111") || !strings.Contains(output, "bbb222") {
+		t.Error("output should contain both bookmarks")
+	}
+	if strings.Contains(output, "ccc333") {
+		t.Error("output should not contain unbookmarked commit")
+	}
+}
+
+// TestRenderViewMode tests view mode rendering
+func TestRenderViewMode_DefaultMode(t *testing.T) {
+	m := model{
+		viewMode:      "log",
+		stashes:       []stashEntry{},
+		reflogEntries: []reflogEntry{},
+	}
+	output := renderViewMode(m, 80)
+	// Default log mode returns empty string per implementation
+	if output != "" {
+		t.Error("renderViewMode should return empty for log mode")
+	}
+}
+
+func TestRenderViewMode_StashMode(t *testing.T) {
+	m := model{
+		viewMode: "stash",
+		stashes: []stashEntry{
+			{name: "stash@{0}", branch: "main", subject: "Work in progress"},
+		},
+	}
+	output := renderViewMode(m, 80)
+	if output == "" {
+		t.Error("renderViewMode should produce output for stash mode")
+	}
+}
+
+func TestRenderViewMode_ReflogMode(t *testing.T) {
+	m := model{
+		viewMode: "reflog",
+		reflogEntries: []reflogEntry{
+			{hash: "aaa111111", action: "commit", message: "Test commit"},
+		},
+	}
+	output := renderViewMode(m, 80)
+	if output == "" {
+		t.Error("renderViewMode should produce output for reflog mode")
+	}
+}
+
+func TestRenderViewMode_InvalidMode(t *testing.T) {
+	m := model{
+		viewMode:      "invalid",
+		stashes:       []stashEntry{},
+		reflogEntries: []reflogEntry{},
+	}
+	output := renderViewMode(m, 80)
+	if output != "" {
+		t.Error("renderViewMode should return empty for invalid mode")
+	}
+}
+
