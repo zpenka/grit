@@ -133,18 +133,6 @@ func TestClassifyCommit_CategorizesCommits(t *testing.T) {
 	}
 }
 
-func TestDetectAnomalies_FindsUnusualCommits(t *testing.T) {
-	commits := []commit{
-		{hash: "aaa1111111111111111111111111111111111", subject: "Small fix"},
-		{hash: "bbb2222222222222222222222222222222222", subject: "Small fix"},
-		{hash: "ccc3333333333333333333333333333333333", subject: "Refactor: Rewrite entire module (50000 lines)"},
-	}
-	anomalies := detectAnomalies(commits)
-	if len(anomalies) == 0 {
-		t.Error("detectAnomalies should find unusual commits")
-	}
-}
-
 func TestClassifyCommit_WithMerge(t *testing.T) {
 	classification := classifyCommit("Merge pull request #123", "abc123")
 	AssertTrue(t, classification.category != "", "should classify merge commit")
@@ -294,42 +282,6 @@ func TestAutoCompleteMessage_NoMatches(t *testing.T) {
 	}
 	completions := autoCompleteMessage("xyz:", commits)
 	AssertEqual(t, 0, len(completions), "should return empty when prefix doesn't match")
-}
-
-func TestFindSimilarCommits_MatchesSimilarSubjects(t *testing.T) {
-	commits := []commit{
-		{hash: "aaa1111111111111111111111111111111111", subject: "Add parser module"},
-		{hash: "bbb2222222222222222222222222222222222", subject: "Add parser tests"},
-		{hash: "ccc3333333333333333333333333333333333", subject: "Fix unrelated bug"},
-	}
-	similar := findSimilarCommits(commits, "aaa1111111111111111111111111111111111")
-	AssertTrue(t, len(similar) >= 0, "should return similar commits list")
-}
-
-func TestFindSimilarCommits_NoMatches(t *testing.T) {
-	commits := []commit{
-		{hash: "aaa1111111111111111111111111111111111", subject: "Feature X completely different"},
-		{hash: "bbb2222222222222222222222222222222222", subject: "Feature Y also different"},
-	}
-	similar := findSimilarCommits(commits, "aaa1111111111111111111111111111111111")
-	AssertTrue(t, len(similar) >= 0, "should handle no matches")
-}
-
-func TestGenerateAutoSummary_TruncatesLongMessages(t *testing.T) {
-	hash := "aaa1111111111111111111111111111111111"
-	longMsg := "This is a very long commit message with many words that should be truncated when creating a summary"
-	summary := generateAutoSummary(hash, longMsg)
-	AssertEqual(t, hash, summary.hash, "should set hash")
-	AssertTrue(t, len(summary.summary) > 0, "should generate summary")
-	AssertTrue(t, summary.length > 0, "should set length")
-	AssertTrue(t, summary.tokens > 0, "should count tokens")
-}
-
-func TestGenerateAutoSummary_ShortMessages(t *testing.T) {
-	hash := "bbb2222222222222222222222222222222222"
-	shortMsg := "Short"
-	summary := generateAutoSummary(hash, shortMsg)
-	AssertEqual(t, shortMsg, summary.summary, "should preserve short messages")
 }
 
 func TestCheckSigningCompliance_EnforcedTrue(t *testing.T) {

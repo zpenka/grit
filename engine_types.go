@@ -131,8 +131,6 @@ type model struct {
 	showTags  bool
 	tags      []string
 	tagCursor int
-	// Option 1: UI Integration
-	showStatsBadge bool
 	// Option 2: Commit Graph
 	commitGraph []graphNode
 	showGraph   bool
@@ -289,12 +287,6 @@ type model struct {
 	messageCompletions      []messageCompletion
 	commitClassifications   []commitClassification
 	showClassification      bool
-	anomalies               []anomalyData
-	showAnomalies           bool
-	similarCommits          []similarCommit
-	showSimilar             bool
-	autoSummaries           []autoSummary
-	showSummaries           bool
 	// Compliance & Security
 	signingStatuses         map[string]signingStatus
 	showSigningStatus       bool
@@ -321,11 +313,7 @@ type model struct {
 	loadState               repoLoadState
 	diffJobs                []diffProcessingJob
 	indexData               indexData
-	showLoadProgress        bool
 	blameCache              map[string][]blameEntry
-	showBlamePerf           bool
-	memoryMetrics           memoryMetrics
-	showMemoryMetrics       bool
 }
 
 // Supporting types
@@ -692,28 +680,6 @@ type commitClassification struct {
 	reason     string
 }
 
-type anomalyData struct {
-	hash      string
-	type_     string // "large", "unusual-pattern", "unusual-time"
-	severity  int    // 1-10
-	description string
-}
-
-type similarCommit struct {
-	hash1   string
-	hash2   string
-	subject1 string
-	subject2 string
-	similarity float64
-}
-
-type autoSummary struct {
-	hash    string
-	summary string
-	length  int
-	tokens  int
-}
-
 // Compliance & Security
 type signingStatus struct {
 	hash      string
@@ -821,11 +787,4 @@ type blameEntry struct {
 	date   string
 	line   int
 	text   string
-}
-
-type memoryMetrics struct {
-	usageBytes    int64
-	cacheSize     int
-	percentUsed   float64
-	estimatedMax  int64
 }
