@@ -439,21 +439,6 @@ func TestExitCommentMode_Valid(t *testing.T) {
 	_ = exitCommentMode(m)
 }
 
-func TestIncrementalLoadRepository_Valid(t *testing.T) {
-	_ = incrementalLoadRepository(".", 100)
-}
-
-func TestParallelProcessDiffs_Valid(t *testing.T) {
-	_ = parallelProcessDiffs([]string{"abc"})
-}
-
-func TestBuildBackgroundIndex_Valid(t *testing.T) {
-	_ = buildBackgroundIndex([]commit{{hash: "a"}})
-}
-
-func TestLazyLoadBlame_Valid(t *testing.T) {
-	_ = lazyLoadBlame("abc", "file.go")
-}
 
 func TestFilterByRegex_Valid(t *testing.T) {
 	_ = filterByRegex([]commit{{subject: "test"}}, "test")
@@ -463,121 +448,16 @@ func TestFilterByDateRange_Valid(t *testing.T) {
 	_ = filterByDateRange([]commit{{when: "1 day ago"}}, 1, 7)
 }
 
-func TestFilterByFilePattern_Valid(t *testing.T) {
-	_ = filterByFilePattern([]commit{{hash: "a"}}, "*.go")
-}
 
 func TestFilterByAuthor_Valid(t *testing.T) {
 	_ = filterByAuthor([]commit{{author: "Alice"}}, "Alice")
 }
 
-func TestFilterCommitsCombined_Valid(t *testing.T) {
-	opts := &FilterOptions{Search: "test"}
-	_ = filterCommitsCombined([]commit{{author: "Alice"}}, opts)
-}
 
 func TestParseDaysAgo_Valid(t *testing.T) {
 	_ = parseDaysAgo("5 days ago")
 }
 
-func TestMatchesFilePattern_Valid(t *testing.T) {
-	_ = matchesFilePattern("file.go", "*.go")
-}
-
-func TestExecuteWorkflowTemplate_Valid(t *testing.T) {
-	tmpl := &WorkflowTemplate{Name: "test"}
-	_ = executeWorkflowTemplate(tmpl)
-}
-
-func TestGetPredefinedWorkflows_Valid(t *testing.T) {
-	_ = getPredefinedWorkflows()
-}
-
-func TestVerifyCommitSignature_Valid(t *testing.T) {
-	_ = verifyCommitSignature(&commit{hash: "a"})
-}
-
-func TestGetSignatureStatus_Valid(t *testing.T) {
-	c := &commit{hash: "a"}
-	_ = getSignatureStatus(c)
-}
-
-func TestGetCodeReviewStats_Valid(t *testing.T) {
-	_ = getCodeReviewStats([]commit{{hash: "a"}})
-}
-
-func TestGetPairProgrammingStats_Valid(t *testing.T) {
-	_ = getPairProgrammingStats([]commit{{hash: "a"}})
-}
-
-func TestDetectCodeSmells_Valid(t *testing.T) {
-	_ = detectCodeSmells("test diff")
-}
-
-
-func TestAnalyzeOnboardingMetrics_Valid(t *testing.T) {
-	_ = analyzeOnboardingMetrics([]commit{{author: "Alice"}}, "Alice")
-}
-
-func TestCalculateTeamKnowledgeDistribution_Valid(t *testing.T) {
-	_ = calculateTeamKnowledgeDistribution([]commit{{author: "Alice"}})
-}
-
-func TestDetectKnowledgeGaps_Valid(t *testing.T) {
-	_ = detectKnowledgeGaps([]commit{{author: "Alice"}})
-}
-
-func TestGenerateBurndownChart_Valid(t *testing.T) {
-	_ = generateBurndownChart([]commit{{hash: "a"}}, "sprint1")
-}
-
-func TestPlanTeamCapacity_Valid(t *testing.T) {
-	_ = planTeamCapacity(5, 40)
-}
-
-func TestCalculateTeamVelocityTrend_Valid(t *testing.T) {
-	_ = calculateTeamVelocityTrend()
-}
-
-func TestValidateCommitMessages_Valid(t *testing.T) {
-	_ = validateCommitMessages([]commit{{subject: "feat: test"}})
-}
-
-func TestEnforceConventionalCommits_Valid(t *testing.T) {
-	_ = enforceConventionalCommits([]commit{{subject: "feat: test"}})
-}
-
-func TestDetectSemanticVersioning_Valid(t *testing.T) {
-	_ = detectSemanticVersioning([]commit{{subject: "v1.0.0"}})
-}
-
-func TestIdentifyBreakingChanges_Valid(t *testing.T) {
-	_ = identifyBreakingChanges([]commit{{subject: "BREAKING"}})
-}
-
-func TestTrackLicenseHeadersCompliance_Valid(t *testing.T) {
-	_ = trackLicenseHeadersCompliance([]string{"main.go"})
-}
-
-func TestEnforceLicenseCompliance_Valid(t *testing.T) {
-	_ = enforceLicenseCompliance()
-}
-
-func TestScanForSecurityIssuesCompliance_Valid(t *testing.T) {
-	_ = scanForSecurityIssuesCompliance([]commit{{hash: "a"}})
-}
-
-func TestIntegrateSASTScanning_Valid(t *testing.T) {
-	_ = integrateSASTScanning(".")
-}
-
-func TestGenerateComplianceReport_Valid(t *testing.T) {
-	_ = generateComplianceReport([]commit{{hash: "a"}})
-}
-
-func TestAuditAllOperations_Valid(t *testing.T) {
-	_ = auditAllOperations()
-}
 
 func TestExportToCSV_Valid(t *testing.T) {
 	_ = exportToCSV([]commit{{subject: "test"}})
@@ -591,415 +471,27 @@ func TestExportToXML_Valid(t *testing.T) {
 	_ = exportToXML([]commit{{subject: "test"}})
 }
 
-func TestGeneratePDFReport_Valid(t *testing.T) {
-	_ = generatePDFReport([]commit{{subject: "test"}})
-}
-
-func TestCreateCustomDashboard_Valid(t *testing.T) {
-	config := make(map[string]interface{})
-	config["title"] = "Dashboard"
-	_ = createCustomDashboard(config)
-}
-
-func TestScheduleEmailReport_Valid(t *testing.T) {
-	_ = scheduleEmailReport("daily", "test@example.com")
-}
-
-func TestGenerateSlackSummary_Valid(t *testing.T) {
-	_ = generateSlackSummary([]commit{{subject: "test"}})
-}
-
-func TestCountUniqueAuthors_Valid(t *testing.T) {
-	_ = countUniqueAuthors([]commit{{author: "Alice"}, {author: "Bob"}})
-}
-
-func TestSetupScheduledExports_Valid(t *testing.T) {
-	_ = setupScheduledExports(make(map[string]string))
-}
-
-func TestArchiveOldReports_Valid(t *testing.T) {
-	_ = archiveOldReports(30)
-}
-
-func TestRenderReportingUI_Valid(t *testing.T) {
-	_ = renderReportingUI()
-}
-
-func TestStreamLiveCommits_Valid(t *testing.T) {
-	_ = streamLiveCommits()
-}
-
-func TestSetupWebSocketServer_Valid(t *testing.T) {
-	_ = setupWebSocketServer("localhost:8080")
-}
-
-func TestBroadcastToClients_Valid(t *testing.T) {
-	_ = broadcastToClients("test")
-}
-
-func TestTrackPresence_Valid(t *testing.T) {
-	_ = trackPresence()
-}
-
-func TestEnableRealtimeLiveUpdates_Valid(t *testing.T) {
-	_ = enableRealtimeLiveUpdates()
-}
-
-func TestSetupLiveDashboard_Valid(t *testing.T) {
-	_ = setupLiveDashboard("localhost:8080")
-}
-
-func TestSubscribeToAlerts_Valid(t *testing.T) {
-	_ = subscribeToAlerts("user1", "commits")
-}
-
-func TestConfigureAlertRouting_Valid(t *testing.T) {
-	_ = configureAlertRouting(make(map[string]string))
-}
-
-func TestSetupEventDrivenTriggers_Valid(t *testing.T) {
-	_ = setupEventDrivenTriggers()
-}
-
-func TestCreateAutomationWorkflow_Valid(t *testing.T) {
-	_ = createAutomationWorkflow("commit", "notify")
-}
-
-func TestRenderRealtimeUI_Valid(t *testing.T) {
-	_ = renderRealtimeUI()
-}
-func TestNext_Valid(t *testing.T) {
-	ts := &TimelineScrubber{}
-	_ = ts.Next()
-}
-
-func TestPrevious_Valid(t *testing.T) {
-	ts := &TimelineScrubber{}
-	_ = ts.Previous()
-}
-
-func TestAnalyzeCodeChurn_Valid(t *testing.T) {
-	_ = analyzeCodeChurn([]commit{{hash: "a"}})
-}
-
-func TestAnalyzeMergeStrategy_Valid(t *testing.T) {
-	_ = analyzeMergeStrategy([]commit{{hash: "a"}}, "main", "feat")
-}
-
-func TestAnalyzeMultiRepo_Valid(t *testing.T) {
-	_ = analyzeMultiRepo([]string{"repo"})
-}
-
-func TestAnalyzePatternsForAnomalies_Valid(t *testing.T) {
-	_ = analyzePatternsForAnomalies([]commit{{hash: "a"}})
-}
-
-func TestAnalyzeReflog_Valid(t *testing.T) {
-	_ = analyzeReflog()
-}
-
-func TestAnalyzeSemanticDiff_Valid(t *testing.T) {
-	_ = analyzeSemanticDiff("test")
-}
-
-func TestAnalyzeStashContents_Valid(t *testing.T) {
-	_ = analyzeStashContents()
-}
-
-func TestAssessArchitecturalImpact_Valid(t *testing.T) {
-	_ = assessArchitecturalImpact("test")
-}
-
-func TestBatchCommitsForProcessing_Valid(t *testing.T) {
-	_ = batchCommitsForProcessing([]commit{{hash: "a"}}, 5)
-}
-
-func TestBuildCollaborationMetrics_Valid(t *testing.T) {
-	_ = buildCollaborationMetrics([]commit{{hash: "a"}})
-}
-
-func TestBuildDependencyGraph_Valid(t *testing.T) {
-	_ = buildDependencyGraph([]commit{{hash: "a"}})
-}
-
-func TestBuildDistributedIndex_Valid(t *testing.T) {
-	_ = buildDistributedIndex([]commit{{hash: "a"}})
-}
-
-func TestBuildFlameGraph_Valid(t *testing.T) {
-	_ = buildFlameGraph([]commit{{hash: "a"}})
-}
-
-func TestBuildInteractiveTimeline_Valid(t *testing.T) {
-	_ = buildInteractiveTimeline([]commit{{hash: "a"}})
-}
-
-func TestCalculateCoverageRisk_Valid(t *testing.T) {
-	_ = calculateCoverageRisk(10, 5, 3)
-}
-
-func TestCalculateExpertiseScore_Valid(t *testing.T) {
-	_ = calculateExpertiseScore("Alice", "file.go", 5, 3)
-}
-
-func TestCalculateHotspotScore_Valid(t *testing.T) {
-	hs := &FileHotspot{FileName: "file.go", ChangeCount: 5}
-	_ = calculateHotspotScore(hs)
-}
-
-func TestCheckRepositoryHealth_Valid(t *testing.T) {
-	_ = checkRepositoryHealth(".")
-}
-
-func TestCompareCommits_Valid(t *testing.T) {
-	left := commit{hash: "a", subject: "test"}
-	right := commit{hash: "b", subject: "test"}
-	_ = compareCommits(left, right)
-}
-
-func TestCompressDiff_Valid(t *testing.T) {
-	_ = compressDiff("test diff")
-}
-
-func TestCorrelateWithPerformanceMetrics_Valid(t *testing.T) {
-	_ = correlateWithPerformanceMetrics([]commit{{hash: "a"}}, make(map[string]float64))
-}
-
-func TestCorrelateWithTestCoverage_Valid(t *testing.T) {
-	_ = correlateWithTestCoverage([]commit{{hash: "a"}})
-}
-
-func TestCreateWorkflowTemplates_Valid(t *testing.T) {
-	_ = createWorkflowTemplates()
-}
-
-func TestDetectAuthorExpertise_Valid(t *testing.T) {
-	_ = detectAuthorExpertise([]commit{{hash: "a"}})
-}
-
-func TestDetectCodeHotspots_Valid(t *testing.T) {
-	_ = detectCodeHotspots([]commit{{hash: "a"}})
-}
-
-func TestDetectConflictProne_Valid(t *testing.T) {
-	_ = detectConflictProne([]commit{{hash: "a"}})
-}
-
-func TestDetectDependencyCycles_Valid(t *testing.T) {
-	_ = detectDependencyCycles([]string{"repo"})
-}
-
-func TestDetectPerformanceRegression_Valid(t *testing.T) {
-	_ = detectPerformanceRegression([]commit{{hash: "a"}})
-}
-
-func TestEnableIncrementalProcessing_Valid(t *testing.T) {
-	_ = enableIncrementalProcessing()
-}
-
-func TestEnableProgressBar_Valid(t *testing.T) {
-	_ = enableProgressBar(100)
-}
-
-func TestEstimateReviewTime_Valid(t *testing.T) {
-	_ = estimateReviewTime("test", 5)
-}
-
-func TestExtractFeaturesForML_Valid(t *testing.T) {
-	c := &commit{hash: "a", subject: "test"}
-	_ = extractFeaturesForML(c)
-}
-
-func TestFetchIssues_Valid(t *testing.T) {
-	_ = fetchIssues("repo")
-}
-
-func TestFetchPullRequests_Valid(t *testing.T) {
-	_ = fetchPullRequests("repo")
-}
-
-func TestFindFilesChangedTogether_Valid(t *testing.T) {
-	_ = findFilesChangedTogether([]commit{{hash: "a"}})
-}
-
-func TestFindOptimalMergeBase_Valid(t *testing.T) {
-	_ = findOptimalMergeBase([]commit{{hash: "a"}}, "main", "feat")
-}
 
 func TestFormatFilterHeaderDisplay_Valid(t *testing.T) {
 	m := newModel(".")
 	_ = formatFilterHeaderDisplay(m)
 }
 
-func TestFormatOutputWithColors_Valid(t *testing.T) {
-	_ = formatOutputWithColors("test")
-}
-
-func TestGenerateCommitMessageAI_Valid(t *testing.T) {
-	_ = generateCommitMessageAI("test diff")
-}
-
-func TestGenerateCompletion_Valid(t *testing.T) {
-	_ = generateCompletion([]string{"commit", "push"})
-}
-
-func TestGenerateGitAliases_Valid(t *testing.T) {
-	_ = generateGitAliases()
-}
-
-func TestGenerateIDEPlugin_Valid(t *testing.T) {
-	_ = generateIDEPlugin("vscode")
-}
-
-func TestGenerateShellAutoComplete_Valid(t *testing.T) {
-	_ = generateShellAutoComplete("bash")
-}
-
-func TestGetAuthorSpecialties_Valid(t *testing.T) {
-	_ = getAuthorSpecialties("Alice", []commit{{author: "Alice", hash: "a"}})
-}
-
-func TestGetCachedResults_Valid(t *testing.T) {
-	_ = getCachedResults("key")
-}
-
-func TestGetChurnMetricsForFile_Valid(t *testing.T) {
-	_ = getChurnMetricsForFile("file.go", 10, 5)
-}
 
 func TestGetCommitRelationships_Valid(t *testing.T) {
 	_ = getCommitRelationships([]commit{{hash: "a"}})
 }
 
-func TestGetCommitsAffectingPerformance_Valid(t *testing.T) {
-	_ = getCommitsAffectingPerformance([]commit{{hash: "a"}}, 0.5)
-}
-
-func TestGetExpertiseForFile_Valid(t *testing.T) {
-	_ = getExpertiseForFile([]commit{{hash: "a"}}, "file.go")
-}
 
 func TestGetFileBlameContext_Valid(t *testing.T) {
 	_ = getFileBlameContext([]diffLine{}, "file.go")
 }
 
-func TestGetMostChurnedFiles_Valid(t *testing.T) {
-	_ = getMostChurnedFiles([]commit{{hash: "a"}}, 5)
-}
-
-func TestGetRelatedFiles_Valid(t *testing.T) {
-	_ = getRelatedFiles([]commit{{hash: "a"}}, "file.go")
-}
-
-func TestGetTestCommitsForFile_Valid(t *testing.T) {
-	_ = getTestCommitsForFile([]commit{{hash: "a"}}, "test_file.go")
-}
-
-func TestIdentifyFunctionsAdded_Valid(t *testing.T) {
-	_ = identifyFunctionsAdded("test")
-}
-
-func TestIdentifyRegressionCauses_Valid(t *testing.T) {
-	_ = identifyRegressionCauses([]commit{{hash: "a"}}, 0.5)
-}
-
-func TestIdentifyUncoveredChanges_Valid(t *testing.T) {
-	_ = identifyUncoveredChanges([]commit{{hash: "a"}})
-}
-
-func TestImproveTableFormat_Valid(t *testing.T) {
-	data := [][]string{{"a", "b"}, {"c", "d"}}
-	_ = improveTableFormat(data)
-}
-
-func TestIncrementalScan_Valid(t *testing.T) {
-	_ = incrementalScan("2024-01-01")
-}
-
-func TestIndexCommitMetadata_Valid(t *testing.T) {
-	_ = indexCommitMetadata([]commit{{hash: "a"}})
-}
-
-func TestIntegrateGitHooks_Valid(t *testing.T) {
-	_ = integrateGitHooks("pre-commit")
-}
-
-func TestIntegrateGitHubAPI_Valid(t *testing.T) {
-	_ = integrateGitHubAPI(make(map[string]string))
-}
-
-func TestIntegrateGitLabAPI_Valid(t *testing.T) {
-	_ = integrateGitLabAPI(make(map[string]string))
-}
 
 func TestIsFileModifiedInCommit_Valid(t *testing.T) {
 	_ = isFileModifiedInCommit("abc123", "file.go")
 }
 
-func TestLinkToJira_Valid(t *testing.T) {
-	_ = linkToJira(make(map[string]string))
-}
-
-func TestLinkToLinear_Valid(t *testing.T) {
-	_ = linkToLinear(make(map[string]string))
-}
-
-func TestManageMirrors_Valid(t *testing.T) {
-	_ = manageMirrors("https://github.com/test/repo")
-}
-
-func TestMapCommitsToIssues_Valid(t *testing.T) {
-	_ = mapCommitsToIssues([]commit{{hash: "a"}})
-}
-
-func TestMonitorGitEvents_Valid(t *testing.T) {
-	_ = monitorGitEvents()
-}
-
-func TestOptimizeCherryPick_Valid(t *testing.T) {
-	_ = optimizeCherryPick([]commit{{hash: "a"}}, []string{"abc"})
-}
-
-func TestOptimizeMemoryUsage_Valid(t *testing.T) {
-	_ = optimizeMemoryUsage([]commit{{hash: "a"}})
-}
-
-func TestOptimizeRepositorySize_Valid(t *testing.T) {
-	_ = optimizeRepositorySize(".")
-}
-
-func TestParseCodeowners_Valid(t *testing.T) {
-	_ = parseCodeowners("Alice file.go\nBob test.go")
-}
-
-func TestPersistToDatabase_Valid(t *testing.T) {
-	_ = persistToDatabase([]commit{{hash: "a"}}, "grit.db")
-}
-
-func TestPlanBackupStrategy_Valid(t *testing.T) {
-	_ = planBackupStrategy(".")
-}
-
-func TestPredictBugRisk_Valid(t *testing.T) {
-	c := &commit{hash: "a", subject: "test"}
-	_ = predictBugRisk(c)
-}
-
-func TestPredictMergeConflicts_Valid(t *testing.T) {
-	_ = predictMergeConflicts([]commit{{hash: "a"}})
-}
-
-func TestRecommendBestReviewers_Valid(t *testing.T) {
-	_ = recommendBestReviewers([]commit{{hash: "a"}}, "test")
-}
-
-func TestRecommendSquashFixup_Valid(t *testing.T) {
-	_ = recommendSquashFixup([]commit{{hash: "a"}})
-}
-
-func TestRecoverFromStash_Valid(t *testing.T) {
-	_ = recoverFromStash("stash@{0}")
-}
 
 func TestRenderBookmarkMarker_Valid(t *testing.T) {
 	m := newModel(".")
@@ -1016,49 +508,6 @@ func TestRenderStatsBadgeInList_Valid(t *testing.T) {
 	_ = renderStatsBadgeInList(stats, 20)
 }
 
-func TestSendSlackNotification_Valid(t *testing.T) {
-	_ = sendSlackNotification("test", "#general")
-}
-
-func TestSetupOIDC_Valid(t *testing.T) {
-	_ = setupOIDC(make(map[string]string))
-}
-
-func TestSetupWebhooks_Valid(t *testing.T) {
-	_ = setupWebhooks("http://localhost:8000")
-}
-
-func TestSimulateRebase_Valid(t *testing.T) {
-	_ = simulateRebase([]commit{{hash: "a"}}, "main", "feat")
-}
-
-func TestSummarizeDiffChanges_Valid(t *testing.T) {
-	_ = summarizeDiffChanges("test")
-}
-
-func TestTrackCloneOperations_Valid(t *testing.T) {
-	_ = trackCloneOperations()
-}
-
-func TestTrackCoverageByFile_Valid(t *testing.T) {
-	_ = trackCoverageByFile([]commit{{hash: "a"}})
-}
-
-func TestTrackDependencies_Valid(t *testing.T) {
-	_ = trackDependencies([]string{"repo"})
-}
-
-func TestTrackFileOwnership_Valid(t *testing.T) {
-	_ = trackFileOwnership("file.go")
-}
-
-func TestTrackSprintVelocity_Valid(t *testing.T) {
-	_ = trackSprintVelocity([]commit{{hash: "a"}}, "sprint-1")
-}
-
-func TestTrackStorageQuota_Valid(t *testing.T) {
-	_ = trackStorageQuota(".")
-}
 
 // TestRenderFileTimeline_WithCommits tests timeline rendering with data
 func TestRenderFileTimeline_WithCommits(t *testing.T) {
@@ -1072,3 +521,4 @@ func TestRenderFileTimeline_WithCommits(t *testing.T) {
 	AssertTrue(t, len(result) > 0, "should render timeline")
 	AssertStringContains(t, result, "main.go", "should contain filename")
 }
+

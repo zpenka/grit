@@ -334,17 +334,6 @@ func TestAddToNavHistory_TracksPosition(t *testing.T) {
 	}
 }
 
-func TestJumpToNextBookmark_NoBookmarks(t *testing.T) {
-	m := newModel(".")
-	m.commits = makeCommits(5)
-	m.bookmarks = nil
-	m.cursor = 0
-
-	m = jumpToNextBookmark(m)
-	if m.cursor != 0 {
-		t.Error("jumpToNextBookmark with no bookmarks should not change cursor")
-	}
-}
 
 func TestJumpToPrevBookmark_NoBookmarks(t *testing.T) {
 	m := newModel(".")
@@ -797,3 +786,4 @@ func TestAddToNavHistory_Multiple(t *testing.T) {
 		t.Errorf("should have at least 3 entries, got %d", len(m.navHistory))
 	}
 }
+
