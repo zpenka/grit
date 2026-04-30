@@ -160,12 +160,16 @@ func amendLastCommit(m model, message string) model {
 
 // --- Git Ops Menu ---
 
-const gitOpsMenuLen = 3
+const gitOpsMenuLen = 7
 
 var gitOpsMenuItems = []string{
 	"Interactive Rebase",
 	"Cherry-pick Mode",
 	"Reset Mode",
+	"Amend Preview",
+	"Rebase Preview",
+	"Squash Planning",
+	"Undo / Recovery",
 }
 
 // renderGitOpsMenuOverlay displays the git ops menu with navigation hints.
@@ -211,6 +215,17 @@ func dispatchGitOpsFeature(m model, idx int) model {
 		default:
 			m.resetMode = ""
 		}
+	case 3: // Amend Preview
+		m.showAmendPreview = !m.showAmendPreview
+	case 4: // Rebase Preview
+		m.showRebasePreview = !m.showRebasePreview
+		if m.showRebasePreview && len(m.rebaseSequence) == 0 {
+			m.rebaseSequence = parseRebaseSequence(m.commits)
+		}
+	case 5: // Squash Planning
+		m.showSquashUI = !m.showSquashUI
+	case 6: // Undo / Recovery
+		m.showUndoMenu = !m.showUndoMenu
 	}
 	return m
 }

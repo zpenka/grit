@@ -123,7 +123,7 @@ func renderProductivityMetrics(metrics map[string]interface{}, width int) string
 
 // --- Analytics Menu Dispatch ---
 
-const analyticsMenuLen = 7
+const analyticsMenuLen = 12
 
 var analyticsMenuItems = []string{
 	"Code Ownership",
@@ -133,6 +133,11 @@ var analyticsMenuItems = []string{
 	"Activity Heatmap",
 	"Author Stats",
 	"Complexity Analysis",
+	"Large Commits",
+	"Merge Analysis",
+	"File Coupling",
+	"Semantic Search",
+	"Dependency Changes",
 }
 
 // dispatchAnalyticsFeature activates the analytics feature at the given menu index.
@@ -181,6 +186,31 @@ func dispatchAnalyticsFeature(m model, idx int) model {
 		m.showComplexity = !m.showComplexity
 		if m.showComplexity && len(m.commitMetrics) == 0 {
 			m = analyzeComplexity(m)
+		}
+	case 7: // Large Commits
+		m.showLargeCommits = !m.showLargeCommits
+		if m.showLargeCommits && len(m.largeCommits) == 0 {
+			m = analyzeCommitSize(m)
+		}
+	case 8: // Merge Analysis
+		m.showMergeAnalysis = !m.showMergeAnalysis
+		if m.showMergeAnalysis && len(m.mergeAnalysisData) == 0 {
+			m.mergeAnalysisData = analyzeMerges(m.commits)
+		}
+	case 9: // File Coupling
+		m.showCoupling = !m.showCoupling
+		if m.showCoupling && len(m.commitCouplings) == 0 {
+			m.commitCouplings = analyzeCommitCoupling(m.commits)
+		}
+	case 10: // Semantic Search
+		m.showSemanticSearch = !m.showSemanticSearch
+		if m.showSemanticSearch && len(m.semanticSearchResults) == 0 {
+			m.semanticSearchResults = semanticSearch(m.commits, m.semanticQuery)
+		}
+	case 11: // Dependency Changes
+		m.showDependencies = !m.showDependencies
+		if m.showDependencies && len(m.dependencyChanges) == 0 {
+			m.dependencyChanges = trackDependencyChanges(m.commits)
 		}
 	}
 	return m

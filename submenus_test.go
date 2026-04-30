@@ -235,7 +235,7 @@ func TestUpdate_AnalyticsMenuBoundsCheck(t *testing.T) {
 	m.width = 80
 	m.height = 24
 	m.showAnalyticsMenu = true
-	m.analyticsMenuIdx = 6  // Last item (0-6 = 7 items)
+	m.analyticsMenuIdx = 11  // Last item (0-11 = 12 items after C2a)
 	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
 
 	// Press "j" at the end - should not go beyond bounds
@@ -243,7 +243,7 @@ func TestUpdate_AnalyticsMenuBoundsCheck(t *testing.T) {
 	m1, _ := m.Update(msgJ)
 	model1 := m1.(model)
 
-	if model1.analyticsMenuIdx != 6 {
+	if model1.analyticsMenuIdx != 11 {
 		t.Error("pressing j at end should stay at last item")
 	}
 
@@ -514,6 +514,241 @@ func TestView_NormalViewWithoutHelpOverlay(t *testing.T) {
 	// Should render normal two-panel UI, not help
 	if strings.Contains(view, "HELP") && strings.Contains(view, "Navigation") {
 		t.Error("normal view should not show help overlay")
+	}
+}
+
+// ============================================================================
+// Analytics Menu Extended Feature Tests (Task C2a)
+// ============================================================================
+
+func TestDispatchAnalyticsFeature_LargeCommits(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "large change"},
+		{hash: "abc2", author: "bob", subject: "small fix"},
+	}
+
+	// Dispatch large commits (index 7)
+	m1 := dispatchAnalyticsFeature(m, 7)
+
+	if !m1.showLargeCommits {
+		t.Error("dispatching large commits should set showLargeCommits")
+	}
+	if len(m1.largeCommits) == 0 {
+		t.Error("dispatching large commits should compute largeCommits data")
+	}
+}
+
+func TestDispatchAnalyticsFeature_MergeAnalysis(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "Merge branch 'feature'"},
+		{hash: "abc2", author: "bob", subject: "fix: bug"},
+	}
+
+	// Dispatch merge analysis (index 8)
+	m1 := dispatchAnalyticsFeature(m, 8)
+
+	if !m1.showMergeAnalysis {
+		t.Error("dispatching merge analysis should set showMergeAnalysis")
+	}
+	if len(m1.mergeAnalysisData) == 0 {
+		t.Error("dispatching merge analysis should compute mergeAnalysisData")
+	}
+}
+
+func TestDispatchAnalyticsFeature_FileCoupling(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "refactor main.go util.go"},
+		{hash: "abc2", author: "bob", subject: "update main.go util.go"},
+	}
+
+	// Dispatch file coupling (index 9)
+	m1 := dispatchAnalyticsFeature(m, 9)
+
+	if !m1.showCoupling {
+		t.Error("dispatching file coupling should set showCoupling")
+	}
+	// Note: commitCouplings may be empty if extractFilesFromSubject doesn't find matches
+	// The important thing is that showCoupling is set and the function ran
+}
+
+func TestDispatchAnalyticsFeature_SemanticSearch(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "feature: add login"},
+		{hash: "abc2", author: "bob", subject: "fix: logout"},
+	}
+	m.semanticQuery = "login"
+
+	// Dispatch semantic search (index 10)
+	m1 := dispatchAnalyticsFeature(m, 10)
+
+	if !m1.showSemanticSearch {
+		t.Error("dispatching semantic search should set showSemanticSearch")
+	}
+	if len(m1.semanticSearchResults) == 0 {
+		t.Error("dispatching semantic search should compute semanticSearchResults data")
+	}
+}
+
+func TestDispatchAnalyticsFeature_DependencyChanges(t *testing.T) {
+	m := newModel(".")
+	m.width = 80
+	m.height = 24
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "update deps"},
+		{hash: "abc2", author: "bob", subject: "bump version"},
+	}
+
+	// Dispatch dependency changes (index 11)
+	m1 := dispatchAnalyticsFeature(m, 11)
+
+	if !m1.showDependencies {
+		t.Error("dispatching dependency changes should set showDependencies")
+	}
+	if len(m1.dependencyChanges) == 0 {
+		t.Error("dispatching dependency changes should compute dependencyChanges data")
+	}
+}
+
+func TestDispatchAnalyticsFeature_ToggleLargeCommits(t *testing.T) {
+	m := newModel(".")
+	m.showLargeCommits = false
+
+	// Toggle on
+	m1 := dispatchAnalyticsFeature(m, 7)
+	if !m1.showLargeCommits {
+		t.Error("first dispatch should enable showLargeCommits")
+	}
+
+	// Toggle off
+	m2 := dispatchAnalyticsFeature(m1, 7)
+	if m2.showLargeCommits {
+		t.Error("second dispatch should disable showLargeCommits")
+	}
+}
+
+func TestDispatchAnalyticsFeature_OutOfRangeIndex(t *testing.T) {
+	m := newModel(".")
+	m.commits = []commit{{hash: "abc1", author: "alice", subject: "test"}}
+	originalShowCodeOwnership := m.showCodeOwnership
+
+	// Test out of range (should be >= 12 for new range)
+	m1 := dispatchAnalyticsFeature(m, 12)
+	if m1.showCodeOwnership != originalShowCodeOwnership {
+		t.Error("out of range index should return unchanged model")
+	}
+}
+
+// ============================================================================
+// Git Ops Menu Extended Feature Tests (Task C2a)
+// ============================================================================
+
+func TestDispatchGitOpsFeature_AmendPreview(t *testing.T) {
+	m := newModel(".")
+	m.showAmendPreview = false
+
+	// Dispatch amend preview (index 3)
+	m1 := dispatchGitOpsFeature(m, 3)
+
+	if !m1.showAmendPreview {
+		t.Error("dispatching amend preview should set showAmendPreview")
+	}
+}
+
+func TestDispatchGitOpsFeature_RebasePreview(t *testing.T) {
+	m := newModel(".")
+	m.showRebasePreview = false
+	m.commits = []commit{
+		{hash: "abc1", author: "alice", subject: "commit 1"},
+		{hash: "abc2", author: "bob", subject: "commit 2"},
+	}
+
+	// Dispatch rebase preview (index 4)
+	m1 := dispatchGitOpsFeature(m, 4)
+
+	if !m1.showRebasePreview {
+		t.Error("dispatching rebase preview should set showRebasePreview")
+	}
+	if len(m1.rebaseSequence) == 0 {
+		t.Error("dispatching rebase preview should populate rebaseSequence")
+	}
+}
+
+func TestDispatchGitOpsFeature_SquashUI(t *testing.T) {
+	m := newModel(".")
+	m.showSquashUI = false
+
+	// Dispatch squash UI (index 5)
+	m1 := dispatchGitOpsFeature(m, 5)
+
+	if !m1.showSquashUI {
+		t.Error("dispatching squash UI should set showSquashUI")
+	}
+}
+
+func TestDispatchGitOpsFeature_UndoMenu(t *testing.T) {
+	m := newModel(".")
+	m.showUndoMenu = false
+
+	// Dispatch undo menu (index 6)
+	m1 := dispatchGitOpsFeature(m, 6)
+
+	if !m1.showUndoMenu {
+		t.Error("dispatching undo menu should set showUndoMenu")
+	}
+}
+
+func TestDispatchGitOpsFeature_ToggleAmendPreview(t *testing.T) {
+	m := newModel(".")
+	m.showAmendPreview = false
+
+	// Toggle on
+	m1 := dispatchGitOpsFeature(m, 3)
+	if !m1.showAmendPreview {
+		t.Error("first dispatch should enable showAmendPreview")
+	}
+
+	// Toggle off
+	m2 := dispatchGitOpsFeature(m1, 3)
+	if m2.showAmendPreview {
+		t.Error("second dispatch should disable showAmendPreview")
+	}
+}
+
+func TestDispatchGitOpsFeature_OutOfRangeIndex(t *testing.T) {
+	m := newModel(".")
+	m.commits = []commit{{hash: "abc1", author: "alice", subject: "test"}}
+	originalShowRebaseUI := m.showRebaseUI
+
+	// Test out of range (should be >= 7 for new range)
+	m1 := dispatchGitOpsFeature(m, 7)
+	if m1.showRebaseUI != originalShowRebaseUI {
+		t.Error("out of range index should return unchanged model")
+	}
+}
+
+func TestAnalyticsMenuItemsMatchLen(t *testing.T) {
+	if len(analyticsMenuItems) != analyticsMenuLen {
+		t.Errorf("analyticsMenuItems count (%d) should match analyticsMenuLen (%d)",
+			len(analyticsMenuItems), analyticsMenuLen)
+	}
+}
+
+func TestGitOpsMenuItemsMatchLen(t *testing.T) {
+	if len(gitOpsMenuItems) != gitOpsMenuLen {
+		t.Errorf("gitOpsMenuItems count (%d) should match gitOpsMenuLen (%d)",
+			len(gitOpsMenuItems), gitOpsMenuLen)
 	}
 }
 
