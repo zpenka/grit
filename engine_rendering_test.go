@@ -408,12 +408,6 @@ func TestSwitchViewMode_Basic(t *testing.T) {
 }
 
 // Additional happy-path coverage for remaining functions
-func TestRenderCommitRowWithStats_Valid(t *testing.T) {
-	m := newModel(".")
-	m.commits = []commit{{hash: "a", subject: "test"}}
-	_ = renderCommitRowWithStats(m, 0, 80)
-}
-
 func TestRenderBookmarkList_Valid(t *testing.T) {
 	m := newModel(".")
 	_ = renderBookmarkList(m, 80)
@@ -459,10 +453,6 @@ func TestBuildBackgroundIndex_Valid(t *testing.T) {
 
 func TestLazyLoadBlame_Valid(t *testing.T) {
 	_ = lazyLoadBlame("abc", "file.go")
-}
-
-func TestOptimizeMemory_Valid(t *testing.T) {
-	_ = optimizeMemory([]commit{{hash: "a"}})
 }
 
 func TestFilterByRegex_Valid(t *testing.T) {
@@ -781,10 +771,6 @@ func TestCorrelateWithTestCoverage_Valid(t *testing.T) {
 
 func TestCreateWorkflowTemplates_Valid(t *testing.T) {
 	_ = createWorkflowTemplates()
-}
-
-func TestDetectAnomaliesML_Valid(t *testing.T) {
-	_ = detectAnomaliesML([]commit{{hash: "a"}})
 }
 
 func TestDetectAuthorExpertise_Valid(t *testing.T) {

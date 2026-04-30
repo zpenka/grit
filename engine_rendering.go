@@ -329,15 +329,6 @@ func findStashByIndex(stashes []stashEntry, idx int) *stashEntry {
 
 // ===== UI INTEGRATION: RENDERING =====
 
-// renderCommitRowWithStats renders commit row with stats badge.
-func renderCommitRowWithStats(m model, idx int, width int) string {
-	if !m.showStatsBadge {
-		return ""
-	}
-	badge := diffStatBadge(m.lastStats)
-	return badge
-}
-
 // renderBookmarkList renders list of bookmarked commits.
 // renderBookmarkList renders bookmarked commits using consolidated rendering.
 func renderBookmarkList(m model, width int) string {
@@ -457,16 +448,6 @@ func buildBackgroundIndex(commits []commit) indexData {
 func lazyLoadBlame(hash string, file string) []blameEntry {
 	return []blameEntry{
 		{hash: hash, author: "unknown", date: "now", line: 1, text: "line text"},
-	}
-}
-
-// Feature 30: Memory Optimization
-func optimizeMemory(commits []commit) memoryMetrics {
-	return memoryMetrics{
-		usageBytes:   1000000,
-		cacheSize:    len(commits),
-		percentUsed:  45.5,
-		estimatedMax: 2000000,
 	}
 }
 
@@ -1133,17 +1114,6 @@ func generateCommitMessageAI(diff string) string {
 		msg.WriteString("chore: Update code")
 	}
 	return msg.String()
-}
-
-func detectAnomaliesML(commits []commit) []map[string]interface{} {
-	var anomalies []map[string]interface{}
-	if len(commits) > 0 {
-		anomalies = append(anomalies, map[string]interface{}{
-			"type": "large_commit",
-			"hash": commits[0].hash,
-		})
-	}
-	return anomalies
 }
 
 func predictBugRisk(c *commit) float64 {
