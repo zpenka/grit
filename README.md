@@ -1,6 +1,6 @@
 # grit - Terminal UI for Git History
 
-A powerful, feature-rich terminal UI for exploring git repositories with **113+ integrated features**. Built in Go with zero external dependencies (besides Bubble Tea for TUI).
+A powerful, feature-rich terminal UI for exploring git repositories. Built in Go with zero external dependencies (besides Bubble Tea for TUI). Offers 40+ integrated features organized across 6 submenus plus core navigation and editing capabilities.
 
 ## Key Features
 
@@ -45,7 +45,7 @@ Press **`?`** at any time to see the help overlay listing all keybindings.
 
 ### Submenu Navigation
 
-When you open a submenu (a, v, t, i, g):
+When you open a submenu (a, v, t, i, g, w):
 - **`j` / `k`** - Move down / up to highlight different options
 - **`Enter` / `Space`** - Select and activate the highlighted feature
 - **`Esc`** or repeat the key - Close the menu and return to main view
@@ -68,17 +68,17 @@ For example: Press `a` → use `j/k` to navigate → press `Enter` to activate "
 | | `Ctrl+/` | Clear search |
 | **Clipboard** | `y` | Copy current commit hash |
 | | `e` | Open current commit in `$EDITOR` |
-| **Submenus** | `a` | Analytics (ownership, hotspots, bisect, linting, heatmap, stats, complexity) |
-| | `v` | Visualizations (flamegraph, timeline, tree view, author comparison, file heatmap) |
-| | `t` | Team/AI (team stats, suggestions, velocity, classification, security, changelog) |
-| | `i` | Integration (GitHub PR links, Jira tickets, export, issue references) |
-| | `g` | Git Operations (rebase, cherry-pick, reset) |
-| **Git Ops** | `r` | Interactive rebase preview (also available in 'g' menu) |
-| | `c` | Cherry-pick mode (toggle commits to pick; also in 'g' menu) |
-| | `x` | Cycle reset mode (soft → mixed → hard; also in 'g' menu) |
-| **Help** | `?` | Show keybinding help overlay |
+| **Submenus** | `a` | Analytics (12 entries: code ownership, hotspots, linting, bisect, heatmap, stats, complexity, large commits, merge analysis, file coupling, semantic search, dependency changes) |
+| | `v` | Visualizations (5 entries: flamegraph, timeline, tree view, author comparison, file heatmap) |
+| | `t` | Team/AI (6 entries: team stats, reviewer suggestions, velocity, commit classification, security scanning, changelog) |
+| | `i` | Integration (5 entries: GitHub PR links, Jira tickets, export to markdown, export patch series, issue references) |
+| | `g` | Git Operations (7 entries: interactive rebase, cherry-pick, reset, amend preview, rebase preview, squash planning, undo/recovery) |
+| | `w` | Workflows (5 entries: worktrees, submodules, named stashes, tag management, GPG status) |
+| **Help** | `?` | Show keybinding help overlay (lists all submenu entries) |
 | | `Esc` | Close any panel |
 | **Exit** | `q` | Quit grit |
+
+**Tip:** Press `?` to open the help overlay, which displays every entry from every submenu in an easy-to-browse format.
 
 ## Installation
 
@@ -138,11 +138,13 @@ For detailed module documentation, see [docs/modules/](docs/modules/).
 
 ## Statistics
 
-- **9,390** lines of Go code
-- **914** tests (100% pass rate)
+- **20,020** lines of Go code
+- **970** tests (100% pass rate)
+- **79.6%** coverage (root), **89.3%** coverage (core package)
 - **150+** type definitions
 - **200+** functions
-- **13** focused modules
+- **14** focused modules
+- **40+** integrated features across 6 submenus
 - **Zero** external dependencies (besides Bubble Tea & Lipgloss)
 
 ## Contributing
