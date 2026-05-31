@@ -12,23 +12,23 @@ import (
 )
 
 var (
-	titleStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD93D"))
-	hashStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#F39C12"))
-	authorStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#4ECDC4"))
-	whenStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	subjStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#DDDDDD"))
-	cursorStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
-	addStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#2ECC71"))
-	removeStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("#E74C3C"))
-	hunkStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#4ECDC4"))
-	metaStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
-	msgStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#CCCCCC"))
-	alertStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
-	divStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#444444"))
-	focusIndStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D"))
+	titleStyle       = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD93D"))
+	hashStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("#F39C12"))
+	authorStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#4ECDC4"))
+	whenStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+	subjStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("#DDDDDD"))
+	cursorStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
+	addStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color("#2ECC71"))
+	removeStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("#E74C3C"))
+	hunkStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("#4ECDC4"))
+	metaStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
+	msgStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color("#CCCCCC"))
+	alertStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
+	divStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color("#444444"))
+	focusIndStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D"))
 	activePanelStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD93D")).Bold(true)
-	lineNumStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#777777"))
-	selectedBg    = lipgloss.Color("#3A3A4A")
+	lineNumStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#777777"))
+	selectedBg       = lipgloss.Color("#3A3A4A")
 )
 
 type commitsLoadedMsg []commit
@@ -1297,7 +1297,7 @@ func renderHelpOverlay(m model) string {
 	return sb.String()
 }
 
-const Version = "0.1.0"
+const Version = "1.0.1"
 
 func Run() {
 	// Handle CLI flags

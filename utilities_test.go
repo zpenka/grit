@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 )
+
 func TestTruncate_Short(t *testing.T) {
 	AssertEqual(t, "hello", truncate("hello", 10), "should not truncate")
 }
@@ -153,11 +154,11 @@ func TestRegexCache_Reuses(t *testing.T) {
 
 func TestCircularBuffer_StoresAndRetrievesItems(t *testing.T) {
 	buffer := NewCircularBuffer(5)
-	
+
 	buffer.Push("commit1")
 	buffer.Push("commit2")
 	buffer.Push("commit3")
-	
+
 	items := buffer.GetAll()
 	AssertLen(t, items, 3, "should store 3 items")
 	AssertEqual(t, 3, buffer.Size(), "size should be 3")
@@ -165,12 +166,12 @@ func TestCircularBuffer_StoresAndRetrievesItems(t *testing.T) {
 
 func TestCircularBuffer_Wraps(t *testing.T) {
 	buffer := NewCircularBuffer(3)
-	
+
 	buffer.Push("a")
 	buffer.Push("b")
 	buffer.Push("c")
 	buffer.Push("d") // Should wrap and overwrite "a"
-	
+
 	items := buffer.GetAll()
 	AssertLen(t, items, 3, "should maintain max capacity")
 }
@@ -225,16 +226,16 @@ func TestMetrics_TracksOperations(t *testing.T) {
 
 func TestMemoryPool_Reuses(t *testing.T) {
 	pool := NewMemoryPool(5)
-	
+
 	// Get object from empty pool
 	obj1 := pool.Get(func() interface{} {
 		return &commit{hash: "new1"}
 	})
 	AssertNotNil(t, obj1, "should create object")
-	
+
 	// Put back to pool
 	pool.Put(obj1)
-	
+
 	// Get again should reuse
 	obj2 := pool.Get(func() interface{} {
 		return &commit{hash: "new2"}
@@ -244,13 +245,13 @@ func TestMemoryPool_Reuses(t *testing.T) {
 
 func TestMemoryPool_CreateWhenEmpty(t *testing.T) {
 	pool := NewMemoryPool(1)
-	
+
 	// First object
 	obj1 := pool.Get(func() interface{} {
 		return &commit{hash: "first"}
 	})
 	AssertNotNil(t, obj1, "should create first object")
-	
+
 	// Get second without returning first
 	obj2 := pool.Get(func() interface{} {
 		return &commit{hash: "second"}
@@ -333,7 +334,6 @@ func TestAddToNavHistory_TracksPosition(t *testing.T) {
 		t.Error("addToNavHistory should increment navHistoryIdx")
 	}
 }
-
 
 func TestJumpToPrevBookmark_NoBookmarks(t *testing.T) {
 	m := newModel(".")
@@ -786,4 +786,3 @@ func TestAddToNavHistory_Multiple(t *testing.T) {
 		t.Errorf("should have at least 3 entries, got %d", len(m.navHistory))
 	}
 }
-

@@ -17,11 +17,11 @@ package grit
 
 // CacheMetrics tracks cache performance
 type CacheMetrics struct {
-	Hits       int
-	Misses     int
-	Evictions  int
-	Size       int
-	MaxSize    int
+	Hits      int
+	Misses    int
+	Evictions int
+	Size      int
+	MaxSize   int
 }
 
 // GetHitRate returns cache hit percentage
@@ -210,10 +210,10 @@ func (rl *RateLimiter) Allow() bool {
 
 // Metrics provides general performance metrics tracking operations by name
 type Metrics struct {
-	Operations map[string]int    // operation name -> count
-	Successes  map[string]int    // operation name -> success count
-	Failures   map[string]int    // operation name -> failure count
-	TotalTime  map[string]int64  // operation name -> total duration
+	Operations map[string]int   // operation name -> count
+	Successes  map[string]int   // operation name -> success count
+	Failures   map[string]int   // operation name -> failure count
+	TotalTime  map[string]int64 // operation name -> total duration
 }
 
 // NewMetrics creates a new metrics tracker

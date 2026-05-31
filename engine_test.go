@@ -44,7 +44,6 @@ func makeCommitsWithDays() []commit {
 	}
 }
 
-
 // TestNewModel_Creation tests model initialization
 func TestNewModel_Creation(t *testing.T) {
 	m := newModel(".")

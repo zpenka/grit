@@ -17,7 +17,8 @@
 //   - engine_team_ai.go: Team analytics, AI, and compliance features
 //
 // Core data flow:
-//   git log → parseCommits() → model.commits → features → render*UI() → Terminal
+//
+//	git log → parseCommits() → model.commits → features → render*UI() → Terminal
 //
 // See CLAUDE.md and DEVELOPER.md for detailed development guidance.
 package grit
@@ -150,67 +151,67 @@ type model struct {
 	inCommentMode    bool
 	commentInput     string
 	// Optimization: Caches
-	dcache    *diffCache
-	scache    *statCache
-	recache   *regexCache
+	dcache  *diffCache
+	scache  *statCache
+	recache *regexCache
 	// Performance tracking
-	diffCacheHits   int
-	statCacheHits   int
-	regexCacheHits  int
+	diffCacheHits  int
+	statCacheHits  int
+	regexCacheHits int
 	// Advanced Operations
-	showRebaseUI      bool
-	rebaseSequence    []rebaseOp
-	showCherryPickUI  bool
-	cherryPickList    []string
-	resetMode         string // soft, mixed, hard
-	amendMessage      string
+	showRebaseUI     bool
+	rebaseSequence   []rebaseOp
+	showCherryPickUI bool
+	cherryPickList   []string
+	resetMode        string // soft, mixed, hard
+	amendMessage     string
 	// Analytics
-	showAnalytics     bool
-	authorStats       map[string]int
-	timeStats         map[string]int
-	collaborators     map[string][]string // author -> co-authors
-	reviewers         map[string][]string // commit hash -> reviewers
-	productivity      map[string]interface{}
-	repoPath          string
-	width             int
-	height            int
-	loading           bool
+	showAnalytics bool
+	authorStats   map[string]int
+	timeStats     map[string]int
+	collaborators map[string][]string // author -> co-authors
+	reviewers     map[string][]string // commit hash -> reviewers
+	productivity  map[string]interface{}
+	repoPath      string
+	width         int
+	height        int
+	loading       bool
 	// Help overlay
 	showHelp bool
 	// Feature menus
-	showAnalyticsMenu  bool
-	analyticsMenuIdx  int
+	showAnalyticsMenu     bool
+	analyticsMenuIdx      int
 	showVisualizationMenu bool
-	vizMenuIdx        int
-	showTeamMenu      bool
-	teamMenuIdx       int
-	showIntegrationMenu bool
-	integrationMenuIdx  int
-	showGitOpsMenu      bool
-	gitOpsMenuIdx       int
-	showWorkflowsMenu   bool
-	workflowsMenuIdx    int
+	vizMenuIdx            int
+	showTeamMenu          bool
+	teamMenuIdx           int
+	showIntegrationMenu   bool
+	integrationMenuIdx    int
+	showGitOpsMenu        bool
+	gitOpsMenuIdx         int
+	showWorkflowsMenu     bool
+	workflowsMenuIdx      int
 	// Bisect & Recovery
-	bisectState         bisectState
-	showBisectUI        bool
-	lostCommits         []lostCommit
-	showLostCommits     bool
-	undoStack           []string // commit hashes for undo
-	undoStackIdx        int
-	showUndoMenu        bool
-	reflogRecoveryMode  bool
-	recoveryCommits     []lostCommit
+	bisectState        bisectState
+	showBisectUI       bool
+	lostCommits        []lostCommit
+	showLostCommits    bool
+	undoStack          []string // commit hashes for undo
+	undoStackIdx       int
+	showUndoMenu       bool
+	reflogRecoveryMode bool
+	recoveryCommits    []lostCommit
 	// Code Patterns & Quality
-	codeOwnership       map[string]codeOwnershipData
-	showCodeOwnership   bool
-	hotspots            []hotspotData
-	showHotspots        bool
-	commitMetrics       []commitMetrics
-	showComplexity      bool
-	lintingResults      []lintingResult
-	showLinting         bool
-	largeCommits        []commitMetrics
-	showLargeCommits    bool
+	codeOwnership     map[string]codeOwnershipData
+	showCodeOwnership bool
+	hotspots          []hotspotData
+	showHotspots      bool
+	commitMetrics     []commitMetrics
+	showComplexity    bool
+	lintingResults    []lintingResult
+	showLinting       bool
+	largeCommits      []commitMetrics
+	showLargeCommits  bool
 	// Commit Analysis & Search
 	semanticSearchResults []semanticSearchResult
 	showSemanticSearch    bool
@@ -229,17 +230,17 @@ type model struct {
 	dependencyChanges []dependencyChange
 	showDependencies  bool
 	// Advanced Workflows
-	worktrees          []worktreeInfo
-	showWorktrees      bool
-	currentWorktree    string
-	submodules         []submoduleInfo
-	showSubmodules     bool
-	namedStashes       []namedStash
-	showNamedStashes   bool
-	pendingTagOps      []tagOperation
-	showTagMgmt        bool
-	gpgStatuses        map[string]gpgSignatureStatus
-	showGPGStatus      bool
+	worktrees        []worktreeInfo
+	showWorktrees    bool
+	currentWorktree  string
+	submodules       []submoduleInfo
+	showSubmodules   bool
+	namedStashes     []namedStash
+	showNamedStashes bool
+	pendingTagOps    []tagOperation
+	showTagMgmt      bool
+	gpgStatuses      map[string]gpgSignatureStatus
+	showGPGStatus    bool
 	// Visualization
 	contributorFlameData []contributorFlameData
 	showFlamegraph       bool
@@ -254,66 +255,66 @@ type model struct {
 	fileHeatmap          []fileHeatmapEntry
 	showFileHeatmap      bool
 	// Integration & Export
-	prReferences      []githubPRReference
-	showPRLinks       bool
-	jiraLinks         []jiraTicketLink
-	showJiraLinks     bool
-	pendingExports    []exportData
-	showExportUI      bool
-	exportFormat      string
-	issueReferences   []issueReference
-	showIssueRefs     bool
+	prReferences    []githubPRReference
+	showPRLinks     bool
+	jiraLinks       []jiraTicketLink
+	showJiraLinks   bool
+	pendingExports  []exportData
+	showExportUI    bool
+	exportFormat    string
+	issueReferences []issueReference
+	showIssueRefs   bool
 	// Advanced Git Operations
-	rebasePreview           rebasePreview
-	showRebasePreview       bool
-	conflictList            []conflictInfo
-	showConflictUI          bool
-	squashPlans             []squashPlan
-	showSquashUI            bool
-	cherryPickImprovements  []cherryPickImprovement
-	amendPreview            amendPreview
-	showAmendPreview        bool
+	rebasePreview          rebasePreview
+	showRebasePreview      bool
+	conflictList           []conflictInfo
+	showConflictUI         bool
+	squashPlans            []squashPlan
+	showSquashUI           bool
+	cherryPickImprovements []cherryPickImprovement
+	amendPreview           amendPreview
+	showAmendPreview       bool
 	// Team & Collaboration
-	teamStats               []teamStats
-	showTeamStats           bool
-	reviewWorkflows         []reviewWorkflow
-	showReviewUI            bool
-	reviewerSuggestions     []reviewerSuggestion
-	pairProgrammingData     []pairProgrammingData
-	showPairProgramming     bool
-	velocityHistory         []velocityData
-	showVelocity            bool
+	teamStats           []teamStats
+	showTeamStats       bool
+	reviewWorkflows     []reviewWorkflow
+	showReviewUI        bool
+	reviewerSuggestions []reviewerSuggestion
+	pairProgrammingData []pairProgrammingData
+	showPairProgramming bool
+	velocityHistory     []velocityData
+	showVelocity        bool
 	// AI-Powered Insights
-	messageCompletions      []messageCompletion
-	commitClassifications   []commitClassification
-	showClassification      bool
+	messageCompletions    []messageCompletion
+	commitClassifications []commitClassification
+	showClassification    bool
 	// Compliance & Security
-	signingStatuses         map[string]signingStatus
-	showSigningStatus       bool
-	licenseHeaders          []licenseHeader
-	showLicenses            bool
-	securityIssues          []securityIssue
-	showSecurityIssues      bool
-	dataDeleteRequests      []dataDeleteRequest
-	showDataRequests        bool
-	secretDetections        []secretDetection
-	showSecrets             bool
+	signingStatuses    map[string]signingStatus
+	showSigningStatus  bool
+	licenseHeaders     []licenseHeader
+	showLicenses       bool
+	securityIssues     []securityIssue
+	showSecurityIssues bool
+	dataDeleteRequests []dataDeleteRequest
+	showDataRequests   bool
+	secretDetections   []secretDetection
+	showSecrets        bool
 	// Release & Versioning
-	semverVersions          []semverData
-	showSemver              bool
-	changelog               []changelogEntry
-	showChangelog           bool
-	releaseNotes            []releaseNote
-	showReleaseNotes        bool
-	versionBumps            []versionBump
-	showVersionBumps        bool
-	milestones              []milestone
-	showMilestones          bool
+	semverVersions   []semverData
+	showSemver       bool
+	changelog        []changelogEntry
+	showChangelog    bool
+	releaseNotes     []releaseNote
+	showReleaseNotes bool
+	versionBumps     []versionBump
+	showVersionBumps bool
+	milestones       []milestone
+	showMilestones   bool
 	// Advanced Performance
-	loadState               repoLoadState
-	diffJobs                []diffProcessingJob
-	indexData               indexData
-	blameCache              map[string][]blameEntry
+	loadState  repoLoadState
+	diffJobs   []diffProcessingJob
+	indexData  indexData
+	blameCache map[string][]blameEntry
 }
 
 // Supporting types
@@ -332,10 +333,10 @@ type graphNode struct {
 }
 
 type stashEntry struct {
-	name   string
-	branch string
+	name    string
+	branch  string
 	subject string
-	hash   string
+	hash    string
 }
 
 type reflogEntry struct {
@@ -379,13 +380,13 @@ type bisectOp struct {
 }
 
 type bisectState struct {
-	active       bool
-	current      string
-	good         []string
-	bad          []string
-	candidates   []string
-	visualSteps  int
-	totalSteps   int
+	active      bool
+	current     string
+	good        []string
+	bad         []string
+	candidates  []string
+	visualSteps int
+	totalSteps  int
 }
 
 type lostCommit struct {
@@ -397,29 +398,29 @@ type lostCommit struct {
 }
 
 type codeOwnershipData struct {
-	author        string
-	files         map[string]int // file -> count of commits
-	lines         int
-	expertise     float64
-	isOwner       bool
+	author    string
+	files     map[string]int // file -> count of commits
+	lines     int
+	expertise float64
+	isOwner   bool
 }
 
 type hotspotData struct {
-	path             string
-	changeFrequency  int
-	recentChanges    int
-	collaborators    int
-	avgCommitSize    int
-	riskLevel        string // low, medium, high
+	path            string
+	changeFrequency int
+	recentChanges   int
+	collaborators   int
+	avgCommitSize   int
+	riskLevel       string // low, medium, high
 }
 
 type commitMetrics struct {
-	hash          string
-	linesChanged  int
-	filesChanged  int
-	complexity    int // estimated
-	isLarge       bool
-	isComplex     bool
+	hash           string
+	linesChanged   int
+	filesChanged   int
+	complexity     int // estimated
+	isLarge        bool
+	isComplex      bool
 	messageQuality int // 0-100
 }
 
@@ -439,12 +440,12 @@ type semanticSearchResult struct {
 }
 
 type authorActivityData struct {
-	author      string
-	hourOfDay   map[int]int // hour -> count
-	dayOfWeek   map[int]int // day -> count
-	peakHour    int
-	peakDay     string
-	avgPerDay   float64
+	author    string
+	hourOfDay map[int]int // hour -> count
+	dayOfWeek map[int]int // day -> count
+	peakHour  int
+	peakDay   string
+	avgPerDay float64
 }
 
 type mergeAnalysis struct {
@@ -456,10 +457,10 @@ type mergeAnalysis struct {
 }
 
 type commitCoupling struct {
-	file1       string
-	file2       string
+	file1         string
+	file2         string
 	coChangeCount int
-	correlation float64 // 0-1
+	correlation   float64 // 0-1
 }
 
 // Performance & Filtering
@@ -469,18 +470,18 @@ type fileExtensionFilter struct {
 }
 
 type commitGroup struct {
-	name     string
-	commits  []string // hashes
-	label    string   // PR, branch, or time period
-	groupBy  string   // "pr", "branch", "date"
+	name    string
+	commits []string // hashes
+	label   string   // PR, branch, or time period
+	groupBy string   // "pr", "branch", "date"
 }
 
 type dependencyChange struct {
-	hash    string
-	dep     string
-	oldVer  string
-	newVer  string
-	reason  string
+	hash   string
+	dep    string
+	oldVer string
+	newVer string
+	reason string
 }
 
 // Advanced Workflows
@@ -542,17 +543,17 @@ type treeNode struct {
 }
 
 type authorComparison struct {
-	author1      string
-	author2      string
-	commits1     int
-	commits2     int
-	files1       int
-	files2       int
-	additions1   int
-	additions2   int
-	deletions1   int
-	deletions2   int
-	similarity   float64
+	author1    string
+	author2    string
+	commits1   int
+	commits2   int
+	files1     int
+	files2     int
+	additions1 int
+	additions2 int
+	deletions1 int
+	deletions2 int
+	similarity float64
 }
 
 type fileHeatmapEntry struct {
@@ -564,10 +565,10 @@ type fileHeatmapEntry struct {
 
 // Integration & Export
 type githubPRReference struct {
-	hash    string
+	hash     string
 	prNumber int
-	status  string // open, merged, closed
-	title   string
+	status   string // open, merged, closed
+	title    string
 }
 
 type jiraTicketLink struct {
@@ -584,9 +585,9 @@ type exportData struct {
 }
 
 type issueReference struct {
-	hash      string
+	hash       string
 	references []string // "#123", "#456"
-	keywords  []string  // "fixes", "closes", "resolves"
+	keywords   []string // "fixes", "closes", "resolves"
 }
 
 // Advanced Git Operations
@@ -605,16 +606,16 @@ type conflictInfo struct {
 }
 
 type squashPlan struct {
-	targetHash  string
-	toSquash    []string
-	resultMsg   string
-	lineCount   int
+	targetHash string
+	toSquash   []string
+	resultMsg  string
+	lineCount  int
 }
 
 type cherryPickImprovement struct {
-	hash       string
+	hash         string
 	autoConflict bool
-	suggestions []string
+	suggestions  []string
 }
 
 type amendPreview struct {
@@ -625,43 +626,43 @@ type amendPreview struct {
 
 // Team & Collaboration
 type teamStats struct {
-	author           string
-	commits          int
-	additions        int
-	deletions        int
-	avgCommitSize    int
-	specialization   string
-	collaborators    []string
+	author         string
+	commits        int
+	additions      int
+	deletions      int
+	avgCommitSize  int
+	specialization string
+	collaborators  []string
 }
 
 type reviewWorkflow struct {
-	prNumber      int
-	author        string
-	reviewers     []string
-	approved      bool
-	commentCount  int
-	status        string
+	prNumber     int
+	author       string
+	reviewers    []string
+	approved     bool
+	commentCount int
+	status       string
 }
 
 type reviewerSuggestion struct {
-	reviewer   string
-	expertise  float64
+	reviewer     string
+	expertise    float64
 	availability float64
-	score      float64
+	score        float64
 }
 
 type pairProgrammingData struct {
-	pair1      string
-	pair2      string
-	commits    int
-	files      int
+	pair1        string
+	pair2        string
+	commits      int
+	files        int
 	coChangeRate float64
 }
 
 type velocityData struct {
-	week    string
-	commits int
-	files   int
+	week      string
+	commits   int
+	files     int
 	additions int
 	deletions int
 }
@@ -703,43 +704,43 @@ type securityIssue struct {
 }
 
 type dataDeleteRequest struct {
-	hash    string
-	date    string
-	reason  string
-	status  string // "pending", "executed"
-	email   string
+	hash   string
+	date   string
+	reason string
+	status string // "pending", "executed"
+	email  string
 }
 
 type secretDetection struct {
-	hash      string
-	type_     string // "api-key", "password", "token"
-	location  string
-	severity  string
+	hash     string
+	type_    string // "api-key", "password", "token"
+	location string
+	severity string
 }
 
 // Release & Versioning
 type semverData struct {
-	hash       string
-	version    string
+	hash        string
+	version     string
 	versionType string // "major", "minor", "patch"
-	isRelease  bool
+	isRelease   bool
 }
 
 type changelogEntry struct {
-	version   string
-	date      string
-	commits   []string
-	features  []string
-	bugfixes  []string
-	breaking  []string
+	version  string
+	date     string
+	commits  []string
+	features []string
+	bugfixes []string
+	breaking []string
 }
 
 type releaseNote struct {
-	version     string
-	summary     string
-	highlights  []string
+	version      string
+	summary      string
+	highlights   []string
 	contributors []string
-	date        string
+	date         string
 }
 
 type versionBump struct {
@@ -760,18 +761,18 @@ type milestone struct {
 
 // Advanced Performance
 type repoLoadState struct {
-	totalCommits   int
-	loadedCommits  int
-	percentage     int
-	isComplete     bool
-	estimatedTime  int // seconds
+	totalCommits  int
+	loadedCommits int
+	percentage    int
+	isComplete    bool
+	estimatedTime int // seconds
 }
 
 type diffProcessingJob struct {
-	hash       string
-	status     string // "pending", "processing", "done"
-	result     []diffLine
-	error      string
+	hash   string
+	status string // "pending", "processing", "done"
+	result []diffLine
+	error  string
 }
 
 type indexData struct {

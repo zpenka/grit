@@ -6,11 +6,11 @@ import "testing"
 
 // TestFixture provides reusable test data
 type TestFixture struct {
-	Commits        []commit
-	CommitCount    int
-	AuthorCount    int
-	SampleFiles    []string
-	SampleAuthors  []string
+	Commits       []commit
+	CommitCount   int
+	AuthorCount   int
+	SampleFiles   []string
+	SampleAuthors []string
 }
 
 // NewTestFixture creates standard test fixture
@@ -153,19 +153,19 @@ type TestCategory struct {
 
 // Categories organized by feature area
 var TestCategories = map[string]*TestCategory{
-	"Core":                 &TestCategory{"Core Parsing & Navigation", 0},
-	"Search":               &TestCategory{"Search & Filtering", 0},
-	"Visualization":        &TestCategory{"Visualization & Graph", 0},
-	"Stash":                &TestCategory{"Stash & Reflog", 0},
-	"Analytics":            &TestCategory{"Analytics & Stats", 0},
-	"BisectRecovery":       &TestCategory{"Bisect & Recovery", 0},
-	"CodeQuality":          &TestCategory{"Code Quality Analysis", 0},
-	"Analysis":             &TestCategory{"Commit Analysis", 0},
-	"Workflows":            &TestCategory{"Advanced Workflows", 0},
-	"AIInsights":           &TestCategory{"AI-Powered Insights", 0},
-	"Compliance":           &TestCategory{"Compliance & Security", 0},
-	"Release":              &TestCategory{"Release & Versioning", 0},
-	"Performance":          &TestCategory{"Performance", 0},
+	"Core":           &TestCategory{"Core Parsing & Navigation", 0},
+	"Search":         &TestCategory{"Search & Filtering", 0},
+	"Visualization":  &TestCategory{"Visualization & Graph", 0},
+	"Stash":          &TestCategory{"Stash & Reflog", 0},
+	"Analytics":      &TestCategory{"Analytics & Stats", 0},
+	"BisectRecovery": &TestCategory{"Bisect & Recovery", 0},
+	"CodeQuality":    &TestCategory{"Code Quality Analysis", 0},
+	"Analysis":       &TestCategory{"Commit Analysis", 0},
+	"Workflows":      &TestCategory{"Advanced Workflows", 0},
+	"AIInsights":     &TestCategory{"AI-Powered Insights", 0},
+	"Compliance":     &TestCategory{"Compliance & Security", 0},
+	"Release":        &TestCategory{"Release & Versioning", 0},
+	"Performance":    &TestCategory{"Performance", 0},
 }
 
 // CommitBuilder provides a fluent builder pattern for creating test commits

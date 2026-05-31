@@ -84,6 +84,7 @@ func TestFirstVisibleHash_Valid(t *testing.T) {
 	m.commits = []commit{{hash: "abc123"}}
 	_ = firstVisibleHash(m)
 }
+
 // === PHASE 3: VISUALIZATION SUBMENU ===
 
 func TestUpdate_VisualizationKeyTogglesMenu(t *testing.T) {

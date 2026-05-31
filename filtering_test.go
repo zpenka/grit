@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 )
+
 func TestFilterCommits_EmptyQuery(t *testing.T) {
 	result := filterCommits(makeNamedCommits(), "")
 	AssertLen(t, result, 3, "empty query should return all")
@@ -217,7 +218,6 @@ func TestFilterByDateRange_OutsideRange(t *testing.T) {
 	AssertLen(t, results, 0, "should return empty when outside range")
 }
 
-
 func TestFilterByExtension_SelectsFiles(t *testing.T) {
 	commits := []commit{
 		{hash: "aaa", subject: "Update main.go"},
@@ -282,20 +282,19 @@ func TestFormatActiveFilters_BothFilters(t *testing.T) {
 func TestFilterCommitsWithCache_CachesResults(t *testing.T) {
 	cache := NewFilterCache()
 	commits := makeNamedCommits()
-	
+
 	// First call - cache miss
 	result1 := filterCommitsWithCache(cache, commits, "login")
 	AssertLen(t, result1, 1, "should find login commit")
 	AssertEqual(t, 0, cache.metrics.Hits, "cache should have 0 hits initially")
-	
+
 	// Second call - cache hit
 	result2 := filterCommitsWithCache(cache, commits, "login")
 	AssertLen(t, result2, 1, "should return same result")
 	AssertEqual(t, 1, cache.metrics.Hits, "cache should have 1 hit")
-	
+
 	// Different query - cache miss
 	result3 := filterCommitsWithCache(cache, commits, "user")
 	AssertLen(t, result3, 1, "should find user commit")
 	AssertEqual(t, 1, cache.metrics.Hits, "hits should still be 1")
 }
-

@@ -439,7 +439,6 @@ func TestExitCommentMode_Valid(t *testing.T) {
 	_ = exitCommentMode(m)
 }
 
-
 func TestFilterByRegex_Valid(t *testing.T) {
 	_ = filterByRegex([]commit{{subject: "test"}}, "test")
 }
@@ -448,16 +447,13 @@ func TestFilterByDateRange_Valid(t *testing.T) {
 	_ = filterByDateRange([]commit{{when: "1 day ago"}}, 1, 7)
 }
 
-
 func TestFilterByAuthor_Valid(t *testing.T) {
 	_ = filterByAuthor([]commit{{author: "Alice"}}, "Alice")
 }
 
-
 func TestParseDaysAgo_Valid(t *testing.T) {
 	_ = parseDaysAgo("5 days ago")
 }
-
 
 func TestExportToCSV_Valid(t *testing.T) {
 	_ = exportToCSV([]commit{{subject: "test"}})
@@ -471,27 +467,22 @@ func TestExportToXML_Valid(t *testing.T) {
 	_ = exportToXML([]commit{{subject: "test"}})
 }
 
-
 func TestFormatFilterHeaderDisplay_Valid(t *testing.T) {
 	m := newModel(".")
 	_ = formatFilterHeaderDisplay(m)
 }
 
-
 func TestGetCommitRelationships_Valid(t *testing.T) {
 	_ = getCommitRelationships([]commit{{hash: "a"}})
 }
-
 
 func TestGetFileBlameContext_Valid(t *testing.T) {
 	_ = getFileBlameContext([]diffLine{}, "file.go")
 }
 
-
 func TestIsFileModifiedInCommit_Valid(t *testing.T) {
 	_ = isFileModifiedInCommit("abc123", "file.go")
 }
-
 
 func TestRenderBookmarkMarker_Valid(t *testing.T) {
 	m := newModel(".")
@@ -507,7 +498,6 @@ func TestRenderStatsBadgeInList_Valid(t *testing.T) {
 	stats := commitStatistics{filesChanged: 1, insertions: 5, deletions: 2}
 	_ = renderStatsBadgeInList(stats, 20)
 }
-
 
 // TestRenderFileTimeline_WithCommits tests timeline rendering with data
 func TestRenderFileTimeline_WithCommits(t *testing.T) {
@@ -622,4 +612,3 @@ func TestRenderViewMode_InvalidMode(t *testing.T) {
 		t.Error("renderViewMode should return empty for invalid mode")
 	}
 }
-

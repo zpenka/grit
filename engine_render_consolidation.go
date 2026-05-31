@@ -36,7 +36,6 @@ func BuildAnalysisData(pairs ...interface{}) map[string]interface{} {
 	return data
 }
 
-
 // renderMenuOverlay renders a menu with consistent navigation hints.
 // This DRY helper reduces duplication across all menu renderers.
 func renderMenuOverlay(config RenderConfig) string {

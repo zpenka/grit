@@ -9,10 +9,10 @@ import (
 // TestMaintenancePhaseDocumentation validates Phase 3 maintenance documentation exists and is properly structured.
 func TestMaintenancePhaseDocumentation(t *testing.T) {
 	tests := []struct {
-		name           string
-		filePath       string
-		requiredText   []string
-		shouldExist    bool
+		name         string
+		filePath     string
+		requiredText []string
+		shouldExist  bool
 	}{
 		{
 			name:     "CONTRIBUTING.md exists",

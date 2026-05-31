@@ -41,7 +41,6 @@ func renderBookmarkMarker(m model, idx int) string {
 	return ""
 }
 
-
 // renderLineCommentMarker returns a visual marker for commented lines.
 func renderLineCommentMarker(m model, lineIdx int) string {
 	if m.comments != nil {

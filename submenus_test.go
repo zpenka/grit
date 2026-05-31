@@ -235,7 +235,7 @@ func TestUpdate_AnalyticsMenuBoundsCheck(t *testing.T) {
 	m.width = 80
 	m.height = 24
 	m.showAnalyticsMenu = true
-	m.analyticsMenuIdx = 11  // Last item (0-11 = 12 items after C2a)
+	m.analyticsMenuIdx = 11 // Last item (0-11 = 12 items after C2a)
 	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
 
 	// Press "j" at the end - should not go beyond bounds
@@ -263,7 +263,7 @@ func TestUpdate_AnalyticsMenuSelect(t *testing.T) {
 	m.width = 80
 	m.height = 24
 	m.showAnalyticsMenu = true
-	m.analyticsMenuIdx = 0  // Code Ownership
+	m.analyticsMenuIdx = 0 // Code Ownership
 	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
 
 	// Press "enter" to select
@@ -339,7 +339,7 @@ func TestDispatchAnalyticsFeature_ComputesFeaturesOnDemand(t *testing.T) {
 		{hash: "abc1", author: "alice", subject: "feature: add login"},
 		{hash: "abc2", author: "bob", subject: "fix: typo in docs"},
 	}
-	m.analyticsMenuIdx = 0  // Code Ownership
+	m.analyticsMenuIdx = 0 // Code Ownership
 
 	// Dispatch code ownership
 	m1 := dispatchAnalyticsFeature(m, 0)
@@ -360,7 +360,7 @@ func TestDispatchAnalyticsFeature_TogglesBisect(t *testing.T) {
 		{hash: "abc1", author: "alice", subject: "feature: add login"},
 		{hash: "abc2", author: "bob", subject: "fix: typo in docs"},
 	}
-	m.analyticsMenuIdx = 3  // Bisect
+	m.analyticsMenuIdx = 3 // Bisect
 
 	// Dispatch bisect
 	m1 := dispatchAnalyticsFeature(m, 3)
@@ -421,7 +421,7 @@ func TestUpdate_HelpKeyInGlobalBindings(t *testing.T) {
 func TestView_HelpOverlayShown(t *testing.T) {
 	m := newModel(".")
 	m.width = 80
-	m.height = 40  // Larger height to show full help text
+	m.height = 40 // Larger height to show full help text
 	m.showHelp = true
 
 	view := m.View()
@@ -447,7 +447,7 @@ func min(a, b int) int {
 func TestView_HelpOverlayContainsKeybindings(t *testing.T) {
 	m := newModel(".")
 	m.width = 80
-	m.height = 40  // Larger height to show full help text
+	m.height = 40 // Larger height to show full help text
 	m.showHelp = true
 
 	view := m.View()
@@ -814,7 +814,7 @@ func TestUpdate_WorkflowsMenuBoundsCheck(t *testing.T) {
 	m.width = 80
 	m.height = 24
 	m.showWorkflowsMenu = true
-	m.workflowsMenuIdx = 4  // Last item (0-4 = 5 items)
+	m.workflowsMenuIdx = 4 // Last item (0-4 = 5 items)
 	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
 
 	// Press "j" at the end - should not go beyond bounds
@@ -842,7 +842,7 @@ func TestUpdate_WorkflowsMenuSelect(t *testing.T) {
 	m.width = 80
 	m.height = 24
 	m.showWorkflowsMenu = true
-	m.workflowsMenuIdx = 0  // Worktrees
+	m.workflowsMenuIdx = 0 // Worktrees
 	m.commits = []commit{{hash: "abc123", author: "test", subject: "test"}}
 
 	// Press "enter" to select

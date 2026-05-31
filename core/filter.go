@@ -167,7 +167,7 @@ func groupCommits(commits []commit, groupBy string) []commitGroup {
 
 	for k, v := range groupMap {
 		groups = append(groups, commitGroup{
-			name:        k,
+			name:         k,
 			commitHashes: v,
 		})
 	}

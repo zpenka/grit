@@ -40,7 +40,6 @@ func TestShowConflictUIRendersConflictUI(t *testing.T) {
 	}
 }
 
-
 // ============================================================================
 // Help Documentation Tests - Verify keybindings are documented
 // ============================================================================
@@ -98,7 +97,7 @@ func TestHelpOverlayDocumentsIntegrationKey(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 80
-	m.height = 60  // Increased height to ensure Integration section is visible
+	m.height = 60 // Increased height to ensure Integration section is visible
 
 	output := renderHelpOverlay(m)
 
@@ -129,7 +128,7 @@ func TestRenderHelpOverlay_ListsAllMenus(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 80
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -147,24 +146,24 @@ func TestRenderHelpOverlay_ListsMenuEntries(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 80
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
 	// Sample entries from each menu that should appear
 	entries := []string{
-		"Code Ownership",        // Analytics
-		"Hotspot Detection",     // Analytics
+		"Code Ownership",         // Analytics
+		"Hotspot Detection",      // Analytics
 		"Contributor Flamegraph", // Visualizations
-		"Timeline Slider",       // Visualizations
-		"Team Statistics",       // Team
-		"Reviewer Suggestions",  // Team
-		"GitHub PR Links",       // Integration
-		"Jira Tickets",         // Integration
-		"Interactive Rebase",    // Git Ops
-		"Cherry-pick Mode",     // Git Ops
-		"Worktrees",            // Workflows
-		"Named stashes",        // Workflows
+		"Timeline Slider",        // Visualizations
+		"Team Statistics",        // Team
+		"Reviewer Suggestions",   // Team
+		"GitHub PR Links",        // Integration
+		"Jira Tickets",           // Integration
+		"Interactive Rebase",     // Git Ops
+		"Cherry-pick Mode",       // Git Ops
+		"Worktrees",              // Workflows
+		"Named stashes",          // Workflows
 	}
 
 	for _, entry := range entries {
@@ -179,7 +178,7 @@ func TestRenderHelpOverlay_StaysInSyncAnalytics(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -195,7 +194,7 @@ func TestRenderHelpOverlay_StaysInSyncVisualization(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -211,7 +210,7 @@ func TestRenderHelpOverlay_StaysInSyncTeam(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -227,7 +226,7 @@ func TestRenderHelpOverlay_StaysInSyncIntegration(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -243,7 +242,7 @@ func TestRenderHelpOverlay_StaysInSyncGitOps(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 
@@ -259,7 +258,7 @@ func TestRenderHelpOverlay_StaysInSyncWorkflows(t *testing.T) {
 	m := newModel(".")
 	m.showHelp = true
 	m.width = 100
-	m.height = 100  // Large height to ensure no clipping
+	m.height = 100 // Large height to ensure no clipping
 
 	output := renderHelpOverlay(m)
 

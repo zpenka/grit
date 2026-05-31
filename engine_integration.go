@@ -209,4 +209,3 @@ func dispatchIntegrationFeature(m model, idx int) model {
 	}
 	return m
 }
-

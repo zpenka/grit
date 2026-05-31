@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 )
+
 func TestCommitStats_Empty(t *testing.T) {
 	stats := commitStats([]diffLine{})
 	AssertEqual(t, 0, stats.filesChanged, "empty diff should have 0 files")
@@ -302,4 +303,3 @@ func TestHandleGoToCommitInput_InvalidHash(t *testing.T) {
 		t.Errorf("should stay at 0 for invalid hash, got %d", m.cursor)
 	}
 }
-
