@@ -327,10 +327,10 @@ func bisectFindCulprit(commits []commit, good []string, bad []string) string {
 // renderBisectUI displays bisect state and progress using the analysis UI template.
 func renderBisectUI(m model, width int) string {
 	data := map[string]interface{}{
-		"Progress":       fmt.Sprintf("%d/%d steps", m.bisectState.visualSteps, m.bisectState.totalSteps),
-		"Current":        m.bisectState.current,
-		"Good commits":   strings.Join(m.bisectState.good, ", "),
-		"Bad commits":    strings.Join(m.bisectState.bad, ", "),
+		"Progress":     fmt.Sprintf("%d/%d steps", m.bisectState.visualSteps, m.bisectState.totalSteps),
+		"Current":      m.bisectState.current,
+		"Good commits": strings.Join(m.bisectState.good, ", "),
+		"Bad commits":  strings.Join(m.bisectState.bad, ", "),
 	}
 	return RenderAnalysisUI("Bisect Status", data)
 }
@@ -998,4 +998,3 @@ func renderDependenciesUI(m model, width int) string {
 	}
 	return RenderAnalysisUI("Dependency Changes", data)
 }
-

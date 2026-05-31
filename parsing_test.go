@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 )
+
 func TestParseCommits_Empty(t *testing.T) {
 	if parseCommits("") != nil {
 		t.Error("expected nil for empty input")
@@ -529,4 +530,3 @@ func TestParseCommitGraph_Linear(t *testing.T) {
 		t.Errorf("expected 3 nodes, got %d", len(graph))
 	}
 }
-

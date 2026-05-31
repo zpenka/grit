@@ -16,7 +16,6 @@ func newModel(repoPath string) model {
 	}
 }
 
-
 // truncate cuts s to at most max visible runes, appending "…" if shortened.
 // truncate shortens a string to max runes and appends "…" if truncated.
 func truncate(s string, max int) string {
@@ -40,9 +39,6 @@ func firstWord(s string) string {
 	}
 	return s
 }
-
-
-
 
 // parseBranches parses the output of "git branch -a", stripping the current-branch
 // marker (*) and skipping ref-pointer lines (e.g. "origin/HEAD -> origin/main").
@@ -155,8 +151,6 @@ func parseCount(s string) int {
 	return n
 }
 
-
-
 // commitStats calculates statistics for a commit's diff.
 // commitStats calculates insertion, deletion, and file change counts from diff lines.
 func commitStats(lines []diffLine) commitStatistics {
@@ -246,7 +240,6 @@ func capitalizeFirst(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
-
 // detectLanguage detects the programming language from a filename.
 func detectLanguage(filename string) string {
 	ext := filename
@@ -255,28 +248,28 @@ func detectLanguage(filename string) string {
 	}
 
 	langMap := map[string]string{
-		".go":         "go",
-		".py":         "python",
-		".js":         "javascript",
-		".ts":         "typescript",
-		".rb":         "ruby",
-		".java":       "java",
-		".cpp":        "cpp",
-		".c":          "c",
-		".rs":         "rust",
-		".sh":         "bash",
-		".sql":        "sql",
-		".html":       "html",
-		".css":        "css",
-		".json":       "json",
-		".yaml":       "yaml",
-		".yml":        "yaml",
-		".xml":        "xml",
-		".md":         "markdown",
-		"Makefile":    "makefile",
-		"Dockerfile":  "dockerfile",
-		".gitignore":  "gitignore",
-		".env":        "dotenv",
+		".go":        "go",
+		".py":        "python",
+		".js":        "javascript",
+		".ts":        "typescript",
+		".rb":        "ruby",
+		".java":      "java",
+		".cpp":       "cpp",
+		".c":         "c",
+		".rs":        "rust",
+		".sh":        "bash",
+		".sql":       "sql",
+		".html":      "html",
+		".css":       "css",
+		".json":      "json",
+		".yaml":      "yaml",
+		".yml":       "yaml",
+		".xml":       "xml",
+		".md":        "markdown",
+		"Makefile":   "makefile",
+		"Dockerfile": "dockerfile",
+		".gitignore": "gitignore",
+		".env":       "dotenv",
 	}
 
 	if lang, ok := langMap[ext]; ok {
@@ -338,7 +331,6 @@ func pluralize(count int) string {
 }
 
 // --- goToCommit ---
-
 
 // --- copyAsPatch ---
 

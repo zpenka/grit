@@ -80,9 +80,9 @@ func planSquashSequence(target string, toSquash []string, msg string) squashPlan
 // Feature 4: Cherry-pick Improvements
 func improveCherryPick(m model, hash string) *cherryPickImprovement {
 	return &cherryPickImprovement{
-		hash:            hash,
-		autoConflict:    false,
-		suggestions:     []string{},
+		hash:         hash,
+		autoConflict: false,
+		suggestions:  []string{},
 	}
 }
 
@@ -335,11 +335,11 @@ func generateChangelog(commits []commit, version string) *changelogEntry {
 		}
 	}
 	return &changelogEntry{
-		version:   version,
-		date:      "2026-04-25",
-		features:  features,
-		bugfixes:  bugfixes,
-		breaking:  []string{},
+		version:  version,
+		date:     "2026-04-25",
+		features: features,
+		bugfixes: bugfixes,
+		breaking: []string{},
 	}
 }
 
@@ -566,4 +566,3 @@ func renderCherryPickUI(m model, width int) string {
 	}
 	return RenderStandardUI(RenderConfig{Title: "Cherry-Pick Queue", Items: items})
 }
-

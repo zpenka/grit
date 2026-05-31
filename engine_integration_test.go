@@ -232,10 +232,10 @@ func TestViewMethodIncludesIntegrationFeatures(t *testing.T) {
 
 	// Test each integration feature is rendered when shown
 	tests := []struct {
-		flag   bool
-		ptr    *bool
-		name   string
-		check  func(string) bool
+		flag  bool
+		ptr   *bool
+		name  string
+		check func(string) bool
 	}{
 		{true, &m.showPRLinks, "PR Links", func(s string) bool {
 			return strings.Contains(s, "PR") || strings.Contains(s, "Link")
@@ -615,14 +615,14 @@ func TestExtractPRReferences_MultipleMatches(t *testing.T) {
 // TestDispatchIntegrationFeature tests integration feature dispatch
 func TestDispatchIntegrationFeature_OutOfRange(t *testing.T) {
 	m := model{
-		showPRLinks:      false,
-		showJiraLinks:    false,
-		showIssueRefs:    false,
-		prReferences:     []githubPRReference{},
-		jiraLinks:        []jiraTicketLink{},
-		issueReferences:  []issueReference{},
-		pendingExports:   []exportData{},
-		commits:          []commit{},
+		showPRLinks:     false,
+		showJiraLinks:   false,
+		showIssueRefs:   false,
+		prReferences:    []githubPRReference{},
+		jiraLinks:       []jiraTicketLink{},
+		issueReferences: []issueReference{},
+		pendingExports:  []exportData{},
+		commits:         []commit{},
 	}
 	original := m
 	result := dispatchIntegrationFeature(m, 999)
@@ -633,9 +633,9 @@ func TestDispatchIntegrationFeature_OutOfRange(t *testing.T) {
 
 func TestDispatchIntegrationFeature_GitHubPRLinks(t *testing.T) {
 	m := model{
-		showPRLinks:    false,
-		prReferences:   []githubPRReference{},
-		commits:        []commit{{hash: "aaa", subject: "Fix #123"}},
+		showPRLinks:  false,
+		prReferences: []githubPRReference{},
+		commits:      []commit{{hash: "aaa", subject: "Fix #123"}},
 	}
 	result := dispatchIntegrationFeature(m, 0)
 	if !result.showPRLinks {

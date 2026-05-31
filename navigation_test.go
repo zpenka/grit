@@ -275,4 +275,3 @@ func TestDiffPanelWidth(t *testing.T) {
 	dw := diffPanelWidth(total)
 	AssertEqual(t, total, lw+dw+1, "panel widths should sum to total")
 }
-

@@ -190,7 +190,7 @@ func renderAuthorComparisonUI(m model, width int) string {
 	}
 	comp := m.authorComparisons[0]
 	items := map[string][2]interface{}{
-		"Commits": {comp.commits1, comp.commits2},
+		"Commits":    {comp.commits1, comp.commits2},
 		"Similarity": {comp.similarity, 0},
 	}
 	return RenderComparisonTable("Author Comparison", comp.author1, comp.author2, items)

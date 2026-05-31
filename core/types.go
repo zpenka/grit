@@ -24,10 +24,10 @@ type lineKind int
 
 const (
 	lineContext lineKind = iota // lineContext is an unchanged line in the diff
-	lineAdded                    // lineAdded is a newly added line (prefix: +)
-	lineRemoved                  // lineRemoved is a deleted line (prefix: -)
-	lineHunk                     // lineHunk is a hunk header (prefix: @@)
-	lineMeta                     // lineMeta is diff metadata (prefix: diff, index, etc.)
+	lineAdded                   // lineAdded is a newly added line (prefix: +)
+	lineRemoved                 // lineRemoved is a deleted line (prefix: -)
+	lineHunk                    // lineHunk is a hunk header (prefix: @@)
+	lineMeta                    // lineMeta is diff metadata (prefix: diff, index, etc.)
 )
 
 // diffLine represents a single line in a unified diff output.
@@ -57,6 +57,6 @@ type blameLine struct {
 // commitGroup represents a logical grouping of commits by a common criteria.
 // Used for viewing commits organized by date, author, branch, or other dimensions.
 type commitGroup struct {
-	name           string   // name is the group key (date, author, branch name, etc.)
-	commitHashes   []string // commitHashes are the commit identifiers in this group
+	name         string   // name is the group key (date, author, branch name, etc.)
+	commitHashes []string // commitHashes are the commit identifiers in this group
 }

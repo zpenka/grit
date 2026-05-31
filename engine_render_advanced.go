@@ -18,7 +18,6 @@ import (
 
 // ===== OPTION A: ADVANCED COMMIT OPERATIONS =====
 
-
 // --- Advanced Performance (5 features) ---
 
 // Feature 26: Incremental Repo Loading
@@ -57,7 +56,6 @@ func filterByDateRange(commits []commit, startDays, endDays int) []commit {
 	return result
 }
 
-
 func filterByAuthor(commits []commit, author string) []commit {
 	var result []commit
 	for _, c := range commits {
@@ -68,7 +66,6 @@ func filterByAuthor(commits []commit, author string) []commit {
 	return result
 }
 
-
 func parseDaysAgo(when string) int {
 	parts := strings.Fields(when)
 	if len(parts) < 2 {
@@ -78,66 +75,45 @@ func parseDaysAgo(when string) int {
 	return days
 }
 
-
 // --- Workflow Templates ---
-
 
 // --- Commit Signing & Verification ---
 
-
 // --- Collaboration Features ---
-
 
 // --- Rich Visualization ---
 
-
 // --- Interactive Timeline ---
-
 
 // --- Side-by-Side Comparison ---
 
-
 // --- Advanced Analytics: Code Churn Analysis ---
-
 
 // --- Advanced Analytics: Author Expertise Detection ---
 
-
 // --- Advanced Analytics: Hotspot Detection ---
-
 
 // --- Advanced Analytics: Performance Regression Detection ---
 
-
 // --- Advanced Analytics: Test Coverage Correlation ---
-
 
 // --- Option 4: Advanced Diff & Review Features ---
 
-
 // --- Option 5: Machine Learning & AI ---
-
 
 // --- Option 6: Performance Optimization & Scale ---
 
-
 // --- Option 5: Advanced Git Operations ---
-
 
 // --- Option 7: Advanced Repository Management ---
 
-
 // --- Option 8: Developer Experience ---
-
 
 // --- Option 1: Integration & External Data ---
 
-
 // --- Option 2: Team & Organizational Features ---
 
-
 // --- Option 3: Quality & Compliance ---
-
 
 // --- Option 4: Data Export & Reporting ---
 
@@ -173,11 +149,8 @@ func exportToXML(commits []commit) string {
 	return sb.String()
 }
 
-
 // renderReportingUI displays data export and reporting options using the analysis UI template.
 
 // --- Option 6: Real-time & WebSocket ---
 
-
 // renderRealtimeUI displays realtime and WebSocket status using the analysis UI template.
-

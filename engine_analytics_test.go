@@ -374,7 +374,7 @@ func TestBisectMarkBad_AddsHashToBisectBad(t *testing.T) {
 func TestBisectFindCulprit_RequiresGoodAndBad(t *testing.T) {
 	commits := makeCommits(5)
 	for i := range commits {
-		commits[i].hash = string(byte(65 + i)) + "bc"
+		commits[i].hash = string(byte(65+i)) + "bc"
 	}
 	good := []string{}
 	bad := []string{"abc"}
@@ -493,10 +493,10 @@ func TestDetectHotspots_WithCommits(t *testing.T) {
 // TestAssessRiskLevel tests risk assessment
 func TestAssessRiskLevel_LowRisk(t *testing.T) {
 	hotspot := hotspotData{
-		path:          "README.md",
+		path:            "README.md",
 		changeFrequency: 2,
-		recentChanges: 1,
-		collaborators: 1,
+		recentChanges:   1,
+		collaborators:   1,
 	}
 	risk := assessRiskLevel(hotspot)
 	if risk == "" {
