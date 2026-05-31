@@ -1,0 +1,57 @@
+version: 2
+
+project_name: grit
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: grit
+    main: ./cmd/grit
+    binary: grit
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/zpenka/grit.Version={{.Version}}
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: grit
+    repository:
+      owner: zpenka
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/zpenka/grit
+    description: Terminal UI for exploring git history
+    license: MIT
+    install: bin.install "grit"
+    test: system "#{bin}/grit", "--version"
